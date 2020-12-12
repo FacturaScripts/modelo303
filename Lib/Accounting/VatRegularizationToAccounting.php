@@ -22,7 +22,7 @@ use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Lib\Accounting\AccountingClass;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Asiento;
-use FacturaScripts\Dinamic\Model\ModelView\PartidaImpuestoResumen;
+use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 use FacturaScripts\Dinamic\Model\Subcuenta;
 

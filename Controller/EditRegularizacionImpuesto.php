@@ -24,7 +24,7 @@ use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Ejercicio;
-use FacturaScripts\Dinamic\Model\ModelView\PartidaImpuestoResumen;
+use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 
 /**
@@ -110,7 +110,7 @@ class EditRegularizacionImpuesto extends EditController
      */
     protected function addTaxLineView($viewName, $caption, $icon)
     {
-        $this->addListView($viewName, 'ModelView\PartidaImpuesto', $caption, $icon);
+        $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon);
         $this->disableButtons($viewName);
     }
 
@@ -121,7 +121,7 @@ class EditRegularizacionImpuesto extends EditController
      */
     protected function addTaxSummaryView($viewName = 'ListPartidaImpuestoResumen')
     {
-        $this->addListView($viewName, 'ModelView\PartidaImpuestoResumen', 'summary', 'fas fa-list-alt');
+        $this->addListView($viewName, 'Join\PartidaImpuestoResumen', 'summary', 'fas fa-list-alt');
         $this->disableButtons($viewName);
     }
 

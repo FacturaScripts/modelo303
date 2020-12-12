@@ -16,23 +16,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace FacturaScripts\Plugins\Modelo303\Model\ModelView;
+namespace FacturaScripts\Plugins\Modelo303\Model\Join;
 
-use FacturaScripts\Core\Model\Base\ModelView;
+use FacturaScripts\Core\Model\Base\JoinModel;
 
 /**
- * Auxiliary model to load a list of accounting entries with VAT
+ * Auxiliary model to load a resume of accounting entries with VAT
  *
  * @author Artex Trading sa     <jcuello@artextrading.com>
  * @author Carlos García Gómez  <carlos@facturascripts.com>
  * 
- * @property float $baseimponible
- * @property float $cuotaiva
- * @property float $cuotarecargo
- * @property float $iva
- * @property float $recargo
+ * @property float  $baseimponible
+ * @property string $codcuentaesp
+ * @property string $codejercicio
+ * @property string $codsubcuenta
+ * @property float  $cuotaiva
+ * @property float  $cuotarecargo
+ * @property string $descripcion
+ * @property int    $idsubcuenta
+ * @property float  $iva
+ * @property float  $recargo
+ * @property float  $total
  */
-class PartidaImpuesto extends ModelView
+class PartidaImpuestoResumen extends JoinModel
 {
 
     /**
@@ -41,11 +47,12 @@ class PartidaImpuesto extends ModelView
     public function clear()
     {
         parent::clear();
-        $this->baseimponible = 0.00;
-        $this->iva = 0.00;
-        $this->cuotaiva = 0.00;
-        $this->recargo = 0.00;
-        $this->cuotarecargo = 0.00;
+        $this->baseimponible = 0.0;
+        $this->iva = 0.0;
+        $this->recargo = 0.0;
+        $this->cuotaiva = 0.0;
+        $this->cuotarecargo = 0.0;
+        $this->total = 0.0;
     }
 
     /**
@@ -54,23 +61,31 @@ class PartidaImpuesto extends ModelView
     protected function getFields(): array
     {
         return [
-            'baseimponible' => 'partidas.baseimponible',
-            'cifnif' => 'partidas.cifnif',
-            'codcontrapartida' => 'partidas.codcontrapartida',
+            'baseimponible' => 'SUM(partidas.baseimponible)',
             'codcuentaesp' => 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)',
             'codejercicio' => 'asientos.codejercicio',
-            'concepto' => 'partidas.concepto',
-            'codserie' => 'partidas.codserie',
-            'documento' => 'partidas.documento',
-            'factura' => 'partidas.factura',
-            'fecha' => 'asientos.fecha',
-            'idasiento' => 'asientos.idasiento',
-            'idcontrapartida' => 'partidas.idcontrapartida',
-            'idpartida' => 'partidas.idpartida',
+            'codsubcuenta' => 'partidas.codsubcuenta',
+            'descripcion' => 'cuentasesp.descripcion',
+            'idsubcuenta' => 'partidas.idsubcuenta',
             'iva' => 'partidas.iva',
-            'numero' => 'asientos.numero',
             'recargo' => 'partidas.recargo'
         ];
+    }
+
+    /**
+     * Return Group By fields
+     *
+     * @return string
+     */
+    protected function getGroupFields(): string
+    {
+        return 'asientos.codejercicio,'
+            . 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp),'
+            . 'cuentasesp.descripcion,'
+            . 'partidas.idsubcuenta,'
+            . 'partidas.codsubcuenta,'
+            . 'partidas.iva,'
+            . 'partidas.recargo';
     }
 
     /**
@@ -81,7 +96,8 @@ class PartidaImpuesto extends ModelView
         return 'asientos'
             . ' INNER JOIN partidas ON partidas.idasiento = asientos.idasiento'
             . ' INNER JOIN subcuentas ON subcuentas.idsubcuenta = partidas.idsubcuenta'
-            . ' INNER JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta';
+            . ' INNER JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta'
+            . ' LEFT JOIN cuentasesp ON cuentasesp.codcuentaesp = COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
     }
 
     /**
@@ -93,7 +109,8 @@ class PartidaImpuesto extends ModelView
             'asientos',
             'partidas',
             'subcuentas',
-            'cuentas'
+            'cuentas',
+            'cuentasesp'
         ];
     }
 
@@ -105,7 +122,8 @@ class PartidaImpuesto extends ModelView
     protected function loadFromData($data)
     {
         parent::loadFromData($data);
-        $this->cuotaiva = $this->baseimponible * ($this->iva / 100.00);
-        $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.00);
+        $this->cuotaiva = $this->baseimponible * ($this->iva / 100.0);
+        $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.0);
+        $this->total = $this->baseimponible + $this->cuotaiva + $this->cuotarecargo;
     }
 }
