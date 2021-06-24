@@ -45,13 +45,16 @@
         <column name="invoice" order="110">
             <widget type="text" fieldname="factura" />
         </column>
+        <column name="invoice-date" order="115" display="center">
+            <widget type="date" fieldname="fechafactura" />
+        </column>
         <column name="accounting-entry" order="120">
             <widget type="text" fieldname="numero" />
         </column>
         <column name="document" order="130" display="none">
             <widget type="text" fieldname="documento" />
         </column>
-        <column name="date" order="140" display="none">
+        <column name="accounting-date" order="140" display="none">
             <widget type="date" fieldname="fecha" />
         </column>
         <column name="subaccount" order="150" display="none">

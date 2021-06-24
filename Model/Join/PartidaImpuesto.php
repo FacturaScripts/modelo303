@@ -25,7 +25,7 @@ use FacturaScripts\Core\Model\Base\JoinModel;
  *
  * @author Artex Trading sa     <jcuello@artextrading.com>
  * @author Carlos García Gómez  <carlos@facturascripts.com>
- * 
+ *
  * @property float $baseimponible
  * @property float $cuotaiva
  * @property float $cuotarecargo
@@ -69,7 +69,9 @@ class PartidaImpuesto extends JoinModel
             'idpartida' => 'partidas.idpartida',
             'iva' => 'partidas.iva',
             'numero' => 'asientos.numero',
-            'recargo' => 'partidas.recargo'
+            'recargo' => 'partidas.recargo',
+            'fechafactura' => 'COALESCE(facturasprov.fecha, facturascli.fecha)',
+            'horafactura' => 'COALESCE(facturasprov.hora, facturascli.hora)',
         ];
     }
 
@@ -81,7 +83,9 @@ class PartidaImpuesto extends JoinModel
         return 'asientos'
             . ' INNER JOIN partidas ON partidas.idasiento = asientos.idasiento'
             . ' INNER JOIN subcuentas ON subcuentas.idsubcuenta = partidas.idsubcuenta'
-            . ' INNER JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta';
+            . ' INNER JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta'
+            . ' LEFT JOIN facturasprov ON facturasprov.idasiento = asientos.idasiento'
+            . ' LEFT JOIN facturascli ON facturascli.idasiento = asientos.idasiento';
     }
 
     /**
@@ -93,7 +97,9 @@ class PartidaImpuesto extends JoinModel
             'asientos',
             'partidas',
             'subcuentas',
-            'cuentas'
+            'cuentas',
+            'facturasprov',
+            'facturascli',
         ];
     }
 

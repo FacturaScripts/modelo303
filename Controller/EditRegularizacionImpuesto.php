@@ -252,12 +252,12 @@ class EditRegularizacionImpuesto extends EditController
      * @param BaseView $view
      * @param int      $group
      */
-    protected function getListPartidaImpuesto($view, $group)
+    protected function getListPartidaImpuesto($view, $group, $orderby)
     {
         $id = $this->getViewModelValue('EditRegularizacionImpuesto', 'idregiva');
         if (!empty($id)) {
             $where = $this->getPartidaImpuestoWhere($group);
-            $view->loadData(false, $where, ['partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC']);
+            $view->loadData(false, $where, $orderby);
         }
     }
 
@@ -328,11 +328,19 @@ class EditRegularizacionImpuesto extends EditController
                 break;
 
             case 'ListPartidaImpuesto-1':
-                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
+                $this->getListPartidaImpuesto(
+                    $view,
+                    SubAccountTools::SPECIAL_GROUP_TAX_INPUT,
+                    ['facturasprov.fecha' => 'ASC', 'facturasprov.hora' => 'ASC']
+                );
                 break;
 
             case 'ListPartidaImpuesto-2':
-                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
+                $this->getListPartidaImpuesto(
+                    $view,
+                    SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT,
+                    ['partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC']
+                );
                 break;
         }
     }
