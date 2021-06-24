@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -30,9 +30,9 @@ use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 /**
  * Controller to list the items in the RegularizacionImpuesto model
  *
- * @author Carlos García Gómez          <carlos@facturascripts.com>
- * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
- * @author Cristo M. Estévez Hernández  <cristom.estevez@gmail.com>
+ * @author Carlos García Gómez              <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello Principal    <yopli2000@gmail.com>
+ * @author Cristo M. Estévez Hernández      <cristom.estevez@gmail.com>
  */
 class EditRegularizacionImpuesto extends EditController
 {
@@ -188,6 +188,11 @@ class EditRegularizacionImpuesto extends EditController
     {
         parent::createViews();
         $this->setTabsPosition('bottom');
+
+        /// disable company column if there is only one company
+        if ($this->empresa->count() < 2) {
+            $this->views[$this->getMainViewName()]->disableColumn('company');
+        }
 
         $this->addTaxSummaryView();
         $this->addTaxLineView('ListPartidaImpuesto-1', 'purchases', 'fas fa-sign-in-alt');
