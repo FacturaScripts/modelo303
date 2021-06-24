@@ -30,7 +30,7 @@ use FacturaScripts\Dinamic\Model\Subcuenta;
  * Class for the accounting of tax regularizations
  *
  * @author Carlos García Gómez  <carlos@facturascripts.com>
- * @author Artex Trading sa     <jcuello@artextrading.com>
+ * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  */
 class VatRegularizationToAccounting extends AccountingClass
 {

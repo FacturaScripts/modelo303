@@ -23,9 +23,9 @@ use FacturaScripts\Core\Model\Base\JoinModel;
 /**
  * Auxiliary model to load a list of accounting entries with VAT
  *
- * @author Artex Trading sa     <jcuello@artextrading.com>
+ * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  * @author Carlos García Gómez  <carlos@facturascripts.com>
- * 
+ *
  * @property float $baseimponible
  * @property float $cuotaiva
  * @property float $cuotarecargo

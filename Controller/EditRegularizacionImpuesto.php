@@ -31,7 +31,7 @@ use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
  * Controller to list the items in the RegularizacionImpuesto model
  *
  * @author Carlos García Gómez          <carlos@facturascripts.com>
- * @author Artex Trading sa             <jcuello@artextrading.com>
+ * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  * @author Cristo M. Estévez Hernández  <cristom.estevez@gmail.com>
  */
 class EditRegularizacionImpuesto extends EditController
@@ -251,13 +251,14 @@ class EditRegularizacionImpuesto extends EditController
      *
      * @param BaseView $view
      * @param int      $group
+     * @param string   $orderby
      */
-    protected function getListPartidaImpuesto($view, $group)
+    protected function getListPartidaImpuesto($view, $group, $orderby)
     {
         $id = $this->getViewModelValue('EditRegularizacionImpuesto', 'idregiva');
         if (!empty($id)) {
             $where = $this->getPartidaImpuestoWhere($group);
-            $view->loadData(false, $where, ['partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC']);
+            $view->loadData(false, $where, $orderby);
         }
     }
 
@@ -328,11 +329,19 @@ class EditRegularizacionImpuesto extends EditController
                 break;
 
             case 'ListPartidaImpuesto-1':
-                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
+                $this->getListPartidaImpuesto(
+                    $view,
+                    SubAccountTools::SPECIAL_GROUP_TAX_INPUT,
+                    ['asientos.fecha' => 'ASC', 'partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC']
+                );
                 break;
 
             case 'ListPartidaImpuesto-2':
-                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
+                $this->getListPartidaImpuesto(
+                    $view,
+                    SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT,
+                    ['partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC']
+                );
                 break;
         }
     }
