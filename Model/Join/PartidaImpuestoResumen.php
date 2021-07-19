@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -24,7 +24,7 @@ use FacturaScripts\Core\Model\Base\JoinModel;
  * Auxiliary model to load a resume of accounting entries with VAT
  *
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
- * @author Carlos García Gómez  <carlos@facturascripts.com>
+ * @author Carlos García Gómez           <carlos@facturascripts.com>
  *
  * @property float  $baseimponible
  * @property string $codcuentaesp
@@ -56,7 +56,9 @@ class PartidaImpuestoResumen extends JoinModel
     }
 
     /**
-     * List of fields or columns to select clausule
+     * Returns an array of fields for the select clausule.
+     * 
+     * @return array
      */
     protected function getFields(): array
     {
@@ -73,7 +75,7 @@ class PartidaImpuestoResumen extends JoinModel
     }
 
     /**
-     * Return Group By fields
+     * Returns a string with the group by fields.
      *
      * @return string
      */
@@ -89,19 +91,23 @@ class PartidaImpuestoResumen extends JoinModel
     }
 
     /**
-     * List of tables related to from clausule
+     * Returns a string with the tables related to from clausule.
+     * 
+     * @return string
      */
     protected function getSQLFrom(): string
     {
         return 'asientos'
-            . ' INNER JOIN partidas ON partidas.idasiento = asientos.idasiento'
-            . ' INNER JOIN subcuentas ON subcuentas.idsubcuenta = partidas.idsubcuenta'
-            . ' INNER JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta'
+            . ' LEFT JOIN partidas ON partidas.idasiento = asientos.idasiento'
+            . ' LEFT JOIN subcuentas ON subcuentas.idsubcuenta = partidas.idsubcuenta'
+            . ' LEFT JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta'
             . ' LEFT JOIN cuentasesp ON cuentasesp.codcuentaesp = COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
     }
 
     /**
-     * List of tables required for the execution of the view.
+     * Returns an array of tables required for the select clausule.
+     * 
+     * @return array
      */
     protected function getTables(): array
     {
@@ -115,7 +121,7 @@ class PartidaImpuestoResumen extends JoinModel
     }
 
     /**
-     * Assign the values of the $data array to the model view properties.
+     * Assign the values of the $data array to the model properties.
      *
      * @param array $data
      */
