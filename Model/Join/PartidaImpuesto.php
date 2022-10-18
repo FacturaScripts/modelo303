@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,15 +16,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Modelo303\Model\Join;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Model\Base\BusinessDocument;
 use FacturaScripts\Core\Model\Base\JoinModel;
+use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\FacturaProveedor;
 
 /**
  * Auxiliary model to load a list of accounting entries with VAT
  *
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
- * @author Carlos García Gómez  <carlos@facturascripts.com>
+ * @author Carlos García Gómez           <carlos@facturascripts.com>
  *
  * @property float $baseimponible
  * @property float $cuotaiva
@@ -34,7 +39,6 @@ use FacturaScripts\Core\Model\Base\JoinModel;
  */
 class PartidaImpuesto extends JoinModel
 {
-
     /**
      * Reset the values of all model view properties.
      */
@@ -46,6 +50,20 @@ class PartidaImpuesto extends JoinModel
         $this->cuotaiva = 0.00;
         $this->recargo = 0.00;
         $this->cuotarecargo = 0.00;
+    }
+
+    protected function getFactura(): BusinessDocument
+    {
+        $where = [new DataBaseWhere('idasiento', $this->idasiento ?? 0)];
+
+        $facturaCliente = new FacturaCliente();
+        if ($facturaCliente->loadFromCode('', $where)) {
+            return $facturaCliente;
+        }
+
+        $facturaProveedor = new FacturaProveedor();
+        $facturaProveedor->loadFromCode('', $where);
+        return $facturaProveedor;
     }
 
     /**
@@ -102,10 +120,22 @@ class PartidaImpuesto extends JoinModel
      *
      * @param array $data
      */
-    protected function loadFromData($data)
+    protected function loadFromData(array $data)
     {
         parent::loadFromData($data);
+
+        // calculamos iva y recargo
         $this->cuotaiva = $this->baseimponible * ($this->iva / 100.00);
         $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.00);
+
+        // si el campo factura está vacío, buscamos la factura con este asiento
+        if (empty($this->factura)) {
+            $factura = $this->getFactura();
+            if ($factura->primaryColumnValue()) {
+                $this->factura = $factura->numero;
+                $this->documento = $factura->codigo;
+                $this->codserie = $factura->codserie;
+            }
+        }
     }
 }

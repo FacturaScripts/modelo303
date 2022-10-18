@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Modelo303\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
@@ -36,7 +37,6 @@ use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
  */
 class EditRegularizacionImpuesto extends EditController
 {
-
     /**
      * Amount to be offset from previous regularization
      *
@@ -65,21 +65,11 @@ class EditRegularizacionImpuesto extends EditController
      */
     public $total;
 
-    /**
-     * Returns the class name of the model to use in the editView.
-     *
-     * @return string
-     */
-    public function getModelClassName()
+    public function getModelClassName(): string
     {
         return 'RegularizacionImpuesto';
     }
 
-    /**
-     * Returns basic page attributes
-     *
-     * @return array
-     */
     public function getPageData(): array
     {
         $data = parent::getPageData();
@@ -95,7 +85,7 @@ class EditRegularizacionImpuesto extends EditController
      *
      * @param string $viewName
      */
-    protected function addEntryLineView($viewName = 'ListPartida')
+    protected function addEntryLineView(string $viewName = 'ListPartida')
     {
         $this->addListView($viewName, 'Partida', 'accounting-entry', 'fas fa-balance-scale');
         $this->disableButtons($viewName);
@@ -108,7 +98,7 @@ class EditRegularizacionImpuesto extends EditController
      * @param string $caption
      * @param string $icon
      */
-    protected function addTaxLineView($viewName, $caption, $icon)
+    protected function addTaxLineView(string $viewName, string $caption, string $icon)
     {
         $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon);
         $this->disableButtons($viewName);
@@ -119,7 +109,7 @@ class EditRegularizacionImpuesto extends EditController
      *
      * @param string $viewName
      */
-    protected function addTaxSummaryView($viewName = 'ListPartidaImpuestoResumen')
+    protected function addTaxSummaryView(string $viewName = 'ListPartidaImpuestoResumen')
     {
         $this->addListView($viewName, 'Join\PartidaImpuestoResumen', 'summary', 'fas fa-list-alt');
         $this->disableButtons($viewName);
@@ -141,10 +131,10 @@ class EditRegularizacionImpuesto extends EditController
      *
      * @param PartidaImpuestoResumen[] $data
      */
-    protected function calculateAmounts($data)
+    protected function calculateAmounts(array $data)
     {
-        /// Init totals values
-        $this->previousBalance = 0.0; /// TODO: Calculate previous balance from generated accounting entry
+        // Init totals values
+        $this->previousBalance = 0.0; // TODO: Calculate previous balance from generated accounting entry
         $this->sales = 0.0;
         $this->purchases = 0.0;
 
@@ -175,7 +165,7 @@ class EditRegularizacionImpuesto extends EditController
             $accounting = new VatRegularizationToAccounting();
             $accounting->generate($reg);
 
-            /// lock accounting and save
+            // lock accounting and save
             $reg->bloquear = true;
             $reg->save();
         }
@@ -189,7 +179,7 @@ class EditRegularizacionImpuesto extends EditController
         parent::createViews();
         $this->setTabsPosition('bottom');
 
-        /// disable company column if there is only one company
+        // disable company column if there is only one company
         if ($this->empresa->count() < 2) {
             $this->views[$this->getMainViewName()]->disableColumn('company');
         }
@@ -205,11 +195,12 @@ class EditRegularizacionImpuesto extends EditController
      *
      * @param string $viewName
      */
-    protected function disableButtons($viewName)
+    protected function disableButtons(string $viewName)
     {
         $this->setSettings($viewName, 'btnDelete', false);
         $this->setSettings($viewName, 'btnNew', false);
         $this->setSettings($viewName, 'checkBoxes', false);
+        $this->setSettings($viewName, 'clickable', false);
     }
 
     /**
@@ -255,8 +246,8 @@ class EditRegularizacionImpuesto extends EditController
      * Load data of PartidaImpuesto if master view has data.
      *
      * @param BaseView $view
-     * @param int      $group
-     * @param string   $orderby
+     * @param int $group
+     * @param string $orderby
      */
     protected function getListPartidaImpuesto($view, $group, $orderby)
     {
@@ -313,7 +304,7 @@ class EditRegularizacionImpuesto extends EditController
     /**
      * Load data view procedure
      *
-     * @param string   $viewName
+     * @param string $viewName
      * @param BaseView $view
      */
     protected function loadData($viewName, $view)
@@ -386,7 +377,7 @@ class EditRegularizacionImpuesto extends EditController
             $columnExercise->widget->setValuesFromArrayKeys($openExercises);
         }
 
-        /// Model exists?
+        // Model exists?
         if (!$view->model->exists()) {
             $view->disableColumn('tax-credit-account', false, 'true');
             $view->disableColumn('tax-debit-account', false, 'true');
