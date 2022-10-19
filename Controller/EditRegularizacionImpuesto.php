@@ -100,14 +100,14 @@ class EditRegularizacionImpuesto extends EditController
         }
 
         $accounting = new VatRegularizationToAccounting();
-        if(false === $accounting->generate($reg)) {
+        if (false === $accounting->generate($reg)) {
             $this->toolBox()->i18nLog()->warning('accounting-entry-not-created');
             return;
         }
 
         // lock accounting and save
         $reg->bloquear = true;
-        if(false === $reg->save()) {
+        if (false === $reg->save()) {
             $this->toolBox()->i18nLog()->warning('record-save-error');
             return;
         }
@@ -222,9 +222,18 @@ class EditRegularizacionImpuesto extends EditController
      */
     protected function getPartidaImpuestoWhere(int $group): array
     {
+        // obtenemos todos los ids de los asientos de las regularizaciones
+        $ids = [];
+        $reg = new RegularizacionImpuesto();
+        foreach ($reg->all([], [], 0, 0) as $reg) {
+            if ($reg->idasiento) {
+                $ids[] = $reg->idasiento;
+            }
+        }
+
         $subAccountTools = new SubAccountTools();
         return [
-            new DataBaseWhere('asientos.idasiento', $this->getModel()->idasiento, '!='),
+            new DataBaseWhere('asientos.idasiento', implode(',', $ids), 'NOT IN'),
             new DataBaseWhere('asientos.codejercicio', $this->getModel()->codejercicio),
             new DataBaseWhere('asientos.fecha', $this->getModel()->fechainicio, '>='),
             new DataBaseWhere('asientos.fecha', $this->getModel()->fechafin, '<='),
