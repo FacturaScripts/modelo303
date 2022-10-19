@@ -64,8 +64,12 @@ final class VatRegularizationToAccountingTest extends TestCase
         // comprobamos que se ha creado el asiento contable
         $this->assertNotEmpty($reg->idasiento);
 
-        // eliminamos
+        // eliminamos la regularización
         $this->assertTrue($reg->delete());
+
+        // comprobamos que se ha eliminado el asiento contable
+        $this->assertFalse($reg->getAccountingEntry()->exists());
+
         $this->assertTrue($supplierInvoice->delete());
         $this->assertTrue($supplierInvoice->getSubject()->delete());
         $this->assertTrue($customerInvoice1->delete());
