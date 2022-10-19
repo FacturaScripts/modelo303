@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * This file is part of FacturaScripts
- * Copyright (C) 2017-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -23,54 +23,58 @@
     <columns>
         <group name="period" numcolumns="12">
             <column name="id" display="none" order="100">
-                <widget type="text" fieldname="idregiva" />
+                <widget type="text" fieldname="idregiva"/>
             </column>
-            <column name="exercise" titleurl="ListEjercicio" order="110">
-                <widget type="select" fieldname="codejercicio" readonly="dinamic" required="true">
-                    <values />
+            <column name="company" titleurl="ListEmpresa" order="110">
+                <widget type="select" fieldname="idempresa" onclick="EditEmpresa" readonly="dinamic"
+                        required="true">
+                    <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto"/>
                 </widget>
             </column>
-            <column name="period" order="120">
+            <column name="exercise" order="120">
+                <widget type="select" fieldname="codejercicio" onclick="EditEjercicio" parent="idempresa" readonly="dinamic" required="true">
+                    <values source="ejercicios" fieldcode="codejercicio" fieldtitle="nombre" fieldfilter="idempresa"/>
+                </widget>
+            </column>
+            <column name="period" order="130">
                 <widget type="select" fieldname="periodo" readonly="dinamic" required="true" translate="true">
-                    <values title="first-trimester">T1</values>
-                    <values title="second-trimester">T2</values>
-                    <values title="third-trimester">T3</values>
-                    <values title="fourth-trimester">T4</values>
+                    <values title="first-quarter">T1</values>
+                    <values title="second-quarter">T2</values>
+                    <values title="third-quarter">T3</values>
+                    <values title="fourth-quarter">T4</values>
+                    <values title="year">Y</values>
                 </widget>
             </column>
-            <column name="start-date" order="130">
-                <widget type="date" fieldname="fechainicio" readonly="true" />
+            <column name="start-date" order="140">
+                <widget type="date" fieldname="fechainicio" readonly="true"/>
             </column>
-            <column name="end-date" order="140">
-                <widget type="date" fieldname="fechafin" readonly="true" />
-            </column>
-            <column name="company" order="150">
-                <widget type="select" fieldname="idempresa" icon="fas fa-building" onclick="EditEmpresa" readonly="true" required="true">
-                    <values source="empresas" fieldcode="idempresa" fieldtitle="nombrecorto" />
-                </widget>
+            <column name="end-date" order="150">
+                <widget type="date" fieldname="fechafin" readonly="true"/>
             </column>
         </group>
         <group name="accounting" valign="bottom" numcolumns="12">
             <column name="tax-credit-account" order="100">
                 <widget type="autocomplete" fieldname="codsubcuentaacr">
-                    <values source="subcuentas" fieldcode="codsubcuenta" fieldtitle="codsubcuenta" />
+                    <values source="subcuentas" fieldcode="codsubcuenta" fieldtitle="codsubcuenta"
+                            fieldfilter="codejercicio"/>
                 </widget>
             </column>
             <column name="tax-debit-account" order="110">
                 <widget type="autocomplete" fieldname="codsubcuentadeu">
-                    <values source="subcuentas" fieldcode="codsubcuenta" fieldtitle="codsubcuenta" />
+                    <values source="subcuentas" fieldcode="codsubcuenta" fieldtitle="codsubcuenta"
+                            fieldfilter="codejercicio"/>
                 </widget>
             </column>
             <column name="accounting-entry" order="120">
                 <widget type="autocomplete" fieldname="idasiento" onclick="EditAsiento" readonly="true">
-                    <values source="asientos" fieldcode="idasiento" fieldtitle="numero" />
+                    <values source="asientos" fieldcode="idasiento" fieldtitle="numero"/>
                 </widget>
             </column>
             <column name="accounting-date" order="130">
-                <widget type="date" fieldname="fechaasiento" readonly="true" />
+                <widget type="date" fieldname="fechaasiento" readonly="true"/>
             </column>
             <column name="lock-accounting" order="140">
-                <widget type="checkbox" fieldname="bloquear" />
+                <widget type="checkbox" fieldname="bloquear"/>
             </column>
         </group>
     </columns>

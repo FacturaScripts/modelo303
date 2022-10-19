@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Modelo303\Model\Join;
 
 use FacturaScripts\Core\Model\Base\JoinModel;
@@ -26,17 +27,17 @@ use FacturaScripts\Core\Model\Base\JoinModel;
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  * @author Carlos García Gómez           <carlos@facturascripts.com>
  *
- * @property float  $baseimponible
+ * @property float $baseimponible
  * @property string $codcuentaesp
  * @property string $codejercicio
  * @property string $codsubcuenta
- * @property float  $cuotaiva
- * @property float  $cuotarecargo
+ * @property float $cuotaiva
+ * @property float $cuotarecargo
  * @property string $descripcion
- * @property int    $idsubcuenta
- * @property float  $iva
- * @property float  $recargo
- * @property float  $total
+ * @property int $idsubcuenta
+ * @property float $iva
+ * @property float $recargo
+ * @property float $total
  */
 class PartidaImpuestoResumen extends JoinModel
 {
@@ -57,7 +58,7 @@ class PartidaImpuestoResumen extends JoinModel
 
     /**
      * Returns an array of fields for the select clausule.
-     * 
+     *
      * @return array
      */
     protected function getFields(): array
@@ -92,7 +93,7 @@ class PartidaImpuestoResumen extends JoinModel
 
     /**
      * Returns a string with the tables related to from clausule.
-     * 
+     *
      * @return string
      */
     protected function getSQLFrom(): string
@@ -106,7 +107,7 @@ class PartidaImpuestoResumen extends JoinModel
 
     /**
      * Returns an array of tables required for the select clausule.
-     * 
+     *
      * @return array
      */
     protected function getTables(): array

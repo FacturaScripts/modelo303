@@ -24,7 +24,6 @@ use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
-use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 
@@ -37,32 +36,13 @@ use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
  */
 class EditRegularizacionImpuesto extends EditController
 {
-    /**
-     * Amount to be offset from previous regularization
-     *
-     * @var float
-     */
-    public $previousBalance;
-
-    /**
-     * Sum of all purchases
-     *
-     * @var float
-     */
+    /** @var float */
     public $purchases;
 
-    /**
-     * Sum of all sales
-     *
-     * @var float
-     */
+    /** @var float */
     public $sales;
 
-    /**
-     * total amount of regularization: (sales - purchases - previousBalance)
-     *
-     * @var float
-     */
+    /** @var float */
     public $total;
 
     public function getModelClassName(): string
@@ -80,53 +60,6 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Add to the view container the view with the lines of
-     * the accounting entry generated.
-     *
-     * @param string $viewName
-     */
-    protected function addEntryLineView(string $viewName = 'ListPartida')
-    {
-        $this->addListView($viewName, 'Partida', 'accounting-entry', 'fas fa-balance-scale');
-        $this->disableButtons($viewName);
-    }
-
-    /**
-     * Add to the view container the view with the list of sales documents included.
-     *
-     * @param string $viewName
-     * @param string $caption
-     * @param string $icon
-     */
-    protected function addTaxLineView(string $viewName, string $caption, string $icon)
-    {
-        $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon);
-        $this->disableButtons($viewName);
-    }
-
-    /**
-     * Add to container views with the summary view or total liquidation.
-     *
-     * @param string $viewName
-     */
-    protected function addTaxSummaryView(string $viewName = 'ListPartidaImpuestoResumen')
-    {
-        $this->addListView($viewName, 'Join\PartidaImpuestoResumen', 'summary', 'fas fa-list-alt');
-        $this->disableButtons($viewName);
-    }
-
-    /**
-     * Run the autocomplete action with exercise filter
-     *
-     * @return array
-     */
-    protected function autocompleteAction(): array
-    {
-        $keys = $this->requestGet(['field', 'source', 'fieldcode', 'fieldtitle', 'term', 'codejercicio']);
-        return SubAccountTools::autocompleteAction($keys);
-    }
-
-    /**
      * Calculates the amounts for the different sections of the regularization
      *
      * @param PartidaImpuestoResumen[] $data
@@ -134,7 +67,6 @@ class EditRegularizacionImpuesto extends EditController
     protected function calculateAmounts(array $data)
     {
         // Init totals values
-        $this->previousBalance = 0.0; // TODO: Calculate previous balance from generated accounting entry
         $this->sales = 0.0;
         $this->purchases = 0.0;
 
@@ -150,25 +82,37 @@ class EditRegularizacionImpuesto extends EditController
             }
         }
 
-        $this->total = $this->sales - $this->purchases - $this->previousBalance;
+        $this->total = $this->sales - $this->purchases;
     }
 
-    /**
-     * Generates the accounting entry for the settlement.
-     *
-     * @param int $code
-     */
-    protected function createAccountingEntry($code)
+    protected function createAccountingEntryAction()
     {
         $reg = new RegularizacionImpuesto();
-        if ($reg->loadFromCode($code) && empty($reg->idasiento)) {
-            $accounting = new VatRegularizationToAccounting();
-            $accounting->generate($reg);
-
-            // lock accounting and save
-            $reg->bloquear = true;
-            $reg->save();
+        $code = $this->request->get('code');
+        if (false === $reg->loadFromCode($code)) {
+            $this->toolBox()->i18nLog()->warning('record-not-found');
+            return;
         }
+
+        if ($reg->idasiento) {
+            $this->toolBox()->i18nLog()->warning('accounting-entry-already-created');
+            return;
+        }
+
+        $accounting = new VatRegularizationToAccounting();
+        if(false === $accounting->generate($reg)) {
+            $this->toolBox()->i18nLog()->warning('accounting-entry-not-created');
+            return;
+        }
+
+        // lock accounting and save
+        $reg->bloquear = true;
+        if(false === $reg->save()) {
+            $this->toolBox()->i18nLog()->warning('record-save-error');
+            return;
+        }
+
+        $this->toolBox()->i18nLog()->notice('record-updated-correctly');
     }
 
     /**
@@ -179,28 +123,36 @@ class EditRegularizacionImpuesto extends EditController
         parent::createViews();
         $this->setTabsPosition('bottom');
 
-        // disable company column if there is only one company
-        if ($this->empresa->count() < 2) {
-            $this->views[$this->getMainViewName()]->disableColumn('company');
-        }
-
-        $this->addTaxSummaryView();
-        $this->addTaxLineView('ListPartidaImpuesto-1', 'purchases', 'fas fa-sign-in-alt');
-        $this->addTaxLineView('ListPartidaImpuesto-2', 'sales', 'fas fa-sign-out-alt');
-        $this->addEntryLineView();
+        $this->createViewsTaxSummary();
+        $this->createViewsTaxLine('ListPartidaImpuesto-1', 'purchases', 'fas fa-sign-in-alt');
+        $this->createViewsTaxLine('ListPartidaImpuesto-2', 'sales', 'fas fa-sign-out-alt');
+        $this->createViewsEntryLine();
     }
 
-    /**
-     * Disable the add and remove buttons from the indicated view.
-     *
-     * @param string $viewName
-     */
-    protected function disableButtons(string $viewName)
+    protected function createViewsEntryLine(string $viewName = 'ListPartida')
+    {
+        $this->addListView($viewName, 'Partida', 'accounting-entry', 'fas fa-balance-scale');
+        $this->disableButtons($viewName, true);
+    }
+
+    protected function createViewsTaxLine(string $viewName, string $caption, string $icon)
+    {
+        $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon);
+        $this->disableButtons($viewName);
+    }
+
+    protected function createViewsTaxSummary(string $viewName = 'ListPartidaImpuestoResumen')
+    {
+        $this->addListView($viewName, 'Join\PartidaImpuestoResumen', 'summary', 'fas fa-list-alt');
+        $this->disableButtons($viewName);
+    }
+
+    protected function disableButtons(string $viewName, bool $clickable = false)
     {
         $this->setSettings($viewName, 'btnDelete', false);
         $this->setSettings($viewName, 'btnNew', false);
         $this->setSettings($viewName, 'checkBoxes', false);
-        $this->setSettings($viewName, 'clickable', false);
+        $this->setSettings($viewName, 'clickable', $clickable);
     }
 
     /**
@@ -214,8 +166,7 @@ class EditRegularizacionImpuesto extends EditController
     {
         switch ($action) {
             case 'create-accounting-entry':
-                $code = $this->request->get('code');
-                $this->createAccountingEntry($code);
+                $this->createAccountingEntryAction();
                 return true;
         }
 
@@ -228,12 +179,7 @@ class EditRegularizacionImpuesto extends EditController
         parent::exportAction();
     }
 
-    /**
-     * Load data of Partida view if master view has data.
-     *
-     * @param BaseView $view
-     */
-    protected function getListPartida($view)
+    protected function getListPartida(BaseView $view)
     {
         $idasiento = $this->getViewModelValue('EditRegularizacionImpuesto', 'idasiento');
         if (!empty($idasiento)) {
@@ -242,38 +188,27 @@ class EditRegularizacionImpuesto extends EditController
         }
     }
 
-    /**
-     * Load data of PartidaImpuesto if master view has data.
-     *
-     * @param BaseView $view
-     * @param int $group
-     * @param string $orderby
-     */
-    protected function getListPartidaImpuesto($view, $group, $orderby)
+    protected function getListPartidaImpuesto(BaseView $view, int $group)
     {
-        $id = $this->getViewModelValue('EditRegularizacionImpuesto', 'idregiva');
+        $id = $this->getViewModelValue($this->getMainViewName(), 'idregiva');
         if (!empty($id)) {
             $where = $this->getPartidaImpuestoWhere($group);
-            $view->loadData(false, $where, $orderby);
+            $orderBy = ['asientos.fecha' => 'ASC', 'partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC'];
+            $view->loadData(false, $where, $orderBy);
         }
     }
 
-    /**
-     * Load data of PartidaImpuestoResumen if master view has data.
-     *
-     * @param BaseView $view
-     */
-    protected function getListPartidaImpuestoResumen($view)
+    protected function getListPartidaImpuestoResumen(BaseView $view)
     {
-        $id = $this->getViewModelValue('EditRegularizacionImpuesto', 'idregiva');
+        $id = $this->getViewModelValue($this->getMainViewName(), 'idregiva');
         if (!empty($id)) {
-            $orderby = [
+            $where = $this->getPartidaImpuestoWhere(SubAccountTools::SPECIAL_GROUP_TAX_ALL);
+            $orderBy = [
                 'cuentasesp.descripcion' => 'ASC',
                 'partidas.iva' => 'ASC',
                 'partidas.recargo' => 'ASC'
             ];
-            $where = $this->getPartidaImpuestoWhere(SubAccountTools::SPECIAL_GROUP_TAX_ALL);
-            $view->loadData(false, $where, $orderby);
+            $view->loadData(false, $where, $orderBy);
             $this->calculateAmounts($view->cursor);
         }
     }
@@ -285,18 +220,14 @@ class EditRegularizacionImpuesto extends EditController
      *
      * @return DataBaseWhere[]
      */
-    protected function getPartidaImpuestoWhere($group)
+    protected function getPartidaImpuestoWhere(int $group): array
     {
         $subAccountTools = new SubAccountTools();
-        $idasiento = $this->getViewModelValue('EditRegularizacionImpuesto', 'idasiento');
-        $exercise = $this->getViewModelValue('EditRegularizacionImpuesto', 'codejercicio');
-        $startDate = $this->getViewModelValue('EditRegularizacionImpuesto', 'fechainicio');
-        $endDate = $this->getViewModelValue('EditRegularizacionImpuesto', 'fechafin');
         return [
-            new DataBaseWhere('asientos.idasiento', $idasiento, '!='),
-            new DataBaseWhere('asientos.codejercicio', $exercise),
-            new DataBaseWhere('asientos.fecha', $startDate, '>='),
-            new DataBaseWhere('asientos.fecha', $endDate, '<='),
+            new DataBaseWhere('asientos.idasiento', $this->getModel()->idasiento, '!='),
+            new DataBaseWhere('asientos.codejercicio', $this->getModel()->codejercicio),
+            new DataBaseWhere('asientos.fecha', $this->getModel()->fechainicio, '>='),
+            new DataBaseWhere('asientos.fecha', $this->getModel()->fechafin, '<='),
             $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group)
         ];
     }
@@ -312,7 +243,10 @@ class EditRegularizacionImpuesto extends EditController
         switch ($viewName) {
             case 'EditRegularizacionImpuesto':
                 parent::loadData($viewName, $view);
-                $this->setCustomWidgetValues($view);
+                if (false === $view->model->exists()) {
+                    $view->disableColumn('tax-credit-account', false, 'true');
+                    $view->disableColumn('tax-debit-account', false, 'true');
+                }
                 break;
 
             case 'ListPartida':
@@ -321,32 +255,24 @@ class EditRegularizacionImpuesto extends EditController
 
             case 'ListPartidaImpuestoResumen':
                 $this->getListPartidaImpuestoResumen($view);
-                $this->setCreateAcEntryButton();
+                $this->setCreateAcEntryButton($viewName);
                 break;
 
             case 'ListPartidaImpuesto-1':
-                $this->getListPartidaImpuesto(
-                    $view,
-                    SubAccountTools::SPECIAL_GROUP_TAX_INPUT,
-                    ['asientos.fecha' => 'ASC', 'partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC']
-                );
+                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
                 break;
 
             case 'ListPartidaImpuesto-2':
-                $this->getListPartidaImpuesto(
-                    $view,
-                    SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT,
-                    ['partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC']
-                );
+                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
                 break;
         }
     }
 
-    protected function setCreateAcEntryButton()
+    protected function setCreateAcEntryButton(string $viewName): void
     {
-        $idasiento = $this->getViewModelValue('EditRegularizacionImpuesto', 'idasiento');
+        $idasiento = $this->getViewModelValue($this->getMainViewName(), 'idasiento');
         if (empty($idasiento)) {
-            $this->addButton('ListPartidaImpuestoResumen', [
+            $this->addButton($viewName, [
                 'action' => 'create-accounting-entry',
                 'color' => 'success',
                 'confirm' => true,
@@ -354,33 +280,6 @@ class EditRegularizacionImpuesto extends EditController
                 'label' => 'create-accounting-entry',
                 'row' => 'actions'
             ]);
-        }
-    }
-
-    /**
-     * Configure and initialize main view widgets.
-     *
-     * @param BaseView $view
-     */
-    protected function setCustomWidgetValues($view)
-    {
-        $openExercises = [];
-        $exerciseModel = new Ejercicio();
-        foreach ($exerciseModel->all([], ['fechainicio' => 'DESC']) as $exercise) {
-            if ($exercise->isOpened()) {
-                $openExercises[$exercise->codejercicio] = $exercise->nombre;
-            }
-        }
-
-        $columnExercise = $view->columnForName('exercise');
-        if ($columnExercise) {
-            $columnExercise->widget->setValuesFromArrayKeys($openExercises);
-        }
-
-        // Model exists?
-        if (!$view->model->exists()) {
-            $view->disableColumn('tax-credit-account', false, 'true');
-            $view->disableColumn('tax-debit-account', false, 'true');
         }
     }
 }
