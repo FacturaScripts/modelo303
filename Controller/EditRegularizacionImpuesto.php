@@ -237,6 +237,7 @@ class EditRegularizacionImpuesto extends EditController
             new DataBaseWhere('asientos.codejercicio', $this->getModel()->codejercicio),
             new DataBaseWhere('asientos.fecha', $this->getModel()->fechainicio, '>='),
             new DataBaseWhere('asientos.fecha', $this->getModel()->fechafin, '<='),
+            new DataBaseWhere('partidas.baseimponible', 0, '!='),
             $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group)
         ];
     }
