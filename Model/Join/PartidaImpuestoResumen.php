@@ -102,7 +102,8 @@ class PartidaImpuestoResumen extends JoinModel
             . ' LEFT JOIN partidas ON partidas.idasiento = asientos.idasiento'
             . ' LEFT JOIN subcuentas ON subcuentas.idsubcuenta = partidas.idsubcuenta'
             . ' LEFT JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta'
-            . ' LEFT JOIN cuentasesp ON cuentasesp.codcuentaesp = COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
+            . ' LEFT JOIN cuentasesp ON cuentasesp.codcuentaesp = COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)'
+            . ' LEFT JOIN series ON series.codserie = partidas.codserie';
     }
 
     /**
