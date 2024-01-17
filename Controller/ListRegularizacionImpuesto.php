@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2023 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -32,7 +32,7 @@ class ListRegularizacionImpuesto extends ListController
     {
         $data = parent::getPageData();
         $data['menu'] = 'reports';
-        $data['title'] = 'model-303';
+        $data['title'] = 'model-303-390';
         $data['icon'] = 'fas fa-book';
         return $data;
     }
