@@ -139,6 +139,16 @@ class EditRegularizacionImpuesto extends EditController
     {
         $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon);
         $this->disableButtons($viewName);
+
+        $this->views[$viewName]->addSearchFields(['partidas.concepto']);
+        $this->views[$viewName]->addFilterPeriod('date', 'date', 'fecha');
+
+        $iva = $this->codeModel->all('partidas', 'iva', 'iva');
+        $this->views[$viewName]->addFilterSelect('iva', 'vat', 'iva', $iva);
+
+        $iva = $this->codeModel->all('series', 'codserie', 'codserie');
+        $this->views[$viewName]->addFilterSelect('codserie', 'serie', 'codserie', $iva);
+
     }
 
     protected function createViewsTaxSummary(string $viewName = 'ListPartidaImpuestoResumen')
