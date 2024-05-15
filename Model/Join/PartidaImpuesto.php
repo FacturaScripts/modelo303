@@ -87,7 +87,9 @@ class PartidaImpuesto extends JoinModel
             'idpartida' => 'partidas.idpartida',
             'iva' => 'partidas.iva',
             'numero' => 'asientos.numero',
-            'recargo' => 'partidas.recargo'
+            'recargo' => 'partidas.recargo',
+            'debe' => 'partidas.debe',
+            'haber' => 'partidas.haber',
         ];
     }
 
@@ -125,9 +127,16 @@ class PartidaImpuesto extends JoinModel
     {
         parent::loadFromData($data);
 
-        // calculamos iva y recargo
-        $this->cuotaiva = $this->baseimponible * ($this->iva / 100.00);
-        $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.00);
+        if ($this->iva > 0 && $this->recargo > 0) {
+            $this->cuotaiva = $this->baseimponible * ($this->iva / 100.0);
+            $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.0);
+        } elseif ($this->iva > 0) {
+            $this->cuotaiva = $data['debe'] > 0 ? $data['debe'] : $data['haber'];
+            $this->cuotarecargo = 0.0;
+        } else {
+            $this->cuotaiva = 0.0;
+            $this->cuotarecargo = $data['debe'] > 0 ? $data['debe'] : $data['haber'];
+        }
 
         // si el campo factura está vacío, buscamos la factura con este asiento
         if (empty($this->factura)) {

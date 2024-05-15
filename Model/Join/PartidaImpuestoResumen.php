@@ -71,7 +71,9 @@ class PartidaImpuestoResumen extends JoinModel
             'descripcion' => 'cuentasesp.descripcion',
             'idsubcuenta' => 'partidas.idsubcuenta',
             'iva' => 'partidas.iva',
-            'recargo' => 'partidas.recargo'
+            'recargo' => 'partidas.recargo',
+            'debe' => 'SUM(partidas.debe)',
+            'haber' => 'SUM(partidas.haber)',
         ];
     }
 
@@ -130,8 +132,18 @@ class PartidaImpuestoResumen extends JoinModel
     protected function loadFromData($data)
     {
         parent::loadFromData($data);
-        $this->cuotaiva = $this->baseimponible * ($this->iva / 100.0);
-        $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.0);
+
+        if ($this->iva > 0 && $this->recargo > 0) {
+            $this->cuotaiva = $this->baseimponible * ($this->iva / 100.0);
+            $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.0);
+        } elseif ($this->iva > 0) {
+            $this->cuotaiva = $data['debe'] > 0 ? $data['debe'] : $data['haber'];
+            $this->cuotarecargo = 0.0;
+        } else {
+            $this->cuotaiva = 0.0;
+            $this->cuotarecargo = $data['debe'] > 0 ? $data['debe'] : $data['haber'];
+        }
+
         $this->total = $this->baseimponible + $this->cuotaiva + $this->cuotarecargo;
     }
 }
