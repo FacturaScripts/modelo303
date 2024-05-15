@@ -99,7 +99,8 @@ class PartidaImpuesto extends JoinModel
         return 'asientos'
             . ' INNER JOIN partidas ON partidas.idasiento = asientos.idasiento'
             . ' INNER JOIN subcuentas ON subcuentas.idsubcuenta = partidas.idsubcuenta'
-            . ' INNER JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta';
+            . ' INNER JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta'
+            . ' LEFT JOIN series ON series.codserie = partidas.codserie';
     }
 
     /**
