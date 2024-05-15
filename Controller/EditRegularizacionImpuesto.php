@@ -20,8 +20,11 @@
 namespace FacturaScripts\Plugins\Modelo303\Controller;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\DataSrc\Impuestos;
+use FacturaScripts\Core\DataSrc\Series;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
@@ -90,29 +93,29 @@ class EditRegularizacionImpuesto extends EditController
         $reg = new RegularizacionImpuesto();
         $code = $this->request->get('code');
         if (false === $reg->loadFromCode($code)) {
-            $this->toolBox()->i18nLog()->warning('record-not-found');
+            Tools::log()->warning('record-not-found');
             return;
         }
 
         if ($reg->idasiento) {
-            $this->toolBox()->i18nLog()->warning('accounting-entry-already-created');
+            Tools::log()->warning('accounting-entry-already-created');
             return;
         }
 
         $accounting = new VatRegularizationToAccounting();
         if (false === $accounting->generate($reg)) {
-            $this->toolBox()->i18nLog()->warning('accounting-entry-not-created');
+            Tools::log()->warning('accounting-entry-not-created');
             return;
         }
 
         // lock accounting and save
         $reg->bloquear = true;
         if (false === $reg->save()) {
-            $this->toolBox()->i18nLog()->warning('record-save-error');
+            Tools::log()->warning('record-save-error');
             return;
         }
 
-        $this->toolBox()->i18nLog()->notice('record-updated-correctly');
+        Tools::log()->notice('record-updated-correctly');
     }
 
     /**
@@ -137,18 +140,13 @@ class EditRegularizacionImpuesto extends EditController
 
     protected function createViewsTaxLine(string $viewName, string $caption, string $icon)
     {
-        $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon);
+        $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon)
+            ->addSearchFields(['partidas.concepto'])
+            ->addFilterPeriod('date', 'date', 'fecha')
+            ->addFilterSelect('iva', 'vat', 'partidas.iva', Impuestos::codeModel())
+            ->addFilterSelect('codserie', 'serie', 'partidas.codserie', Series::codeModel());
+
         $this->disableButtons($viewName);
-
-        $this->views[$viewName]->addSearchFields(['partidas.concepto']);
-        $this->views[$viewName]->addFilterPeriod('date', 'date', 'fecha');
-
-        $iva = $this->codeModel->all('partidas', 'iva', 'iva');
-        $this->views[$viewName]->addFilterSelect('iva', 'vat', 'iva', $iva);
-
-        $iva = $this->codeModel->all('series', 'codserie', 'codserie');
-        $this->views[$viewName]->addFilterSelect('codserie', 'serie', 'codserie', $iva);
-
     }
 
     protected function createViewsTaxSummary(string $viewName = 'ListPartidaImpuestoResumen')

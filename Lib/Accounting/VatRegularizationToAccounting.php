@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2019-2022 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2019-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,8 +20,8 @@
 namespace FacturaScripts\Plugins\Modelo303\Lib\Accounting;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Core\Model\RegularizacionImpuesto;
+use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
@@ -46,11 +46,11 @@ class VatRegularizationToAccounting
         // creamos el asiento contable
         $accEntry = new Asiento();
         $accEntry->codejercicio = $reg->codejercicio;
-        $accEntry->concepto = ToolBox::i18n()->trans('vat-regularization') . ' ' . $reg->periodo;
+        $accEntry->concepto = Tools::lang()->trans('vat-regularization') . ' ' . $reg->periodo;
         $accEntry->fecha = $reg->fechafin;
         $accEntry->idempresa = $reg->idempresa;
         if (false === $accEntry->save()) {
-            ToolBox::i18nLog()->warning('accounting-entry-error');
+            Tools::log()->warning('accounting-entry-error');
             return false;
         }
 
@@ -66,7 +66,7 @@ class VatRegularizationToAccounting
             }
         }
 
-        ToolBox::i18nLog()->warning('accounting-lines-error');
+        Tools::log()->warning('accounting-lines-error');
         $accEntry->delete();
         return false;
     }
