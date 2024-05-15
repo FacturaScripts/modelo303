@@ -43,6 +43,18 @@
                     <values title="third-quarter">T3</values>
                     <values title="fourth-quarter">T4</values>
                     <values title="year-model-390">Y</values>
+                    <values title="january">01</values>
+                    <values title="february">02</values>
+                    <values title="march">03</values>
+                    <values title="april">04</values>
+                    <values title="may">05</values>
+                    <values title="june">06</values>
+                    <values title="july">07</values>
+                    <values title="august">08</values>
+                    <values title="september">09</values>
+                    <values title="october">10</values>
+                    <values title="november">11</values>
+                    <values title="december">12</values>
                 </widget>
             </column>
             <column name="start-date" order="140">
