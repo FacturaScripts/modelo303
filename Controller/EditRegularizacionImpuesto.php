@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -230,26 +230,29 @@ class EditRegularizacionImpuesto extends EditController
      */
     protected function getPartidaImpuestoWhere(int $group): array
     {
-        // obtenemos todos los ids de los asientos de las regularizaciones
-        $ids = [];
-        $reg = new RegularizacionImpuesto();
-        foreach ($reg->all([], [], 0, 0) as $reg) {
-            if ($reg->idasiento) {
-                $ids[] = $reg->idasiento;
-            }
-        }
-
-        $subAccountTools = new SubAccountTools();
-        return [
-            new DataBaseWhere('asientos.idasiento', implode(',', $ids), 'NOT IN'),
+        $saTools = new SubAccountTools();
+        $where = [
             new DataBaseWhere('asientos.codejercicio', $this->getModel()->codejercicio),
             new DataBaseWhere('asientos.fecha', $this->getModel()->fechainicio, '>='),
             new DataBaseWhere('asientos.fecha', $this->getModel()->fechafin, '<='),
             new DataBaseWhere('COALESCE(series.siniva, 0)', 0),
             new DataBaseWhere('partidas.baseimponible', 0, '!='),
             new DataBaseWhere('COALESCE(partidas.iva, 0)', 0, '>', 'OR'),
-            $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group)
+            $saTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group)
         ];
+
+        // obtenemos todos los ids de los asientos de las regularizaciones
+        $ids = [];
+        foreach (RegularizacionImpuesto::all([], [], 0, 0) as $reg) {
+            if ($reg->idasiento) {
+                $ids[] = $reg->idasiento;
+            }
+        }
+        if (!empty($ids)) {
+            array_unshift($where, new DataBaseWhere('asientos.idasiento', implode(',', $ids), 'NOT IN'));
+        }
+
+        return $where;
     }
 
     /**
