@@ -24,10 +24,12 @@ use FacturaScripts\Core\DataSrc\Impuestos;
 use FacturaScripts\Core\DataSrc\Series;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
+use FacturaScripts\Core\Model\Asiento;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
+use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 
 /**
@@ -47,6 +49,9 @@ class EditRegularizacionImpuesto extends EditController
 
     /** @var float */
     public $total;
+
+    /** @var array */
+    public array $modelo303 = [];
 
     public function getModelClassName(): string
     {
@@ -127,8 +132,6 @@ class EditRegularizacionImpuesto extends EditController
         $this->setTabsPosition('bottom');
 
         $this->createViewsTaxSummary();
-        $this->createViewsTaxLine('ListPartidaImpuesto-1', 'purchases', 'fas fa-sign-in-alt');
-        $this->createViewsTaxLine('ListPartidaImpuesto-2', 'sales', 'fas fa-sign-out-alt');
         $this->createViewsEntryLine();
     }
 
@@ -151,7 +154,7 @@ class EditRegularizacionImpuesto extends EditController
 
     protected function createViewsTaxSummary(string $viewName = 'ListPartidaImpuestoResumen')
     {
-        $this->addListView($viewName, 'Join\PartidaImpuestoResumen', 'summary', 'fas fa-list-alt');
+        $this->addHtmlView($viewName, 'Modelo303', 'Impuesto', 'summary', 'fas fa-list-alt');
         $this->disableButtons($viewName);
     }
 
@@ -208,16 +211,77 @@ class EditRegularizacionImpuesto extends EditController
 
     protected function getListPartidaImpuestoResumen(BaseView $view)
     {
-        $id = $this->getViewModelValue($this->getMainViewName(), 'idregiva');
-        if (!empty($id)) {
-            $where = $this->getPartidaImpuestoWhere(SubAccountTools::SPECIAL_GROUP_TAX_ALL);
-            $orderBy = [
-                'cuentasesp.descripcion' => 'ASC',
-                'partidas.iva' => 'ASC',
-                'partidas.recargo' => 'ASC'
-            ];
-            $view->loadData(false, $where, $orderBy);
-            $this->calculateAmounts($view->cursor);
+        $impuestos = Impuestos::all();
+
+        // obtenemos los codigos de subcuentas de los impuestos
+        $subcuentas = array_values(array_unique(array_filter(array_merge(
+            array_column($impuestos, 'codsubcuentarep'),
+            array_column($impuestos, 'codsubcuentasop'),
+        ))));
+
+        // obtenemos los asientos para poder filtrar
+        // por fecha. asi nos aseguramos que se filtra
+        // primero por fecha de devengo y si no existe
+        // por fecha de factura
+        $asientos = Asiento::all([
+            new DataBaseWhere('codejercicio', $this->getModel()->codejercicio),
+            new DataBaseWhere('fecha', $this->getModel()->fechainicio, '>='),
+            new DataBaseWhere('fecha', $this->getModel()->fechafin, '<'),
+        ], [], 0, 0);
+        $idsAsientos = array_unique(array_column($asientos, Asiento::primaryColumn()));
+
+        $partidas = Partida::all([
+            new DataBaseWhere('idasiento', $idsAsientos, 'IN'),
+            new DataBaseWhere('codsubcuenta', $subcuentas, 'IN')
+        ], [], 0, 0);
+
+        // agrupamos por subcuenta
+        $partidasAgrupadas = [];
+        foreach ($partidas as $partida) {
+            $partidasAgrupadas[$partida->codsubcuenta][] = $partida;
+        }
+
+        // inicializamos el modelo303
+        $this->modelo303 = [
+            '01' => 0.00,
+            '02' => 4.00,
+            '03' => 0.00,
+
+            '04' => 0.00,
+            '05' => 10.00,
+            '06' => 0.00,
+
+            '07' => 0.00,
+            '08' => 21.00,
+            '09' => 0.00,
+        ];
+
+        // obtenemos los codigos de subcuentas agrupados según tipo iva
+        // esto lo hacemos por si existen varios impuesto
+        // del mismo iva y distintas subcuentas
+        $subcuentasSegunIVA = [];
+        foreach ($impuestos as $impuesto) {
+            $subcuentasSegunIVA[$impuesto->iva]['repercutido'][] = $impuesto->codsubcuentarep;
+            $subcuentasSegunIVA[$impuesto->iva]['soportado'][] = $impuesto->codsubcuentasop;
+        }
+
+        foreach ($partidasAgrupadas as $subcuenta => $movimientos) {
+            foreach ($movimientos as $mov) {
+                if (in_array($subcuenta, $subcuentasSegunIVA[4]['repercutido'])) {
+                    $this->modelo303['01'] += $mov->baseimponible;
+                    $this->modelo303['03'] += $mov->haber;
+                }
+
+                if (in_array($subcuenta, $subcuentasSegunIVA[10]['repercutido'])) {
+                    $this->modelo303['04'] += $mov->baseimponible;
+                    $this->modelo303['06'] += $mov->haber;
+                }
+
+                if (in_array($subcuenta, $subcuentasSegunIVA[21]['repercutido'])) {
+                    $this->modelo303['07'] += $mov->baseimponible;
+                    $this->modelo303['09'] += $mov->haber; // solo se toma el haber como cuota devengada
+                }
+            }
         }
     }
 
