@@ -383,6 +383,12 @@ class EditRegularizacionImpuesto extends EditController
                 }
             }
         }
+
+        // Total a deducir
+        $this->modelo303['45'] = $this->modelo303['29'] + $this->modelo303['31'] + $this->modelo303['33'] + $this->modelo303['35'] + $this->modelo303['37'] + $this->modelo303['39'] + $this->modelo303['41'] + $this->modelo303['42'] + $this->modelo303['43'] + $this->modelo303['44'];
+
+        // Resultado régimen general
+        $this->modelo303['46'] = $this->modelo303['27'] - $this->modelo303['45'];
     }
 
     /**

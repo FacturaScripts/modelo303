@@ -197,14 +197,22 @@
                     </tbody>
                 </table>
 
-                Total cuota devengada (152 + 167 + 03 + 155 + 06 + 09 + 11 + 13 + 15 + 158 + 170 + 18 + 21 + 24 + 26)
-                ........
-                <strong>{{ fsc.modelo303['27'] is empty ? '' : number(fsc.modelo303['27'], 2) }}</strong>
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                    <tr>
+                        <td>Total cuota devengada</td>
+                        <td class="text-center">27</td>
+                        <td class="text-end">
+                            <strong>{{ fsc.modelo303['27'] is empty ? '' : number(fsc.modelo303['27'], 2) }}</strong>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
     <div class="col-6">
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-header">
                 IVA deducible
             </div>
@@ -229,6 +237,37 @@
                         <td class="text-center">29</td>
                         <td class="text-end">
                             <strong>{{ fsc.modelo303['29'] is empty ? '' : number(fsc.modelo303['29'], 2) }}</strong>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                    <tr>
+                        <td> Total a deducir</td>
+                        <td class="text-center">45</td>
+                        <td class="text-end">
+                            <strong>{{ fsc.modelo303['45'] is empty ? '' : number(fsc.modelo303['45'], 2) }}</strong>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Resultado régimen general
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-sm">
+                    <tbody>
+                    <tr>
+                        <td>Resultado régimen general</td>
+                        <td class="text-center">46</td>
+                        <td class="text-end">
+                            <strong>{{ fsc.modelo303['46'] is empty ? '' : number(fsc.modelo303['46'], 2) }}</strong>
                         </td>
                     </tr>
                     </tbody>
