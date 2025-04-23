@@ -20,6 +20,8 @@
 namespace FacturaScripts\Plugins\Modelo303\Lib\Accounting;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\Model\FacturaCliente;
+use FacturaScripts\Core\Model\FacturaProveedor;
 use FacturaScripts\Core\Model\RegularizacionImpuesto;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
@@ -43,6 +45,11 @@ class VatRegularizationToAccounting
 
     public function generate(RegularizacionImpuesto &$reg): bool
     {
+        if(false === $this->checkInvoicesWithoutAccEntry($reg)){
+            Tools::log()->warning('invoices-without-acc-entry');
+            return false;
+        }
+
         // creamos el asiento contable
         $accEntry = new Asiento();
         $accEntry->codejercicio = $reg->codejercicio;
@@ -150,5 +157,33 @@ class VatRegularizationToAccounting
         }
 
         return $subtotals;
+    }
+
+    /**
+     * Comprueba si hay facturas sin asiento contable
+     *
+     * @param $reg
+     *
+     * @return bool
+     */
+    private function checkInvoicesWithoutAccEntry($reg): bool
+    {
+        $where = [
+            new DataBaseWhere('codejercicio', $reg->codejercicio),
+            new DataBaseWhere('idempresa', $reg->idempresa),
+            new DataBaseWhere('fecha', $reg->fechainicio, '>='),
+            new DataBaseWhere('fecha', $reg->fechafin, '<='),
+            new DataBaseWhere('idasiento', 'IS NULL')
+        ];
+
+        $facturasClienteSinAsiento = FacturaCliente::all($where, [], 0, 0);
+
+        $facturasProveedorSinAsiento = FacturaProveedor::all($where, [], 0, 0);
+
+        if (count($facturasClienteSinAsiento) > 0 || count($facturasProveedorSinAsiento) > 0) {
+            return false;
+        }
+
+        return true;
     }
 }
