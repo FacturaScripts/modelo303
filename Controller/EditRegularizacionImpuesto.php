@@ -254,6 +254,34 @@ class EditRegularizacionImpuesto extends EditController
             '07' => 0.00,
             '08' => 21.00,
             '09' => 0.00,
+
+            // IVA 0
+            '150' => 0.00,
+            '151' => 0.00,
+            '152' => 0.00,
+
+            // RECARGO 1.75
+            '156' => 0.00,
+            '157' => 1.75,
+            '158' => 0.00,
+
+            // RECARGO 0.5
+            '168' => 0.00,
+            '169' => 0.5,
+            '170' => 0.00,
+
+            // RECARGO 1.4
+            '19' => 0.00,
+            '20' => 1.4,
+            '21' => 0.00,
+
+            // RECARGO 5.2
+            '22' => 0.00,
+            '23' => 5.2,
+            '24' => 0.00,
+
+            // Total cuota devengada
+            '27' => 0.00,
         ];
 
         // obtenemos los codigos de subcuentas agrupados según tipo iva
@@ -265,24 +293,69 @@ class EditRegularizacionImpuesto extends EditController
             $subcuentasSegunIVA[$impuesto->iva]['soportado'][] = $impuesto->codsubcuentasop;
         }
 
+        // obtenemos los codigos de subcuentas agrupados según tipo recargo
+        // esto lo hacemos por si existen varios impuesto
+        // del mismo recargo y distintas subcuentas
+        $subcuentasSegunRecargo = [];
+        foreach ($impuestos as $impuesto) {
+            $subcuentasSegunRecargo[$impuesto->recargo]['repercutido'][] = $impuesto->codsubcuentarepre;
+            $subcuentasSegunRecargo[$impuesto->recargo]['soportado'][] = $impuesto->codsubcuentasopre;
+        }
+
         foreach ($partidasAgrupadas as $subcuenta => $movimientos) {
             foreach ($movimientos as $mov) {
+                // IVA 4%
                 if (in_array($subcuenta, $subcuentasSegunIVA[4]['repercutido'])) {
                     $this->modelo303['01'] += $mov->baseimponible;
                     $this->modelo303['03'] += $mov->haber;
                 }
 
+                // IVA 10%
                 if (in_array($subcuenta, $subcuentasSegunIVA[10]['repercutido'])) {
                     $this->modelo303['04'] += $mov->baseimponible;
                     $this->modelo303['06'] += $mov->haber;
                 }
 
+                // IVA 21%
                 if (in_array($subcuenta, $subcuentasSegunIVA[21]['repercutido'])) {
                     $this->modelo303['07'] += $mov->baseimponible;
-                    $this->modelo303['09'] += $mov->haber; // solo se toma el haber como cuota devengada
+                    $this->modelo303['09'] += $mov->haber;
+                }
+
+                // IVA 0%
+                if (in_array($subcuenta, $subcuentasSegunIVA[0]['repercutido'])) {
+                    $this->modelo303['150'] += $mov->baseimponible;
+                    $this->modelo303['152'] += $mov->haber;
+                }
+
+                // RECARGO 1.75%
+                if (in_array($subcuenta, $subcuentasSegunRecargo[1.75]['repercutido'])) {
+                    $this->modelo303['156'] += $mov->baseimponible;
+                    $this->modelo303['158'] += $mov->haber;
+                }
+
+                // RECARGO 0.5%
+                if (in_array($subcuenta, $subcuentasSegunRecargo[0.5]['repercutido'])) {
+                    $this->modelo303['168'] += $mov->baseimponible;
+                    $this->modelo303['170'] += $mov->haber;
+                }
+
+                // RECARGO 1.4%
+                if (in_array($subcuenta, $subcuentasSegunRecargo[1.4]['repercutido'])) {
+                    $this->modelo303['19'] += $mov->baseimponible;
+                    $this->modelo303['21'] += $mov->haber;
+                }
+
+                // RECARGO 5.2%
+                if (in_array($subcuenta, $subcuentasSegunRecargo[5.2]['repercutido'])) {
+                    $this->modelo303['22'] += $mov->baseimponible;
+                    $this->modelo303['24'] += $mov->haber;
                 }
             }
         }
+
+        // Total cuota devengada
+        $this->modelo303['27'] = $this->modelo303['152'] + $this->modelo303['167'] + $this->modelo303['03'] + $this->modelo303['155'] + $this->modelo303['06'] + $this->modelo303['09'] + $this->modelo303['11'] + $this->modelo303['13'] + $this->modelo303['15'] + $this->modelo303['158'] + $this->modelo303['170'] + $this->modelo303['18'] + $this->modelo303['21'] + $this->modelo303['24'] + $this->modelo303['26'];
     }
 
     /**
