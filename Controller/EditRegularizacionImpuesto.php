@@ -367,19 +367,19 @@ class EditRegularizacionImpuesto extends EditController
                 // IVA 4%
                 if (in_array($subcuenta, $subcuentasSegunIVA[4]['soportado'])) {
                     $this->modelo303['28'] += $mov->baseimponible;
-                    $this->modelo303['29'] += $mov->haber;
+                    $this->modelo303['29'] += $mov->debe;
                 }
 
                 // IVA 10%
                 if (in_array($subcuenta, $subcuentasSegunIVA[10]['soportado'])) {
                     $this->modelo303['28'] += $mov->baseimponible;
-                    $this->modelo303['29'] += $mov->haber;
+                    $this->modelo303['29'] += $mov->debe;
                 }
 
                 // IVA 21%
                 if (in_array($subcuenta, $subcuentasSegunIVA[21]['soportado'])) {
                     $this->modelo303['28'] += $mov->baseimponible;
-                    $this->modelo303['29'] += $mov->haber;
+                    $this->modelo303['29'] += $mov->debe;
                 }
             }
         }
