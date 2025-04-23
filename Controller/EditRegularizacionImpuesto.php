@@ -356,6 +356,33 @@ class EditRegularizacionImpuesto extends EditController
 
         // Total cuota devengada
         $this->modelo303['27'] = $this->modelo303['152'] + $this->modelo303['167'] + $this->modelo303['03'] + $this->modelo303['155'] + $this->modelo303['06'] + $this->modelo303['09'] + $this->modelo303['11'] + $this->modelo303['13'] + $this->modelo303['15'] + $this->modelo303['158'] + $this->modelo303['170'] + $this->modelo303['18'] + $this->modelo303['21'] + $this->modelo303['24'] + $this->modelo303['26'];
+
+        /**
+         * IVA DEDUCIBLE
+         */
+
+        // Por cuotas soportadas en operaciones interiores corrientes
+        foreach ($partidasAgrupadas as $subcuenta => $movimientos) {
+            foreach ($movimientos as $mov) {
+                // IVA 4%
+                if (in_array($subcuenta, $subcuentasSegunIVA[4]['soportado'])) {
+                    $this->modelo303['28'] += $mov->baseimponible;
+                    $this->modelo303['29'] += $mov->haber;
+                }
+
+                // IVA 10%
+                if (in_array($subcuenta, $subcuentasSegunIVA[10]['soportado'])) {
+                    $this->modelo303['28'] += $mov->baseimponible;
+                    $this->modelo303['29'] += $mov->haber;
+                }
+
+                // IVA 21%
+                if (in_array($subcuenta, $subcuentasSegunIVA[21]['soportado'])) {
+                    $this->modelo303['28'] += $mov->baseimponible;
+                    $this->modelo303['29'] += $mov->haber;
+                }
+            }
+        }
     }
 
     /**
