@@ -1,5 +1,6 @@
 {
   "accounting-entry-already-created": "Asiento ya creado anteriormente.",
+  "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
   "accounting-entry-not-created": "Asiento no creado.",
   "invoices-without-acc-entry": "Existen facturas sin asiento. Debe crear los asientos de todas las facturas.",
   "model-303": "Modelo 303",

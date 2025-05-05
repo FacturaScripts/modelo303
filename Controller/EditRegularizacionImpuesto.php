@@ -230,6 +230,11 @@ class EditRegularizacionImpuesto extends EditController
         ], [], 0, 0);
         $idsAsientos = array_unique(array_column($asientos, Asiento::primaryColumn()));
 
+        if(empty($idsAsientos)) {
+            Tools::log()->warning('accounting-entry-not-found');
+            return;
+        }
+
         $partidas = Partida::all([
             new DataBaseWhere('idasiento', $idsAsientos, 'IN'),
             new DataBaseWhere('codsubcuenta', $subcuentas, 'IN')
@@ -242,47 +247,19 @@ class EditRegularizacionImpuesto extends EditController
         }
 
         // inicializamos el modelo303
-        $this->modelo303 = [
-            '01' => 0.00,
-            '02' => 4.00,
-            '03' => 0.00,
+        $this->modelo303 = [];
+        for ($i = 0; $i <= 200; $i++) {
+            $this->modelo303[sprintf('%02d', $i)] = 0.00;
+        }
 
-            '04' => 0.00,
-            '05' => 10.00,
-            '06' => 0.00,
-
-            '07' => 0.00,
-            '08' => 21.00,
-            '09' => 0.00,
-
-            // IVA 0
-            '150' => 0.00,
-            '151' => 0.00,
-            '152' => 0.00,
-
-            // RECARGO 1.75
-            '156' => 0.00,
-            '157' => 1.75,
-            '158' => 0.00,
-
-            // RECARGO 0.5
-            '168' => 0.00,
-            '169' => 0.5,
-            '170' => 0.00,
-
-            // RECARGO 1.4
-            '19' => 0.00,
-            '20' => 1.4,
-            '21' => 0.00,
-
-            // RECARGO 5.2
-            '22' => 0.00,
-            '23' => 5.2,
-            '24' => 0.00,
-
-            // Total cuota devengada
-            '27' => 0.00,
-        ];
+        // set default values
+        $this->modelo303['02'] = 4.00;
+        $this->modelo303['05'] = 10.00;
+        $this->modelo303['08'] = 21.00;
+        $this->modelo303['157'] = 1.75;
+        $this->modelo303['169'] = 0.5;
+        $this->modelo303['20'] = 1.4;
+        $this->modelo303['23'] = 5.2;
 
         // obtenemos los códigos de subcuentas agrupados según tipo iva
         // esto lo hacemos por si existen varios impuestos
