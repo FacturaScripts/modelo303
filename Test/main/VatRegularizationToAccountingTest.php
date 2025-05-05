@@ -24,9 +24,8 @@ use FacturaScripts\Plugins\Modelo303\Lib\Accounting\VatRegularizationToAccountin
 use FacturaScripts\Test\Traits\DefaultSettingsTrait;
 use FacturaScripts\Test\Traits\LogErrorsTrait;
 use FacturaScripts\Test\Traits\RandomDataTrait;
-use PHPUnit\Framework\TestCase;
 
-final class VatRegularizationToAccountingTest extends TestCase
+final class VatRegularizationToAccountingTest extends Modelo303TestCase
 {
     use DefaultSettingsTrait;
     use LogErrorsTrait;
@@ -41,14 +40,14 @@ final class VatRegularizationToAccountingTest extends TestCase
     public function testCreate()
     {
         // creamos una factura de proveedor
-        $supplierInvoice = $this->getRandomSupplierInvoice('10-01-2022');
+        $supplierInvoice = $this->getRandomSupplierInvoice('now');
         $this->assertTrue($supplierInvoice->save());
 
         // creamos dos facturas de cliente
-        $customerInvoice1 = $this->getRandomCustomerInvoice('11-01-2022');
+        $customerInvoice1 = $this->getRandomCustomerInvoice('+1 day');
         $this->assertTrue($customerInvoice1->save());
 
-        $customerInvoice2 = $this->getRandomCustomerInvoice('12-01-2022');
+        $customerInvoice2 = $this->getRandomCustomerInvoice('+2 day');
         $this->assertTrue($customerInvoice2->save());
 
         // creamos una regularización
