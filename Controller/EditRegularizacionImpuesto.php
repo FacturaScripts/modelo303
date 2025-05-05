@@ -72,7 +72,7 @@ class EditRegularizacionImpuesto extends EditController
      *
      * @param PartidaImpuestoResumen[] $data
      */
-    protected function calculateAmounts(array $data)
+    protected function calculateAmounts(array $data): void
     {
         // Init totals values
         $this->sales = 0.0;
@@ -93,7 +93,7 @@ class EditRegularizacionImpuesto extends EditController
         $this->total = $this->sales - $this->purchases;
     }
 
-    protected function createAccountingEntryAction()
+    protected function createAccountingEntryAction(): void
     {
         $reg = new RegularizacionImpuesto();
         $code = $this->request->get('code');
@@ -135,13 +135,13 @@ class EditRegularizacionImpuesto extends EditController
         $this->createViewsEntryLine();
     }
 
-    protected function createViewsEntryLine(string $viewName = 'ListPartida')
+    protected function createViewsEntryLine(string $viewName = 'ListPartida'): void
     {
         $this->addListView($viewName, 'Partida', 'accounting-entry', 'fas fa-balance-scale');
         $this->disableButtons($viewName, true);
     }
 
-    protected function createViewsTaxLine(string $viewName, string $caption, string $icon)
+    protected function createViewsTaxLine(string $viewName, string $caption, string $icon): void
     {
         $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon)
             ->addSearchFields(['partidas.concepto'])
@@ -152,13 +152,13 @@ class EditRegularizacionImpuesto extends EditController
         $this->disableButtons($viewName);
     }
 
-    protected function createViewsTaxSummary(string $viewName = 'ListPartidaImpuestoResumen')
+    protected function createViewsTaxSummary(string $viewName = 'ListPartidaImpuestoResumen'): void
     {
         $this->addHtmlView($viewName, 'Modelo303', 'Impuesto', 'summary', 'fas fa-list-alt');
         $this->disableButtons($viewName);
     }
 
-    protected function disableButtons(string $viewName, bool $clickable = false)
+    protected function disableButtons(string $viewName, bool $clickable = false): void
     {
         $this->setSettings($viewName, 'btnDelete', false);
         $this->setSettings($viewName, 'btnNew', false);
@@ -190,7 +190,7 @@ class EditRegularizacionImpuesto extends EditController
         parent::exportAction();
     }
 
-    protected function getListPartida(BaseView $view)
+    protected function getListPartida(BaseView $view): void
     {
         $idasiento = $this->getViewModelValue('EditRegularizacionImpuesto', 'idasiento');
         if (!empty($idasiento)) {
@@ -199,7 +199,7 @@ class EditRegularizacionImpuesto extends EditController
         }
     }
 
-    protected function getListPartidaImpuesto(BaseView $view, int $group)
+    protected function getListPartidaImpuesto(BaseView $view, int $group): void
     {
         $id = $this->getViewModelValue($this->getMainViewName(), 'idregiva');
         if (!empty($id)) {
@@ -209,7 +209,7 @@ class EditRegularizacionImpuesto extends EditController
         }
     }
 
-    protected function getListPartidaImpuestoResumen(BaseView $view)
+    protected function getListPartidaImpuestoResumen(BaseView $view): void
     {
         $impuestos = Impuestos::all();
 
@@ -219,8 +219,8 @@ class EditRegularizacionImpuesto extends EditController
             array_column($impuestos, 'codsubcuentasop'),
         ))));
 
-        // obtenemos los asientos para poder filtrar
-        // por fecha. asi nos aseguramos que se filtra
+        // Obtenemos los asientos para poder filtrar
+        // por fecha. Asi nos aseguramos que se filtra
         // primero por fecha de devengo y si no existe
         // por fecha de factura
         $asientos = Asiento::all([
@@ -284,8 +284,8 @@ class EditRegularizacionImpuesto extends EditController
             '27' => 0.00,
         ];
 
-        // obtenemos los codigos de subcuentas agrupados según tipo iva
-        // esto lo hacemos por si existen varios impuesto
+        // obtenemos los códigos de subcuentas agrupados según tipo iva
+        // esto lo hacemos por si existen varios impuestos
         // del mismo iva y distintas subcuentas
         $subcuentasSegunIVA = [];
         foreach ($impuestos as $impuesto) {
@@ -294,7 +294,7 @@ class EditRegularizacionImpuesto extends EditController
         }
 
         // obtenemos los codigos de subcuentas agrupados según tipo recargo
-        // esto lo hacemos por si existen varios impuesto
+        // esto lo hacemos por si existen varios impuestos
         // del mismo recargo y distintas subcuentas
         $subcuentasSegunRecargo = [];
         foreach ($impuestos as $impuesto) {
