@@ -19,19 +19,18 @@
 
 namespace FacturaScripts\Plugins\Modelo303\Controller;
 
-use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Impuestos;
 use FacturaScripts\Core\DataSrc\Series;
+use FacturaScripts\Core\KernelException;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
-use FacturaScripts\Core\Model\Asiento;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
-use FacturaScripts\Dinamic\Model\Partida;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
+use FacturaScripts\Plugins\Modelo303\Lib\Modelo303Calculator;
 use FacturaScripts\Plugins\Modelo303\Lib\Modelo303Data;
 
 /**
@@ -210,177 +209,17 @@ class EditRegularizacionImpuesto extends EditController
         }
     }
 
+    /**
+     * @throws KernelException
+     */
     protected function getListPartidaImpuestoResumen(BaseView $view): void
     {
-        $impuestos = Impuestos::all();
-
-        // obtenemos los codigos de subcuentas de los impuestos
-        $subcuentas = array_values(array_unique(array_filter(array_merge(
-            array_column($impuestos, 'codsubcuentarep'),
-            array_column($impuestos, 'codsubcuentasop'),
-        ))));
-
-        // Obtenemos los asientos para poder filtrar
-        // por fecha. Asi nos aseguramos que se filtra
-        // primero por fecha de devengo y si no existe
-        // por fecha de factura
-        $asientos = Asiento::all([
-            new DataBaseWhere('codejercicio', $this->getModel()->codejercicio),
-            new DataBaseWhere('fecha', $this->getModel()->fechainicio, '>='),
-            new DataBaseWhere('fecha', $this->getModel()->fechafin, '<'),
-        ], [], 0, 0);
-        $idsAsientos = array_unique(array_column($asientos, Asiento::primaryColumn()));
-
-        if(empty($idsAsientos)) {
-            Tools::log()->warning('accounting-entry-not-found');
-            return;
-        }
-
-        $partidas = Partida::all([
-            new DataBaseWhere('idasiento', $idsAsientos, 'IN'),
-            new DataBaseWhere('codsubcuenta', $subcuentas, 'IN')
-        ], [], 0, 0);
-
-        // agrupamos por subcuenta
-        $partidasAgrupadas = [];
-        foreach ($partidas as $partida) {
-            $partidasAgrupadas[$partida->codsubcuenta][] = $partida;
-        }
-
-        // obtenemos los códigos de subcuentas agrupados según tipo iva
-        // esto lo hacemos por si existen varios impuestos
-        // del mismo iva y distintas subcuentas
-        $subcuentasSegunIVA = [];
-        foreach ($impuestos as $impuesto) {
-            $subcuentasSegunIVA[$impuesto->iva]['repercutido'][] = $impuesto->codsubcuentarep;
-            $subcuentasSegunIVA[$impuesto->iva]['soportado'][] = $impuesto->codsubcuentasop;
-        }
-
-        // obtenemos los codigos de subcuentas agrupados según tipo recargo
-        // esto lo hacemos por si existen varios impuestos
-        // del mismo recargo y distintas subcuentas
-        $subcuentasSegunRecargo = [];
-        foreach ($impuestos as $impuesto) {
-            $subcuentasSegunRecargo[$impuesto->recargo]['repercutido'][] = $impuesto->codsubcuentarepre;
-            $subcuentasSegunRecargo[$impuesto->recargo]['soportado'][] = $impuesto->codsubcuentasopre;
-        }
-
-        // Iniciamos modelo 303
-        $this->modelo303 = new Modelo303Data();
-
-        foreach ($partidasAgrupadas as $subcuenta => $movimientos) {
-            foreach ($movimientos as $mov) {
-                // IVA 4%
-                if (in_array($subcuenta, $subcuentasSegunIVA[4]['repercutido'])) {
-                    $this->modelo303->add('01', $mov->baseimponible);
-                    $this->modelo303->add('03', $mov->haber);
-                }
-
-                // IVA 10%
-                if (in_array($subcuenta, $subcuentasSegunIVA[10]['repercutido'])) {
-                    $this->modelo303->add('04', $mov->baseimponible);
-                    $this->modelo303->add('06', $mov->haber);
-                }
-
-                // IVA 21%
-                if (in_array($subcuenta, $subcuentasSegunIVA[21]['repercutido'])) {
-                    $this->modelo303->add('07', $mov->baseimponible);
-                    $this->modelo303->add('09', $mov->haber);
-                }
-
-                // IVA 0%
-                if (in_array($subcuenta, $subcuentasSegunIVA[0]['repercutido'])) {
-                    $this->modelo303->add('150', $mov->baseimponible);
-                    $this->modelo303->add('152', $mov->haber);
-                }
-
-                // RECARGO 1.75%
-                if (in_array($subcuenta, $subcuentasSegunRecargo[1.75]['repercutido'])) {
-                    $this->modelo303->add('156', $mov->baseimponible);
-                    $this->modelo303->add('158', $mov->haber);
-                }
-
-                // RECARGO 0.5%
-                if (in_array($subcuenta, $subcuentasSegunRecargo[0.5]['repercutido'])) {
-                    $this->modelo303->add('168', $mov->baseimponible);
-                    $this->modelo303->add('170', $mov->haber);
-                }
-
-                // RECARGO 1.4%
-                if (in_array($subcuenta, $subcuentasSegunRecargo[1.4]['repercutido'])) {
-                    $this->modelo303->add('19', $mov->baseimponible);
-                    $this->modelo303->add('21', $mov->haber);
-                }
-
-                // RECARGO 5.2%
-                if (in_array($subcuenta, $subcuentasSegunRecargo[5.2]['repercutido'])) {
-                    $this->modelo303->add('22', $mov->baseimponible);
-                    $this->modelo303->add('24', $mov->haber);
-                }
-            }
-        }
-
-        // Total cuota devengada
-        $this->modelo303->set('27', $this->modelo303->get('152') + $this->modelo303->get('167') + $this->modelo303->get('03') + $this->modelo303->get('155') + $this->modelo303->get('06') + $this->modelo303->get('09') + $this->modelo303->get('11') + $this->modelo303->get('13') + $this->modelo303->get('15') + $this->modelo303->get('158') + $this->modelo303->get('170') + $this->modelo303->get('18') + $this->modelo303->get('21') + $this->modelo303->get('24') + $this->modelo303->get('26'));
-
-        /**
-         * IVA DEDUCIBLE
-         */
-        // Por cuotas soportadas en operaciones interiores corrientes
-        foreach ($partidasAgrupadas as $subcuenta => $movimientos) {
-            foreach ($movimientos as $mov) {
-                // IVA 4%
-                if (in_array($subcuenta, $subcuentasSegunIVA[4]['soportado'])) {
-                    $this->modelo303->add('28', $mov->baseimponible);
-                    $this->modelo303->add('29', $mov->debe);
-                }
-
-                // IVA 10%
-                if (in_array($subcuenta, $subcuentasSegunIVA[10]['soportado'])) {
-                    $this->modelo303->add('28', $mov->baseimponible);
-                    $this->modelo303->add('29', $mov->debe);
-                }
-
-                // IVA 21%
-                if (in_array($subcuenta, $subcuentasSegunIVA[21]['soportado'])) {
-                    $this->modelo303->add('28', $mov->baseimponible);
-                    $this->modelo303->add('29', $mov->debe);
-                }
-            }
-        }
-
-        // Total a deducir
-        $this->modelo303->set('45', $this->modelo303->get('29') + $this->modelo303->get('31') + $this->modelo303->get('33') + $this->modelo303->get('35') + $this->modelo303->get('37') + $this->modelo303->get('39') + $this->modelo303->get('41') + $this->modelo303->get('42') + $this->modelo303->get('43') + $this->modelo303->get('44'));
-
-        // Resultado régimen general
-        $this->modelo303->set('46', $this->modelo303->get('27') - $this->modelo303->get('45'));
-
-        // Información adicional
-        // Ventas intracomunitarias
-        $dataBase = new DataBase();
-
-        $sql  = "SELECT SUM(neto) AS neto FROM facturascli ";
-        $sql .= "WHERE codejercicio = '".$this->getModel()->codejercicio."' AND ";
-        $sql .= "COALESCE(fechadevengo, fecha) >= ".$dataBase->var2str($this->getModel()->fechainicio)." AND ";
-        $sql .= "COALESCE(fechadevengo, fecha) < ".$dataBase->var2str($this->getModel()->fechafin)." AND ";
-        $sql .= "operacion = 'intracomunitaria'";
-        $netoFacturasVentasIntra = $dataBase->select($sql)[0]['neto'];
-
-        $this->modelo303->set('59', $netoFacturasVentasIntra);
-
-        // Compras intracomunitarias
-        $sql  = "SELECT SUM(neto) AS base, SUM(totaliva) AS cuota FROM facturasprov ";
-        $sql .= "WHERE codejercicio = '".$this->getModel()->codejercicio."' AND ";
-        $sql .= "COALESCE(fechadevengo, fecha) >= ".$dataBase->var2str($this->getModel()->fechainicio)." AND ";
-        $sql .= "COALESCE(fechadevengo, fecha) < ".$dataBase->var2str($this->getModel()->fechafin)." AND ";
-        $sql .= "operacion = 'intracomunitaria'";
-        $result = $dataBase->select($sql)[0];
-
-        $baseFacturasComprasIntra = $result['base'];
-        $cuotaFacturasComprasIntra = $result['cuota'];
-
-        $this->modelo303->set('10', $baseFacturasComprasIntra);
-        $this->modelo303->set('11', $cuotaFacturasComprasIntra);
+        // Calculamos casillas del modelo 303
+        $this->modelo303 = Modelo303Calculator::calculate(
+            $this->getModel()->codejercicio,
+            $this->getModel()->fechainicio,
+            $this->getModel()->fechafin,
+        );
     }
 
     /**
