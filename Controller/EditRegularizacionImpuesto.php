@@ -19,6 +19,7 @@
 
 namespace FacturaScripts\Plugins\Modelo303\Controller;
 
+use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Impuestos;
 use FacturaScripts\Core\DataSrc\Series;
@@ -366,6 +367,33 @@ class EditRegularizacionImpuesto extends EditController
 
         // Resultado régimen general
         $this->modelo303['46'] = $this->modelo303['27'] - $this->modelo303['45'];
+
+        // Información adicional
+        // Ventas intracomunitarias
+        $dataBase = new DataBase();
+
+        $sql  = "SELECT SUM(neto) AS neto FROM facturascli ";
+        $sql .= "WHERE codejercicio = '".$this->getModel()->codejercicio."' AND ";
+        $sql .= "COALESCE(fechadevengo, fecha) >= ".$dataBase->var2str($this->getModel()->fechainicio)." AND ";
+        $sql .= "COALESCE(fechadevengo, fecha) < ".$dataBase->var2str($this->getModel()->fechafin)." AND ";
+        $sql .= "operacion = 'intracomunitaria'";
+        $netoFacturasVentasIntra = $dataBase->select($sql)[0]['neto'];
+
+        $this->modelo303['59'] = $netoFacturasVentasIntra;
+
+        // Compras intracomunitarias
+        $sql  = "SELECT SUM(neto) AS base, SUM(totaliva) AS cuota FROM facturasprov ";
+        $sql .= "WHERE codejercicio = '".$this->getModel()->codejercicio."' AND ";
+        $sql .= "COALESCE(fechadevengo, fecha) >= ".$dataBase->var2str($this->getModel()->fechainicio)." AND ";
+        $sql .= "COALESCE(fechadevengo, fecha) < ".$dataBase->var2str($this->getModel()->fechafin)." AND ";
+        $sql .= "operacion = 'intracomunitaria'";
+        $result = $dataBase->select($sql)[0];
+
+        $baseFacturasComprasIntra = $result['base'];
+        $cuotaFacturasComprasIntra = $result['cuota'];
+
+        $this->modelo303['10'] = $baseFacturasComprasIntra;
+        $this->modelo303['11'] = $cuotaFacturasComprasIntra;
     }
 
     /**
