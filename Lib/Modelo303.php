@@ -71,7 +71,7 @@ class Modelo303
         ],
 
         // Operaciones exentas
-        'IVAREX' => ['0' => ['base' => '59', 'cuota' => null]],
+        'IVAREX' => ['0' => ['base' => '150', 'cuota' => null]],
 
         /*
          * IVA soportado (deducible)
@@ -201,14 +201,6 @@ class Modelo303
                 $cuota = $base * ($recargo / 100.0);
             }
             $this->square[$grupo['cuota']] += $cuota;
-        }
-
-        // Special handling for exempt operations
-        // Only the base is recorded in the informative squares 59 / 60
-        if ($tipo === 'IVAREX' || $tipo === 'IVASEX') {
-            if (false === empty($grupo['base'])) {
-                $this->square[$grupo['base']] += $base;
-            }
         }
     }
 
