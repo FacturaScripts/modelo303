@@ -46,12 +46,31 @@ class ListRegularizacionImpuesto extends ListController
     protected function createViews(): void
     {
         $this->createViewsModel303();
+        $this->createViewsModel303New();
         $this->createViewsModel390();
     }
 
     protected function createViewsModel303(string $viewName = 'ListRegularizacionImpuesto'): void
     {
         $this->addView($viewName, 'RegularizacionImpuesto', 'model-303', 'fa-solid fa-book')
+            ->addOrderBy(['fechainicio'], 'start-date', 2)
+            ->addOrderBy(['codejercicio||periodo'], 'period')
+            ->addSearchFields(['codsubcuentaacr', 'codsubcuentadeu']);
+
+        // añadimos filtros
+        $this->addFilterSelectWhere($viewName, 'status', [
+            ['label' => Tools::lang()->trans('model-303'), 'where' => [new DataBaseWhere('periodo', 'Y', '!=')]]
+        ]);
+
+        $this->addFilterSelect($viewName, 'idempresa', 'company', 'idempresa', Empresas::codeModel());
+
+        $exercises = $this->codeModel->all('ejercicios', 'codejercicio', 'nombre');
+        $this->addFilterSelect($viewName, 'codejercicio', 'exercise', 'codejercicio', $exercises);
+    }
+
+    protected function createViewsModel303New(string $viewName = 'ListRegularizacionImpuesto-New'): void
+    {
+        $this->addView($viewName, 'RegularizacionImpuestoNew', 'model-303-new', 'fa-solid fa-book')
             ->addOrderBy(['fechainicio'], 'start-date', 2)
             ->addOrderBy(['codejercicio||periodo'], 'period')
             ->addSearchFields(['codsubcuentaacr', 'codsubcuentadeu']);
