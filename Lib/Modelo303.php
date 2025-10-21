@@ -34,6 +34,7 @@ class Modelo303
     /**
      * Stores all model squares.
      * Each key is the AEAT square number.
+     *   '01' => 0.00, '02' => 0.00, ...
      */
     private array $square;
 
