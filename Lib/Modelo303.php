@@ -20,6 +20,7 @@ namespace FacturaScripts\Plugins\Modelo303\Lib;
 
 use FacturaScripts\Core\DataSrc\Impuestos;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Plugins\Modelo303\Model\Join\PartidaImpuestoResumenNew;
 
 /**
  * Class to handle Modelo 303 tax form data.
@@ -30,7 +31,67 @@ class Modelo303
 {
     private const MAX_SQUARE = 200;
 
+    /**
+     * Stores all model squares.
+     * Each key is the AEAT square number.
+     */
     private array $square;
+
+    /**
+     * Structure for know to assign values to squares.
+     *
+     * @var array<string, array<string, array<string, ?string>>>
+     */
+    private array $casillaMap = [
+        /*
+         * IVA devengado (repercutido).
+         */
+        // Ventas nacionales (régimen general)
+        'IVAREP' => [
+            '2'   => ['base' => '165', 'cuota' => '167'],
+            '4'   => ['base' => '01', 'cuota' => '03'],
+            '7.5' => ['base' => '153', 'cuota' => '155'],
+            '10'  => ['base' => '04', 'cuota' => '06'],
+            '21'  => ['base' => '07', 'cuota' => '09'],
+        ],
+
+        // Adquisiciones intracomunitarias
+        'IVARUE' => ['21' => ['base' => '10', 'cuota' => '11']],
+
+        // Operaciones con inversión del sujeto pasivo
+        // TODO: 'xxxxx' =>  ['21' => ['base' => '12', 'cuota' => '13']],
+
+        // Recargo de equivalencia
+        'IVARRE' => [
+            '1.75' => ['base' => '156', 'cuota' => '158'],
+            '0.26' => ['base' => '168',  'cuota' => '170'],
+            '1'    => ['base' => '16',  'cuota' => '18'],
+            '1.4'  => ['base' => '19',  'cuota' => '21'],
+            '5.2'  => ['base' => '22',  'cuota' => '24'],
+        ],
+
+        // Operaciones exentas
+        'IVAREX' => ['0' => ['base' => '59', 'cuota' => null]],
+
+        /*
+         * IVA soportado (deducible)
+         */
+        // Compras nacionales (régimen general)
+        'IVASOP' => [
+            '21' => ['base' => '28', 'cuota' => '29'],
+            '10' => ['base' => '28', 'cuota' => '29'],
+            '4'  => ['base' => '28', 'cuota' => '29'],
+        ],
+
+        // Compras en importaciones
+        'IVASIM' => ['21' => ['base' => '32', 'cuota' => '33']],
+
+        // Compras en adquisiciones intracomunitarias
+        'IVASUE' => ['21' => ['base' => '36', 'cuota' => '37']],
+
+        // Operaciones exentas
+        'IVASEX' => ['0'  => ['base' => '60', 'cuota' => null]],
+    ];
 
     /**
      * Initializes the tax rates for each square.
@@ -45,10 +106,13 @@ class Modelo303
         $this->square['02'] = 4.00;
         $this->square['05'] = 10.00;
         $this->square['08'] = 21.00;
+        $this->square['17'] = 1.00;
+        $this->square['20'] = 1.40;
+        $this->square['23'] = 5.20;
+        $this->square['154'] = 7.50;
         $this->square['157'] = 1.75;
-        $this->square['169'] = 0.5;
-        $this->square['20'] = 1.4;
-        $this->square['23'] = 5.2;
+        $this->square['169'] = 0.26;
+        $this->square['166'] = 2.00;
     }
 
     /**
@@ -68,147 +132,104 @@ class Modelo303
      * @param string $square
      * @return string
      */
-    public function casillaStr(string $square): string
+    public function casillaStr(string $square, bool $showEmpty = false): string
     {
         $value = $this->casilla($square);
-        return empty($value) ? '' : Tools::number($value, 2);
+        if (empty($value) && false === $showEmpty ) {
+            return '';
+        }
+        return Tools::number($value, 2);
     }
 
     /**
-     * Assign movements to the corresponding squares.
-     * Calculates the totals squares based on the provided movements.
+     * Loads summary data from an array of PartidaImpuestoResumen.
      *
-     * @param array $groupedMovs
-     * @return void
+     * @param PartidaImpuestoResumenNew[] $resumen
      */
-    public function setMovements(array $groupedMovs): void
+    public function loadFromResumen(array $resumen): void
     {
-        // obtenemos los códigos de subcuentas agrupados según tipo iva
-        // esto lo hacemos por si existen varios impuestos
-        // del mismo iva y distintas subcuentas
-        $subaccountsVAT = [];
-        $subaccountsSurcharge = [];
-        foreach (Impuestos::all() as $tax) {
-            $subaccountsVAT[$tax->iva]['repercutido'][] = $tax->codsubcuentarep;
-            $subaccountsVAT[$tax->iva]['soportado'][] = $tax->codsubcuentasop;
-            $subaccountsSurcharge[$tax->recargo]['repercutido'][] = $tax->codsubcuentarepre;
-            $subaccountsSurcharge[$tax->recargo]['soportado'][] = $tax->codsubcuentasopre;
+        foreach ($resumen as $item) {
+            $this->addMovimiento(
+                $item->codcuentaesp ?? '',
+                (float) $item->iva,
+                (float) $item->recargo,
+                (float) $item->baseimponible,
+                (float) $item->cuota
+            );
         }
-
-        // aplicamos los movimientos a las casillas correspondientes
-        $this->applyVATCharged($groupedMovs, $subaccountsVAT, $subaccountsSurcharge);
-        $this->applyVATPaid($groupedMovs, $subaccountsVAT, $subaccountsSurcharge);
-
-        // Resultado régimen general
-        $this->square['46'] = $this->square['27'] - $this->square['45'];
+        $this->calculateTotals();
     }
 
-    private function applyVATCharged(array $groupedMovs, array $subaccountsVAT, array $subaccountsSurcharge): void
+    /**
+     * Add a tax movement to the model (base + quota by type and rate)
+     * - Determine the correct square based on the type and tax rate.
+     * - Update the base and quota squares accordingly.
+     *
+     * @param string $tipo
+     * @param float $iva
+     * @param float $recargo
+     * @param float $base
+     * @param float $cuota
+     * @return void
+     */
+    private function addMovimiento(string $tipo, float $iva, float $recargo, float $base, float $cuota): void
     {
-        foreach ($groupedMovs as $subaccount => $movements) {
-            foreach ($movements as $mov) {
-                // IVA 21%
-                if (in_array($subaccount, $subaccountsVAT[21]['repercutido'])) {
-                    $this->square['07'] += $mov->baseimponible;
-                    $this->square['09'] += $mov->haber;
-                    continue;
-                }
-
-                // IVA 10%
-                if (in_array($subaccount, $subaccountsVAT[10]['repercutido'])) {
-                    $this->square['04'] += $mov->baseimponible;
-                    $this->square['06'] += $mov->haber;
-                    continue;
-                }
-
-                // IVA 4%
-                if (in_array($subaccount, $subaccountsVAT[4]['repercutido'])) {
-                    $this->square['01'] += $mov->baseimponible;
-                    $this->square['03'] += $mov->haber;
-                    continue;
-                }
-
-                // IVA 0%
-                if (in_array($subaccount, $subaccountsVAT[0]['repercutido'])) {
-                    $this->square['150'] += $mov->baseimponible;
-                    $this->square['152'] += $mov->haber;
-                    continue;
-                }
-
-                // RECARGO 1.75%
-                if (in_array($subaccount, $subaccountsSurcharge[1.75]['repercutido'])) {
-                    $this->square['156'] += $mov->baseimponible;
-                    $this->square['158'] += $mov->haber;
-                    continue;
-                }
-
-                // RECARGO 0.5%
-                if (in_array($subaccount, $subaccountsSurcharge[0.5]['repercutido'])) {
-                    $this->square['168'] += $mov->baseimponible;
-                    $this->square['170'] += $mov->haber;
-                    continue;
-                }
-
-                // RECARGO 1.4%
-                if (in_array($subaccount, $subaccountsSurcharge[1.4]['repercutido'])) {
-                    $this->square['19'] += $mov->baseimponible;
-                    $this->square['21'] += $mov->haber;
-                    continue;
-                }
-
-                // RECARGO 5.2%
-                if (in_array($subaccount, $subaccountsSurcharge[5.2]['repercutido'])) {
-                    $this->square['22'] += $mov->baseimponible;
-                    $this->square['24'] += $mov->haber;
-                }
-            }
+        if (false === isset($this->casillaMap[$tipo])) {
+            return;
         }
 
-        // JOSEA: Existen casillas que no están calculadas
+        // Determine the correct group based on the tax rate.
+        $tax = ($tipo === 'IVARRE') ? $recargo : $iva;
+        $key = rtrim(rtrim(number_format($tax, 1, '.', ''), '0'), '.');
+        $grupo = $this->casillaMap[$tipo][$key]
+            ?? $this->casillaMap[$tipo][(string)(int)$tax]
+            ?? $this->casillaMap[$tipo]['*']
+            ?? null;
+
+        if ($grupo === null) {
+            return;
+        }
+
+        // Update base and quota squares.
+        if (false === empty($grupo['base'])) {
+            $this->square[$grupo['base']] += $base;
+        }
+
+        if (false === empty($grupo['cuota'])) {
+            // For recargo, if cuota is zero, calculate it from base and recargo rate
+            if ($tipo === 'IVARRE' && $cuota == 0.0 && $recargo > 0.0) {
+                $cuota = $base * ($recargo / 100.0);
+            }
+            $this->square[$grupo['cuota']] += $cuota;
+        }
+
+        // Special handling for exempt operations
+        // Only the base is recorded in the informative squares 59 / 60
+        if ($tipo === 'IVAREX' || $tipo === 'IVASEX') {
+            if (false === empty($grupo['base'])) {
+                $this->square[$grupo['base']] += $base;
+            }
+        }
+    }
+
+    /**
+     * Calculate total squares based on individual entries.
+     *
+     * @return void
+     */
+    private function calculateTotals(): void
+    {
         // Total cuota devengada
-        $this->square['27'] = $this->square['152']
-            + $this->square['167']
-            + $this->square['03']       // Cuota IVA 4%
-            + $this->square['155']
-            + $this->square['06']       // Cuota IVA 10%
-            + $this->square['09']       // Cuota IVA 21%
+        $this->square['27'] = $this->square['03']
+            + $this->square['06']
+            + $this->square['09']
             + $this->square['11']
             + $this->square['13']
             + $this->square['15']
-            + $this->square['158']      // Cuota recargo 1.75%
-            + $this->square['170']      // Cuota recargo 0.5%
             + $this->square['18']
-            + $this->square['21']       // Cuota recargo 1.4%
-            + $this->square['24']       // Cuota recargo 5.2%
+            + $this->square['21']
+            + $this->square['24']
             + $this->square['26'];
-    }
-
-    private function applyVATPaid(array $groupedMovs, array $subaccountsVAT): void
-    {
-        // JoseA: Todo se acumula en las casillas 28 y 29
-        foreach ($groupedMovs as $subaccount => $movements) {
-            foreach ($movements as $mov) {
-                // IVA 21%
-                if (in_array($subaccount, $subaccountsVAT[21]['soportado'])) {
-                    $this->square['28'] += $mov->baseimponible;
-                    $this->square['29'] += $mov->debe;
-                    continue;
-                }
-
-                // IVA 10%
-                if (in_array($subaccount, $subaccountsVAT[10]['soportado'])) {
-                    $this->square['28'] += $mov->baseimponible;
-                    $this->square['29'] += $mov->debe;
-                    continue;
-                }
-
-                // IVA 4%
-                if (in_array($subaccount, $subaccountsVAT[4]['soportado'])) {
-                    $this->square['28'] += $mov->baseimponible;
-                    $this->square['29'] += $mov->debe;
-                }
-            }
-        }
 
         // Total a deducir
         $this->square['45'] = $this->square['29']
@@ -221,5 +242,8 @@ class Modelo303
             + $this->square['42']
             + $this->square['43']
             + $this->square['44'];
+
+        // Resultado régimen general
+        $this->square['46'] = $this->square['27'] - $this->square['45'];
     }
 }

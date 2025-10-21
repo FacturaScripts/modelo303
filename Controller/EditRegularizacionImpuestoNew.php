@@ -102,8 +102,9 @@ class EditRegularizacionImpuestoNew extends EditController
      */
     protected function createViewsTaxSummary(string $viewName = 'Modelo303New'): void
     {
-        $this->addHtmlView($viewName, $viewName, 'Impuesto', 'summary', 'fa-solid fa-list-alt');
+        $this->addHtmlView($viewName, $viewName, 'RegularizacionImpuesto', 'summary', 'fa-solid fa-list-alt');
         $this->disableButtons($viewName);
+        $this->modelo303 = new Modelo303();
     }
 
     /**
@@ -139,6 +140,8 @@ class EditRegularizacionImpuestoNew extends EditController
                     'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)' => 'ASC',
                     'partidas.codsubcuenta' => 'ASC',
                 ]);
+
+                $this->modelo303->loadFromResumen($view->cursor);
                 break;
 
             case 'ListPartida':
