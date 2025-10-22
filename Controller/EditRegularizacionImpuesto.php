@@ -20,12 +20,15 @@ namespace FacturaScripts\Plugins\Modelo303\Controller;
 
 use Exception;
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
+use FacturaScripts\Core\DataSrc\Impuestos;
+use FacturaScripts\Core\DataSrc\Series;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
+use FacturaScripts\Core\Lib\SubAccountTools;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
-use FacturaScripts\Dinamic\Lib\Modelo303;
+use FacturaScripts\Plugins\Modelo303\Lib\Modelo303;
 
 /**
  * Controller to list the items in the RegularizacionImpuesto model
@@ -60,6 +63,11 @@ class EditRegularizacionImpuesto extends EditController
         return $data;
     }
 
+    /**
+     * Create accounting entry action procedure.
+     *
+     * @return void
+     */
     protected function createAccountingEntryAction(): void
     {
         $reg = new RegularizacionImpuesto();
@@ -100,6 +108,8 @@ class EditRegularizacionImpuesto extends EditController
 
         $this->createViewsTaxSummary();
         $this->createViewsTaxDetail();
+        $this->createViewsTaxLine('ListPartidaImpuesto-1', 'purchases', 'fas fa-sign-in-alt');
+        $this->createViewsTaxLine('ListPartidaImpuesto-2', 'sales', 'fas fa-sign-out-alt');
         $this->createViewsEntryLine();
     }
 
@@ -124,7 +134,26 @@ class EditRegularizacionImpuesto extends EditController
     protected function createViewsTaxDetail(string $viewName = 'ListPartidaImpuestoResumen'): void
     {
         $this->addListView($viewName, 'Join\PartidaImpuestoResumen', 'tax-detail');
-        $this->disableButtons($viewName, true);
+        $this->disableButtons($viewName, false);
+    }
+
+    /**
+     * Add invoices view for tax lines.
+     *
+     * @param string $viewName
+     * @param string $caption
+     * @param string $icon
+     * @return void
+     */
+    protected function createViewsTaxLine(string $viewName, string $caption, string $icon): void
+    {
+        $this->addListView($viewName, 'Join\PartidaImpuesto', $caption, $icon)
+            ->addSearchFields(['partidas.concepto'])
+            ->addFilterPeriod('date', 'date', 'fecha')
+            ->addFilterSelect('iva', 'vat', 'partidas.iva', Impuestos::codeModel())
+            ->addFilterSelect('codserie', 'serie', 'partidas.codserie', Series::codeModel());
+
+        $this->disableButtons($viewName);
     }
 
     /**
@@ -207,6 +236,14 @@ class EditRegularizacionImpuesto extends EditController
             case 'ListPartida':
                 $this->getListPartida($view);
                 break;
+
+            case 'ListPartidaImpuesto-1':
+                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
+                break;
+
+            case 'ListPartidaImpuesto-2':
+                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
+                break;
         }
     }
 
@@ -222,7 +259,8 @@ class EditRegularizacionImpuesto extends EditController
         $this->setSettings($viewName, 'btnDelete', false)
             ->setSettings('btnNew', false)
             ->setSettings('checkBoxes', false)
-            ->setSettings('clickable', $clickable);
+            ->setSettings('clickable', $clickable)
+            ->setSettings('btnPrint', true);
     }
 
     /**
@@ -237,6 +275,54 @@ class EditRegularizacionImpuesto extends EditController
             $where = [new DataBaseWhere('idasiento', $this->getModel()->idasiento)];
             $view->loadData(false, $where, ['orden' => 'ASC']);
         }
+    }
+
+    /**
+     * Load data into invoices view for tax lines.
+     *
+     * @param BaseView $view
+     * @param int $group
+     * @return void
+     */
+    private function getListPartidaImpuesto(BaseView $view, int $group): void
+    {
+        $id = $this->getModel()->idregiva;
+        if (empty($id)) {
+            return;
+        }
+
+        $where = $this->getPartidaImpuestoWhere($group);
+        $orderBy = ['asientos.fecha' => 'ASC', 'partidas.codserie' => 'ASC', 'partidas.factura' => 'ASC'];
+        $view->loadData(false, $where, $orderBy);
+    }
+
+    /**
+     * Get DataBaseWhere filter for tax group
+     *
+     * @param int $group
+     * @return DataBaseWhere[]
+     */
+    private function getPartidaImpuestoWhere(int $group): array
+    {
+        // obtenemos todos los ids de los asientos de las regularizaciones
+        $ids = [];
+        foreach (RegularizacionImpuesto::all() as $reg) {
+            if ($reg->idasiento) {
+                $ids[] = $reg->idasiento;
+            }
+        }
+
+        $subAccountTools = new SubAccountTools();
+        return [
+            new DataBaseWhere('asientos.idasiento', implode(',', $ids), 'NOT IN'),
+            new DataBaseWhere('asientos.codejercicio', $this->getModel()->codejercicio),
+            new DataBaseWhere('asientos.fecha', $this->getModel()->fechainicio, '>='),
+            new DataBaseWhere('asientos.fecha', $this->getModel()->fechafin, '<='),
+            new DataBaseWhere('COALESCE(series.siniva, 0)', 0),
+            new DataBaseWhere('partidas.baseimponible', 0, '!='),
+            new DataBaseWhere('COALESCE(partidas.iva, 0)', 0, '>', 'OR'),
+            $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group)
+        ];
     }
 
     /**
