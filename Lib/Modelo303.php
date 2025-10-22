@@ -20,7 +20,7 @@ namespace FacturaScripts\Plugins\Modelo303\Lib;
 
 use FacturaScripts\Core\DataSrc\Impuestos;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Modelo303\Model\Join\PartidaImpuestoResumenNew;
+use FacturaScripts\Plugins\Modelo303\Model\Join\PartidaImpuestoResumen;
 
 /**
  * Class to handle Modelo 303 tax form data.
@@ -145,7 +145,7 @@ class Modelo303
     /**
      * Loads summary data from an array of PartidaImpuestoResumen.
      *
-     * @param PartidaImpuestoResumenNew[] $resumen
+     * @param PartidaImpuestoResumen[] $resumen
      */
     public function loadFromResumen(array $resumen): void
     {
