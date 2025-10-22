@@ -36,12 +36,12 @@
             <widget type="number" decimal="2" fieldname="recargo"/>
         </column>
         <column name="tax-base" display="right" order="150">
-            <widget type="money" fieldname="baseimponible">
+            <widget type="money" fieldname="baseimponible" totals="false">
                 <option color="danger">lt:0</option>
             </widget>
         </column>
         <column name="quota" display="right" order="160">
-            <widget type="money" fieldname="cuota">
+            <widget type="money" fieldname="cuota" totals="false">
                 <option color="danger">lt:0</option>
             </widget>
         </column>
