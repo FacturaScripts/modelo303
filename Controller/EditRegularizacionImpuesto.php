@@ -186,8 +186,55 @@ class EditRegularizacionImpuesto extends EditController
 
     protected function exportAction(): void
     {
+        if (false === $this->views[$this->active]->settings['btnPrint'] ||
+            false === $this->permissions->allowExport) {
+            Tools::log()->warning('no-print-permission');
+            return;
+        }
+
+        $this->setTemplate(false);
         $this->exportManager->setOrientation('landscape');
-        parent::exportAction();
+        $this->exportManager->newDoc(
+            $this->request->queryOrInput('option', ''),
+            $this->title,
+            (int)$this->request->input('idformat', ''),
+            $this->request->input('langcode', '')
+        );
+
+        // load data for all views before exporting
+        foreach ($this->views as $name => $view) {
+            $this->loadData($name, $view);
+        }
+
+        foreach ($this->views as $name => $selectedView) {
+            if (false === $selectedView->settings['active']) {
+                continue;
+            }
+
+            $activeTab = $this->request->inputOrQuery('activetab', '');
+            if (!empty($activeTab) && $activeTab !== $name) {
+                continue;
+            }
+
+            $codes = $this->request->request->getArray('codes');
+            if (false === $selectedView->export($this->exportManager, $codes)) {
+                break;
+            }
+        }
+
+        // add tax settlement summary table
+        if (!empty($this->modelo303)) {
+            $concept = Tools::trans('concept');
+            $amount = Tools::trans('amount');
+            $rows = [
+                [$concept => Tools::trans('total-accrued-fee'), $amount => Tools::money($this->modelo303['27'])],
+                [$concept => Tools::trans('total-to-deduct'), $amount => Tools::money($this->modelo303['45'])],
+                [$concept => Tools::trans('total-result-of-the-general-regime'), $amount => Tools::money($this->modelo303['46'])],
+            ];
+            $this->exportManager->addTablePage([$concept, $amount], $rows);
+        }
+
+        $this->exportManager->show($this->response);
     }
 
     protected function getListPartida(BaseView $view): void
