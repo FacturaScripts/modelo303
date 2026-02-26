@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace FacturaScripts\Plugins\Modelo303\Model\Join;
 
 use FacturaScripts\Core\Model\Base\JoinModel;
@@ -25,37 +24,9 @@ use FacturaScripts\Core\Model\Base\JoinModel;
  * Auxiliary model to load a resume of accounting entries with VAT
  *
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
- * @author Carlos García Gómez           <carlos@facturascripts.com>
- *
- * @property float $baseimponible
- * @property string $codcuentaesp
- * @property string $codejercicio
- * @property string $codsubcuenta
- * @property float $cuotaiva
- * @property float $cuotarecargo
- * @property string $descripcion
- * @property int $idsubcuenta
- * @property float $iva
- * @property float $recargo
- * @property float $total
  */
 class PartidaImpuestoResumen extends JoinModel
 {
-
-    /**
-     * Reset the values of all model view properties.
-     */
-    public function clear(): void
-    {
-        parent::clear();
-        $this->baseimponible = 0.0;
-        $this->iva = 0.0;
-        $this->recargo = 0.0;
-        $this->cuotaiva = 0.0;
-        $this->cuotarecargo = 0.0;
-        $this->total = 0.0;
-    }
-
     /**
      * Returns an array of fields for the select clausule.
      *
@@ -64,16 +35,19 @@ class PartidaImpuestoResumen extends JoinModel
     protected function getFields(): array
     {
         return [
-            'baseimponible' => 'SUM(partidas.baseimponible)',
-            'codcuentaesp' => 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)',
-            'codejercicio' => 'asientos.codejercicio',
             'codsubcuenta' => 'partidas.codsubcuenta',
+            'iva' => 'COALESCE(partidas.iva, 0)',
+            'recargo' => 'COALESCE(partidas.recargo, 0)',
+
             'descripcion' => 'subcuentas.descripcion',
-            'idsubcuenta' => 'partidas.idsubcuenta',
-            'iva' => 'partidas.iva',
-            'recargo' => 'partidas.recargo',
-            'debe' => 'SUM(partidas.debe)',
-            'haber' => 'SUM(partidas.haber)',
+
+            'codcuentaesp' => 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)',
+            'tipo_desc' => 'cuentasesp.descripcion',
+
+            'baseimponible' => 'ROUND(SUM(partidas.baseimponible), 2)',
+            'debe' => 'ROUND(SUM(partidas.debe), 2)',
+            'haber' => 'ROUND(SUM(partidas.haber), 2)',
+            'cuota' => 'ROUND(SUM(' . $this->sqlForCuota() . '), 2)',
         ];
     }
 
@@ -84,14 +58,12 @@ class PartidaImpuestoResumen extends JoinModel
      */
     protected function getGroupFields(): string
     {
-        return 'asientos.codejercicio,'
-            . 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp),'
-            . 'cuentasesp.descripcion,'
-            . 'partidas.codsubcuenta,'
-            . 'subcuentas.descripcion,'
-            . 'partidas.idsubcuenta,'
-            . 'partidas.iva,'
-            . 'partidas.recargo';
+        return 'partidas.codsubcuenta'
+            . ', partidas.iva'
+            . ', partidas.recargo'
+            . ', subcuentas.descripcion'
+            . ', COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)'
+            . ', cuentasesp.descripcion';
     }
 
     /**
@@ -101,12 +73,12 @@ class PartidaImpuestoResumen extends JoinModel
      */
     protected function getSQLFrom(): string
     {
-        return 'asientos'
-            . ' LEFT JOIN partidas ON partidas.idasiento = asientos.idasiento'
-            . ' LEFT JOIN subcuentas ON subcuentas.idsubcuenta = partidas.idsubcuenta'
-            . ' LEFT JOIN cuentas ON cuentas.idcuenta = subcuentas.idcuenta'
-            . ' LEFT JOIN cuentasesp ON cuentasesp.codcuentaesp = COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)'
-            . ' LEFT JOIN series ON series.codserie = partidas.codserie';
+        return 'partidas'
+            . ' INNER JOIN asientos on asientos.idasiento = partidas.idasiento'
+            . ' INNER JOIN subcuentas on subcuentas.idsubcuenta = partidas.idsubcuenta'
+            . ' INNER JOIN cuentas on cuentas.idcuenta = subcuentas.idcuenta'
+            . ' LEFT JOIN cuentasesp on cuentasesp.codcuentaesp = coalesce(subcuentas.codcuentaesp, cuentas.codcuentaesp)'
+            . ' LEFT JOIN series on series.codserie = partidas.codserie';
     }
 
     /**
@@ -117,38 +89,25 @@ class PartidaImpuestoResumen extends JoinModel
     protected function getTables(): array
     {
         return [
-            'asientos',
             'partidas',
+            'asientos',
             'subcuentas',
             'cuentas',
-            'cuentasesp'
+            'cuentasesp',
+            'series',
         ];
     }
 
     /**
-     * Assign the values of the $data array to the model properties.
+     * SQL snippet to calculate the cuota field.
      *
-     * @param array $data
+     * @return string
      */
-    protected function loadFromData(array $data): void
+    private function sqlForCuota(): string
     {
-        parent::loadFromData($data);
-
-        if ($this->iva > 0 && $this->recargo > 0) {
-            $this->cuotaiva = $this->baseimponible * ($this->iva / 100.0);
-            $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.0);
-        } elseif ($this->iva > 0) {
-            $this->cuotaiva = $this->codcuentaesp === 'IVAREP'
-                ? $data['haber'] - $data['debe']
-                : $data['debe'] - $data['haber'];
-            $this->cuotarecargo = 0.0;
-        } else {
-            $this->cuotarecargo = $this->codcuentaesp === 'IVAREP'
-                ? $data['haber'] - $data['debe']
-                : $data['debe'] - $data['haber'];
-            $this->cuotaiva = 0.0;
-        }
-
-        $this->total = $this->baseimponible + $this->cuotaiva + $this->cuotarecargo;
+        return 'CASE WHEN partidas.baseimponible < 0 AND (partidas.debe + partidas.haber) > 0
+                      THEN (partidas.debe + partidas.haber) * -1
+                      ELSE partidas.debe + partidas.haber
+                  END';
     }
 }

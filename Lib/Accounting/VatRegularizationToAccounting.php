@@ -175,14 +175,12 @@ class VatRegularizationToAccounting
             new DataBaseWhere('idasiento', 'IS NULL')
         ];
 
-        $facturasClienteSinAsiento = FacturaCliente::all($where);
-
-        $facturasProveedorSinAsiento = FacturaProveedor::all($where);
-
-        if (count($facturasClienteSinAsiento) > 0 || count($facturasProveedorSinAsiento) > 0) {
+        $facturasSinAsiento = FacturaCliente::all($where, [], 0, 1);
+        if (false === empty($facturasSinAsiento)) {
             return false;
         }
 
-        return true;
+        $facturasSinAsiento = FacturaProveedor::all($where, [], 0, 1);
+        return empty($facturasSinAsiento);
     }
 }

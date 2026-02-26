@@ -16,63 +16,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * @author Carlos García Gómez  <carlos@facturascripts.com>
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
 -->
 <view>
     <columns>
-        <column name="fiscal-exercise" display="none" order="100">
-            <widget type="text" fieldname="codejercicio"/>
-        </column>
-        <column name="subaccount" order="110">
-            <widget type="autocomplete" fieldname="idsubcuenta" onclick="EditSubcuenta">
-                <values source="subcuentas" fieldcode="idsubcuenta" fieldtitle="codsubcuenta"/>
-            </widget>
-        </column>
-        <column name="special-account" display="none" order="120">
+        <column name="special-account" order="100">
             <widget type="text" fieldname="codcuentaesp"/>
         </column>
-        <column name="description" order="130">
+        <column name="subaccount" order="110">
+            <widget type="text" fieldname="codsubcuenta" />
+        </column>
+        <column name="description" order="120">
             <widget type="textarea" fieldname="descripcion"/>
         </column>
-        <column name="tax" display="none" order="140">
-            <widget type="text" fieldname="codimpuesto"/>
-        </column>
-        <column name="tax-base" display="right" order="150">
-            <widget type="money" fieldname="baseimponible">
-                <option color="danger">lt:0</option>
-            </widget>
-        </column>
-        <column name="pct-vat" display="right" order="160">
+        <column name="pct-vat" display="right" order="130">
             <widget type="number" decimal="2" fieldname="iva"/>
         </column>
-        <column name="vat" display="right" order="170">
-            <widget type="money" fieldname="cuotaiva">
-                <option color="danger">lt:0</option>
-            </widget>
-        </column>
-        <column name="pct-surcharge" display="right" order="180">
+        <column name="pct-surcharge" display="right" order="140">
             <widget type="number" decimal="2" fieldname="recargo"/>
         </column>
-        <column name="surcharge" display="right" order="190">
-            <widget type="money" fieldname="cuotarecargo">
+        <column name="tax-base" display="right" order="150">
+            <widget type="money" fieldname="baseimponible" totals="false">
                 <option color="danger">lt:0</option>
             </widget>
         </column>
-        <column name="total" display="right" order="200">
-            <widget type="money" fieldname="total">
+        <column name="quota" display="right" order="160">
+            <widget type="money" fieldname="cuota" totals="false">
                 <option color="danger">lt:0</option>
             </widget>
         </column>
     </columns>
-    <rows>
-        <row type="footer">
-            <group name="actions"/>
-            <group name="summary" html="Block/PartidaImpuestoResumen.html.twig"/>
-        </row>
-        <row type="status">
-            <option color="warning" fieldname="codcuentaesp">IVASOP</option>
-            <option color="success" fieldname="codcuentaesp">IVAREP</option>
-        </row>
-    </rows>
 </view>
