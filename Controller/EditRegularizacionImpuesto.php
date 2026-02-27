@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Modelo303\Controller;
 
 use Exception;
@@ -28,11 +29,9 @@ use FacturaScripts\Core\Lib\SubAccountTools;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
-use FacturaScripts\Plugins\Modelo303\Lib\Modelo303;
+use FacturaScripts\Dinamic\Lib\Modelo303;
 
 /**
- * Controller to list the items in the RegularizacionImpuesto model
- *
  * @author Carlos García Gómez <carlos@facturascripts.com>
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  */
@@ -207,11 +206,6 @@ class EditRegularizacionImpuesto extends EditController
             $this->request->input('langcode', '')
         );
 
-        // load data for all views before exporting
-        foreach ($this->views as $name => $view) {
-            $this->loadData($name, $view);
-        }
-
         foreach ($this->views as $name => $selectedView) {
             if (false === $selectedView->settings['active']) {
                 continue;
@@ -233,9 +227,9 @@ class EditRegularizacionImpuesto extends EditController
             $concept = Tools::trans('concept');
             $amount = Tools::trans('amount');
             $rows = [
-                [$concept => Tools::trans('total-accrued-fee'), $amount => Tools::money($this->modelo303['27'])],
-                [$concept => Tools::trans('total-to-deduct'), $amount => Tools::money($this->modelo303['45'])],
-                [$concept => Tools::trans('total-result-of-the-general-regime'), $amount => Tools::money($this->modelo303['46'])],
+                [$concept => Tools::trans('total-accrued-fee'), $amount => Tools::money($this->modelo303->casilla('27'))],
+                [$concept => Tools::trans('total-to-deduct'), $amount => Tools::money($this->modelo303->casilla('45'))],
+                [$concept => Tools::trans('total-result-of-the-general-regime'), $amount => Tools::money($this->modelo303->casilla('46'))],
             ];
             $this->exportManager->addTablePage([$concept, $amount], $rows);
         }
@@ -277,7 +271,7 @@ class EditRegularizacionImpuesto extends EditController
                     'partidas.codsubcuenta' => 'ASC',
                 ]);
 
-                $this->modelo303->loadFromResumen($view->cursor);       // Load data into Modelo303 View
+                $this->modelo303->loadFromResumen($view->cursor); // Load data into Modelo303 View
                 break;
 
             case 'ListPartida':

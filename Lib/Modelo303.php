@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,11 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Modelo303\Lib;
 
-use FacturaScripts\Core\DataSrc\Impuestos;
+use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Tools;
-use FacturaScripts\Plugins\Modelo303\Model\Join\PartidaImpuestoResumen;
+use FacturaScripts\Dinamic\Model\Ejercicio;
+use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 
 /**
  * Class to handle Modelo 303 tax form data.
@@ -46,8 +48,8 @@ class Modelo303
     private array $casillaMap = [
         /*
          * IVA devengado (repercutido).
+         * Ventas nacionales (régimen general)
          */
-        // Ventas nacionales (régimen general)
         'IVAREP' => [
             '2'   => ['base' => '165', 'cuota' => '167'],
             '4'   => ['base' => '01', 'cuota' => '03'],
@@ -76,8 +78,8 @@ class Modelo303
 
         /*
          * IVA soportado (deducible)
+         * Compras nacionales (régimen general)
          */
-        // Compras nacionales (régimen general)
         'IVASOP' => [
             '21' => ['base' => '28', 'cuota' => '29'],
             '10' => ['base' => '28', 'cuota' => '29'],
@@ -161,6 +163,25 @@ class Modelo303
         $this->calculateTotals();
     }
 
+    public static function treasury(string $codejercicio, string $period): array
+    {
+        // comprobamos que el ejercicio existe
+        $exercise = new Ejercicio();
+        if (false === $exercise->load($codejercicio)) {
+            return [];
+        }
+
+        $dataBase = new DataBase();
+        $period = strtoupper($period);
+        list($dateStart, $dateEnd) = static::treasuryDates($exercise, $period);
+
+        return [
+            'iva-repercutido' => static::treasurySaldoCuenta('477%', $dateStart, $dateEnd, $dataBase),
+            'iva-soportado' => static::treasurySaldoCuenta('472%', $dateStart, $dateEnd, $dataBase),
+            'iva-devolver' => static::treasurySaldoCuenta('4700%', $dateStart, $dateEnd, $dataBase),
+        ];
+    }
+
     /**
      * Add a tax movement to the model (base + quota by type and rate)
      * - Determine the correct square based on the type and tax rate.
@@ -238,5 +259,55 @@ class Modelo303
 
         // Resultado régimen general
         $this->square['46'] = $this->square['27'] - $this->square['45'];
+    }
+
+    protected static function treasurySaldoCuenta(string $cuenta, string $desde, string $hasta, DataBase $dataBase): float
+    {
+        $saldo = 0.0;
+
+        if ($dataBase->tableExists('partidas')) {
+            // calculamos el saldo de todos aquellos asientos que afecten a caja
+            $sql = "select sum(debe-haber) as total from partidas where codsubcuenta LIKE " . $dataBase->var2str($cuenta)
+                . " and idasiento in (select idasiento from asientos where fecha >= " . $dataBase->var2str($desde)
+                . " and fecha <= " . $dataBase->var2str($hasta) . ");";
+
+            $data = $dataBase->select($sql);
+            if ($data && $data[0]['total'] !== null) {
+                $saldo = floatval($data[0]['total']);
+            }
+        }
+
+        return $saldo;
+    }
+
+    protected static function treasuryDates(Ejercicio $exercise, string $period): array
+    {
+        // si el periodo no es T1, T2, T3, T4 o Annual, se asume que es el primer trimestre
+        if (!in_array($period, ['T1', 'T2', 'T3', 'T4', 'ANNUAL'])) {
+            $period = 'T1';
+        }
+
+        return match ($period) {
+            'T1' => [
+                date('01-01-Y', strtotime($exercise->fechainicio)),
+                date('31-03-Y', strtotime($exercise->fechainicio))
+            ],
+            'T2' => [
+                date('01-04-Y', strtotime($exercise->fechainicio)),
+                date('30-06-Y', strtotime($exercise->fechainicio))
+            ],
+            'T3' => [
+                date('01-07-Y', strtotime($exercise->fechainicio)),
+                date('30-09-Y', strtotime($exercise->fechainicio))
+            ],
+            'ANNUAL' => [
+                date('01-01-Y', strtotime($exercise->fechainicio)),
+                date('31-12-Y', strtotime($exercise->fechainicio))
+            ],
+            default => [
+                date('01-10-Y', strtotime($exercise->fechainicio)),
+                date('31-12-Y', strtotime($exercise->fechainicio))
+            ],
+        };
     }
 }
