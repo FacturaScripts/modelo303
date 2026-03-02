@@ -27,6 +27,9 @@ use FacturaScripts\Core\Lib\ExtendedController\BaseView;
 use FacturaScripts\Core\Lib\ExtendedController\EditController;
 use FacturaScripts\Core\Lib\SubAccountTools;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
 use FacturaScripts\Dinamic\Lib\Modelo303;
@@ -60,6 +63,33 @@ class EditRegularizacionImpuesto extends EditController
         $data['title'] = 'model-303';
         $data['icon'] = 'fa-solid fa-balance-scale-right';
         return $data;
+    }
+
+    protected function checkInvoicesWithoutAccounting($model): void
+    {
+        // si el modelo no existe, no hacemos nada
+        if (false === $model->exists()) {
+            return;
+        }
+
+        // construimos la consulta para buscar facturas sin asiento
+        $where = [
+            Where::isNull('idasiento'),
+            Where::eq('codejercicio', $model->codejercicio),
+            Where::gte('fecha', $model->fechainicio),
+            Where::lte('fecha', $model->fechafin),
+            Where::notEq('total', 0),
+        ];
+
+        // buscamos si hay facturas de compra sin asiento para la fecha de la regularización
+        foreach (FacturaProveedor::all($where) as $invoice) {
+            Tools::log()->warning('supplier-invoice-without-accounting-entry', ['%code%' => $invoice->codigo]);
+        }
+
+        // buscamos si hay facturas de venta sin asiento para la fecha de la regularización
+        foreach (FacturaCliente::all($where) as $invoice) {
+            Tools::log()->warning('sale-invoice-without-accounting-entry', ['%code%' => $invoice->codigo]);
+        }
     }
 
     /**
@@ -272,6 +302,7 @@ class EditRegularizacionImpuesto extends EditController
                 ]);
 
                 $this->modelo303->loadFromResumen($view->cursor); // Load data into Modelo303 View
+                $this->checkInvoicesWithoutAccounting($mainModel);
                 break;
 
             case 'ListPartida':
