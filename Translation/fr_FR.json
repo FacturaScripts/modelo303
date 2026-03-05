@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Écriture déjà créée précédemment.",
+    "accounting-entry-not-created": "Écriture non créée.",
+    "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
+    "base": "Base",
+    "deductible-vat": "TVA déductible",
+    "deductible-vat-28": "Pour les montants supportés dans les opérations intérieures courantes",
+    "general-regime-result": "Résultat du régime général",
+    "invoices-without-acc-entry": "Il existe des factures sans écritures. Vous devez créer les écritures pour toutes les factures.",
     "model-303": "Formulaire 303",
     "model-303-390": "Modèle 303\/390",
+    "model-303-new": "Modelos 303 (2025)",
     "model-390": "Modèle 390",
+    "quota": "Quote",
+    "sale-invoice-without-accounting-entry": "La facture de vente %code% n'a pas d'écriture comptable",
+    "supplier-invoice-without-accounting-entry": "La factura de compra %code% no tiene asiento contable",
+    "tax-detail": "Détail des impôts",
+    "total-accrued-fee": "Frais totaux accumulés",
+    "total-result-of-the-general-regime": "Résultat total du régime général",
+    "total-to-deduct": "Total à déduire",
+    "vat-accrued": "TVA déductible",
     "year-model-390": "Année (formulaire 390)"
 }

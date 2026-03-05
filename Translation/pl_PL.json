@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Wpis już wcześniej utworzony.",
+    "accounting-entry-not-created": "Wpis nie został utworzony.",
+    "accounting-entry-not-found": "Nie znaleziono księgowań dla tego okresu",
+    "base": "Base",
+    "deductible-vat": "VAT do odliczenia",
+    "deductible-vat-28": "Za kwoty z tytułu transakcji związanych z wewnętrzną działalnością",
+    "general-regime-result": "Wynik reżimu ogólnego",
+    "invoices-without-acc-entry": "Istnieją faktury bez zapisów. Musisz utworzyć zapisy dla wszystkich faktur.",
     "model-303": "Model 303",
     "model-303-390": "Model 303\/390",
+    "model-303-new": "Formularze 303 (2025)",
     "model-390": "Model 390",
+    "quota": "Kwota",
+    "sale-invoice-without-accounting-entry": "La factura de venta %code% no tiene asiento contable",
+    "supplier-invoice-without-accounting-entry": "La factura de compra %code% no tiene asiento contable",
+    "tax-detail": "Detalle de impuestos",
+    "total-accrued-fee": "Całkowita należna opłata",
+    "total-result-of-the-general-regime": "Łączny wynik ogólnego reżimu",
+    "total-to-deduct": "Do odliczenia ogółem",
+    "vat-accrued": "Podatek VAT naliczony",
     "year-model-390": "Rok (model 390)"
 }

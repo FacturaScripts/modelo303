@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Položka byla již dříve vytvořena.",
+    "accounting-entry-not-created": "Účet nebyl vytvořen.",
+    "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
+    "base": "Base",
+    "deductible-vat": "Dovolený DPH",
+    "deductible-vat-28": "Za úhrady uhrazené při běžných vnitrostátních operacích",
+    "general-regime-result": "Výsledek obecného režimu",
+    "invoices-without-acc-entry": "Existují faktury bez zápisu. Musíte vytvořit zápisy pro všechny faktury.",
     "model-303": "Modelo 303",
     "model-303-390": "Model 303\/390",
+    "model-303-new": "Modelos 303 (2025)",
     "model-390": "Model 390",
+    "quota": "Kvóta",
+    "sale-invoice-without-accounting-entry": "La factura de venta %code% no tiene asiento contable",
+    "supplier-invoice-without-accounting-entry": "Faktura za nákup %code% nemá účetní zápis",
+    "tax-detail": "Detalle de impuestos",
+    "total-accrued-fee": "Celkově nashromážděné poplatky",
+    "total-result-of-the-general-regime": "Celkový výsledek běžného režimu",
+    "total-to-deduct": "Celková částka k odečtení",
+    "vat-accrued": "DPH zaúčtováno",
     "year-model-390": "Rok (model 390)"
 }

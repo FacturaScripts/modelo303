@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Buchung bereits erstellt.",
+    "accounting-entry-not-created": "Buchung nicht erstellt.",
+    "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
+    "base": "Bemessungsgrundlage",
+    "deductible-vat": "Vorsteuer",
+    "deductible-vat-28": "Für Vorsteuerbeträge aus laufenden Innenoperationen",
+    "general-regime-result": "Ergebnis des allgemeinen Regimes",
+    "invoices-without-acc-entry": "Es gibt Rechnungen ohne Buchungen. Sie müssen die Buchungen für alle Rechnungen erstellen.",
     "model-303": "Modell-303",
     "model-303-390": "Modell 303\/390",
+    "model-303-new": "Modelle 303 (2025)",
     "model-390": "Modell 390",
+    "quota": "Quota",
+    "sale-invoice-without-accounting-entry": "Die Verkaufsrechnung %code% hat keinen Buchungssatz.",
+    "supplier-invoice-without-accounting-entry": "La factura de compra %code% no tiene asiento contable",
+    "tax-detail": "Steuerdetails",
+    "total-accrued-fee": "Gesamt geschuldete Gebühr",
+    "total-result-of-the-general-regime": "Gesamtergebnis des allgemeinen Regimes",
+    "total-to-deduct": "Gesamt abzuziehen",
+    "vat-accrued": "Ertragsteuer",
     "year-model-390": "Jahr (Modell 390)"
 }

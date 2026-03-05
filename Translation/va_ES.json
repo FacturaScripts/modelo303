@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Seient ja creat anteriorment.",
+    "accounting-entry-not-created": "Asient no creat.",
+    "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
+    "base": "Base",
+    "deductible-vat": "IVA deduïble",
+    "deductible-vat-28": "Per quotes suportades en operacions interiors corrents",
+    "general-regime-result": "Resultat del règim general",
+    "invoices-without-acc-entry": "Existixen factures sense asient. Cal crear els asients de totes les factures.",
     "model-303": "model-303",
     "model-303-390": "Models 303 i 390",
+    "model-303-new": "Modelos 303 (2025)",
     "model-390": "Model 390",
+    "quota": "Quota",
+    "sale-invoice-without-accounting-entry": "La factura de venda %code% no té assentament comptable",
+    "supplier-invoice-without-accounting-entry": "La factura de compra %code% no tiene asiento contable",
+    "tax-detail": "Detall d'impostos",
+    "total-accrued-fee": "Quota total devengada",
+    "total-result-of-the-general-regime": "Resultat total del règim general",
+    "total-to-deduct": "Total a deduïr",
+    "vat-accrued": "IVA devengat",
     "year-model-390": "Any (model 390)"
 }

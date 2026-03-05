@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Registrazione già creata in precedenza.",
+    "accounting-entry-not-created": "Registrazione non creata.",
+    "accounting-entry-not-found": "Non sono stati trovati movimenti contabili per questo periodo",
+    "base": "Base",
+    "deductible-vat": "IVA deducibile",
+    "deductible-vat-28": "Per le spese sostenute in operazioni interne correnti",
+    "general-regime-result": "Risultato del regime generale",
+    "invoices-without-acc-entry": "Esistono fatture senza registrazione. È necessario creare le registrazioni per tutte le fatture.",
     "model-303": "Modello 303",
     "model-303-390": "Modelli 303 e 390",
+    "model-303-new": "Modelos 303 (2025)",
     "model-390": "Modello 390",
+    "quota": "Quota",
+    "sale-invoice-without-accounting-entry": "La fattura di vendita %code% non ha registrazione contabile",
+    "supplier-invoice-without-accounting-entry": "La factura de compra %code% no tiene asiento contable",
+    "tax-detail": "Dettaglio imposte",
+    "total-accrued-fee": "Quota totale devengata",
+    "total-result-of-the-general-regime": "Risultato totale del regime generale",
+    "total-to-deduct": "Totale da detrarre",
+    "vat-accrued": "IVA maturata",
     "year-model-390": "Anno (modello 390)"
 }

@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Journal entry already created.",
+    "accounting-entry-not-created": "Journal entry not created.",
+    "accounting-entry-not-found": "No accounting entries found for this period",
+    "base": "Tax base",
+    "deductible-vat": "Deductible VAT",
+    "deductible-vat-28": "For input VAT on regular domestic transactions.",
+    "general-regime-result": "Result under the general regime",
+    "invoices-without-acc-entry": "There are invoices without journal entries. You must create journal entries for all invoices.",
     "model-303": "Tax model 303",
     "model-303-390": "Model 303\/390",
+    "model-303-new": "Model 303 (2025)",
     "model-390": "Form 390",
+    "quota": "Quota.",
+    "sale-invoice-without-accounting-entry": "The sales invoice %code% has no accounting entry",
+    "supplier-invoice-without-accounting-entry": "The purchase invoice %code% has no accounting entry",
+    "tax-detail": "Tax details",
+    "total-accrued-fee": "Total accrued fee.",
+    "total-result-of-the-general-regime": "Total result of the general regime.",
+    "total-to-deduct": "Total to be deducted",
+    "vat-accrued": "Accrued VAT",
     "year-model-390": "Year (modelo 390)"
 }

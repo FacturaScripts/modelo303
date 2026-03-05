@@ -1,6 +1,23 @@
 {
+    "accounting-entry-already-created": "Sarrera jadanik sortuta dago.",
+    "accounting-entry-not-created": "Asiento ez da sortu.",
+    "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
+    "base": "Base",
+    "deductible-vat": "IVA deduzigarria",
+    "deductible-vat-28": "Barne operazioetan baino jasandako kuoten ondorioz",
+    "general-regime-result": "Orokorreko erregimenaren emaitza",
+    "invoices-without-acc-entry": "Faktura batzuk ez daude sartuak. Faktura guztien sarrerak sortu beharko dituzu.",
     "model-303": "303 Eredua",
     "model-303-390": "Modeloa 303\/390",
+    "model-303-new": "Modelos 303 (2025)",
     "model-390": "Modeloa 390",
+    "quota": "Kuota",
+    "sale-invoice-without-accounting-entry": "La factura de venta %code% no tiene asiento contable",
+    "supplier-invoice-without-accounting-entry": "La factura de compra %code% no tiene asiento contable",
+    "tax-detail": "Detalle de impuestos",
+    "total-accrued-fee": "Kuota totala devengatua",
+    "total-result-of-the-general-regime": "Orokorreko araubidearen emaitza osoa",
+    "total-to-deduct": "Guztira deskontzeko",
+    "vat-accrued": "Zergak aurreratua",
     "year-model-390": "Urtea (390 modeloa)"
 }
