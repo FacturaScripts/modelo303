@@ -29,6 +29,7 @@ use FacturaScripts\Core\Lib\SubAccountTools;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
+use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Lib\Modelo303;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
@@ -284,6 +285,7 @@ class EditRegularizacionImpuesto extends EditController
 
             case 'ListPartidaImpuestoResumen':
                 $mainModel = $this->getModel();
+                $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
                 $where = [
                     new DataBaseWhere('partidas.codsubcuenta', '477%', 'LIKE'),
                     new DataBaseWhere('partidas.codsubcuenta', '472%', 'LIKE', 'OR'),
@@ -291,6 +293,7 @@ class EditRegularizacionImpuesto extends EditController
                     new DataBaseWhere('asientos.fecha', $mainModel->fechainicio, '>='),
                     new DataBaseWhere('asientos.fecha', $mainModel->fechafin, '<='),
                     new DataBaseWhere('COALESCE(series.siniva, false)', false),
+                    new DataBaseWhere("COALESCE(asientos.operacion, '')", $excludedOperations, 'NOT IN'),
                 ];
 
                 if (false === empty($mainModel->idasiento)) {

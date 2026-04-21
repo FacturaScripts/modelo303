@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2019-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2019-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -127,10 +127,12 @@ class VatRegularizationToAccounting
     {
         $accTools = new SubAccountTools();
         $field = 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
+        $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
         $where = [
             new DataBaseWhere('asientos.codejercicio', $reg->codejercicio),
             new DataBaseWhere('asientos.fecha', $reg->fechainicio, '>='),
             new DataBaseWhere('asientos.fecha', $reg->fechafin, '<='),
+            new DataBaseWhere("COALESCE(asientos.operacion, '')", $excludedOperations, 'NOT IN'),
             $accTools->whereForSpecialAccounts($field, SubAccountTools::SPECIAL_GROUP_TAX_ALL)
         ];
         $orderBy = [
