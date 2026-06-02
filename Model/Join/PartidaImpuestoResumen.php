@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2025 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -18,7 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Modelo303\Model\Join;
 
-use FacturaScripts\Core\Model\Base\JoinModel;
+use FacturaScripts\Core\Template\JoinModel;
 
 /**
  * Auxiliary model to load a resume of accounting entries with VAT
@@ -105,7 +105,7 @@ class PartidaImpuestoResumen extends JoinModel
      *
      * @param array $data
      */
-    protected function loadFromData(array $data)
+    protected function loadFromData(array $data): void
     {
         parent::loadFromData($data);
 
