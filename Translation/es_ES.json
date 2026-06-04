@@ -4,7 +4,6 @@
     "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
     "base": "Base",
     "deductible-vat": "IVA deducible",
-    "deductible-vat-28": "Por cuotas soportadas en operaciones interiores corrientes",
     "general-regime-result": "Resultado del régimen general",
     "invoices-without-acc-entry": "Existen facturas sin asiento. Debe crear los asientos de todas las facturas.",
     "model-303": "Modelo 303",
@@ -19,5 +18,8 @@
     "total-result-of-the-general-regime": "Resultado total del régimen general",
     "total-to-deduct": "Total a deducir",
     "vat-accrued": "IVA devengado",
-    "year-model-390": "Año (modelo 390)"
+    "year-model-390": "Año (modelo 390)",
+    "deductible-vat-28": "por operaciones interiores corrientes",
+    "deductible-vat-32": "por importaciones",
+    "deductible-vat-36": "por adquisiciones intracomunitarias"
 }
