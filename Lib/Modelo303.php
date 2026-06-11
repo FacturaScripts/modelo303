@@ -21,7 +21,10 @@ namespace FacturaScripts\Plugins\Modelo303\Lib;
 
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Tools;
+use FacturaScripts\Core\Where;
+use FacturaScripts\Dinamic\Lib\InvoiceOperation;
 use FacturaScripts\Dinamic\Model\Ejercicio;
+use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 
 /**
@@ -34,11 +37,11 @@ class Modelo303
     private const MAX_SQUARE = 200;
 
     /**
-     * Stores all model squares.
-     * Each key is the AEAT square number.
-     *   '01' => 0.00, '02' => 0.00, ...
+     * Warnings collected while loading data (amounts not assigned to any square).
+     *
+     * @var string[]
      */
-    private array $square;
+    private array $avisos = [];
 
     /**
      * Structure for know to assign values to squares.
@@ -58,11 +61,10 @@ class Modelo303
             '21'  => ['base' => '07', 'cuota' => '09'],
         ],
 
-        // Adquisiciones intracomunitarias
-        'IVARUE' => ['21' => ['base' => '10', 'cuota' => '11']],
-
-        // Operaciones con inversión del sujeto pasivo
-        // TODO: 'xxxxx' =>  ['21' => ['base' => '12', 'cuota' => '13']],
+        // Adquisiciones intracomunitarias (cualquier tipo va a 10/11)
+        'IVARUE' => [
+            '*' => ['base' => '10', 'cuota' => '11'],
+        ],
 
         // Recargo de equivalencia
         'IVARRE' => [
@@ -74,37 +76,37 @@ class Modelo303
         ],
 
         // Operaciones exentas
-        'IVAREX' => ['0' => ['base' => '150', 'cuota' => null]],
+        'IVAREX' => ['*' => ['base' => '150', 'cuota' => null]],
 
         /*
          * IVA soportado (deducible)
          * Compras nacionales (régimen general)
          */
         'IVASOP' => [
-            '21' => ['base' => '28', 'cuota' => '29'],
-            '10' => ['base' => '28', 'cuota' => '29'],
-            '4'  => ['base' => '28', 'cuota' => '29'],
+            '*' => ['base' => '28', 'cuota' => '29'],
         ],
 
-        // Compras en importaciones
+        // Compras en importaciones (cualquier tipo va a 32/33)
         'IVASIM' => [
-            '21' => ['base' => '32', 'cuota' => '33'],
-            '10' => ['base' => '32', 'cuota' => '33'],
-            '4'  => ['base' => '32', 'cuota' => '33'],
-            '0'  => ['base' => '32', 'cuota' => '33'],
+            '*' => ['base' => '32', 'cuota' => '33'],
         ],
 
-        // Compras en adquisiciones intracomunitarias
+        // Compras en adquisiciones intracomunitarias (cualquier tipo va a 36/37)
         'IVASUE' => [
-            '21' => ['base' => '36', 'cuota' => '37'],
-            '10' => ['base' => '36', 'cuota' => '37'],
-            '4'  => ['base' => '36', 'cuota' => '37'],
-            '0'  => ['base' => '36', 'cuota' => '37'],
+            '*' => ['base' => '36', 'cuota' => '37'],
         ],
 
-        // Operaciones exentas
-        'IVASEX' => ['0'  => ['base' => '60', 'cuota' => null]],
+        // Operaciones exentas: las compras exentas no se deducen ni figuran en el
+        // resultado del régimen general; se reconocen para no generar avisos.
+        'IVASEX' => ['*' => ['base' => null, 'cuota' => null]],
     ];
+
+    /**
+     * Stores all model squares.
+     * Each key is the AEAT square number.
+     *   '01' => 0.00, '02' => 0.00, ...
+     */
+    private array $square;
 
     /**
      * Initializes the tax rates for each square.
@@ -155,6 +157,17 @@ class Modelo303
     }
 
     /**
+     * Returns the list of warnings collected while loading data
+     * (amounts that could not be assigned to any square).
+     *
+     * @return string[]
+     */
+    public function getAvisos(): array
+    {
+        return $this->avisos;
+    }
+
+    /**
      * Loads summary data from an array of PartidaImpuestoResumen.
      *
      * @param PartidaImpuestoResumen[] $resumen
@@ -164,6 +177,8 @@ class Modelo303
         foreach ($resumen as $item) {
             $this->addMovimiento(
                 $item->codcuentaesp ?? '',
+                $item->operacion ?? '',
+                $item->tipodoc ?? '',
                 (float) $item->iva,
                 (float) $item->recargo,
                 (float) $item->baseimponible,
@@ -171,6 +186,35 @@ class Modelo303
             );
         }
         $this->calculateTotals();
+    }
+
+    /**
+     * Loads the exempt/informative tax bases of sales invoices (without VAT entries)
+     * into their squares: intracommunity (59), exports (60) and reverse charge (122).
+     *
+     * @param int $idempresa
+     * @param string $codejercicio
+     * @param string $dateStart
+     * @param string $dateEnd
+     */
+    public function loadFromSalesInvoices(int $idempresa, string $codejercicio, string $dateStart, string $dateEnd): void
+    {
+        $where = [
+            Where::eq('idempresa', $idempresa),
+            Where::eq('codejercicio', $codejercicio),
+            Where::gte('fecha', $dateStart),
+            Where::lte('fecha', $dateEnd),
+            Where::in('operacion', [
+                InvoiceOperation::INTRA_COMMUNITY,
+                InvoiceOperation::INTRA_COMMUNITY_SERVICES,
+                InvoiceOperation::EXPORT,
+                InvoiceOperation::REVERSE_CHARGE,
+            ]),
+        ];
+
+        foreach (FacturaCliente::all($where, [], 0, 0) as $invoice) {
+            $this->addBaseExentaVenta((string)$invoice->operacion, (float)$invoice->neto);
+        }
     }
 
     public static function treasury(string $codejercicio, string $period): array
@@ -193,20 +237,75 @@ class Modelo303
     }
 
     /**
-     * Add a tax movement to the model (base + quota by type and rate)
-     * - Determine the correct square based on the type and tax rate.
-     * - Update the base and quota squares accordingly.
+     * Adds the exempt tax base of a sales invoice to its informative square.
      *
-     * @param string $tipo
+     * @param string $operacion
+     * @param float $base
+     * @return void
+     */
+    private function addBaseExentaVenta(string $operacion, float $base): void
+    {
+        switch ($operacion) {
+            case InvoiceOperation::EXPORT:
+                $this->square['60'] += $base;
+                break;
+
+            case InvoiceOperation::INTRA_COMMUNITY:
+            case InvoiceOperation::INTRA_COMMUNITY_SERVICES:
+                $this->square['59'] += $base;
+                break;
+
+            case InvoiceOperation::REVERSE_CHARGE:
+                $this->square['122'] += $base;
+                break;
+        }
+    }
+
+    /**
+     * Adds a base and/or quota amount to the given squares.
+     *
+     * @param string|null $baseSquare
+     * @param string|null $cuotaSquare
+     * @param float $base
+     * @param float $cuota
+     * @return void
+     */
+    private function addCasilla(?string $baseSquare, ?string $cuotaSquare, float $base, float $cuota): void
+    {
+        if (false === empty($baseSquare)) {
+            $this->square[$baseSquare] += $base;
+        }
+
+        if (false === empty($cuotaSquare)) {
+            $this->square[$cuotaSquare] += $cuota;
+        }
+    }
+
+    /**
+     * Add a tax movement to the model (base + quota by type and rate)
+     * - Special operations (reverse charge, intracommunity, import) are routed by
+     *   the invoice operation type to their specific squares.
+     * - The rest follows the casillaMap by special account and tax rate.
+     *
+     * @param string $tipo cuenta especial de IVA (IVAREP, IVASOP, IVARUE, ...)
+     * @param string $operacion tipo de operación de la factura (intracomunitaria, inv-sujeto-pasivo, ...)
+     * @param string $tipodoc 'compra' o 'venta'
      * @param float $iva
      * @param float $recargo
      * @param float $base
      * @param float $cuota
      * @return void
      */
-    private function addMovimiento(string $tipo, float $iva, float $recargo, float $base, float $cuota): void
+    private function addMovimiento(string $tipo, string $operacion, string $tipodoc, float $iva, float $recargo, float $base, float $cuota): void
     {
+        // Las operaciones especiales (ISP, intracomunitarias, importación) deciden la casilla
+        // por el tipo de operación de la factura, no solo por la cuenta especial.
+        if ($this->addMovimientoEspecial($tipo, $operacion, $tipodoc, $base, $cuota)) {
+            return;
+        }
+
         if (false === isset($this->casillaMap[$tipo])) {
+            $this->registrarNoMapeado($tipo, $operacion, $base, $cuota);
             return;
         }
 
@@ -219,20 +318,77 @@ class Modelo303
             ?? null;
 
         if ($grupo === null) {
+            $this->registrarNoMapeado($tipo, $operacion, $base, $cuota, $tax);
             return;
         }
 
-        // Update base and quota squares.
-        if (false === empty($grupo['base'])) {
-            $this->square[$grupo['base']] += $base;
+        // For recargo, if cuota is zero, calculate it from base and recargo rate
+        if ($tipo === 'IVARRE' && $cuota == 0.0 && $recargo > 0.0) {
+            $cuota = $base * ($recargo / 100.0);
         }
 
-        if (false === empty($grupo['cuota'])) {
-            // For recargo, if cuota is zero, calculate it from base and recargo rate
-            if ($tipo === 'IVARRE' && $cuota == 0.0 && $recargo > 0.0) {
-                $cuota = $base * ($recargo / 100.0);
-            }
-            $this->square[$grupo['cuota']] += $cuota;
+        $this->addCasilla($grupo['base'] ?? null, $grupo['cuota'] ?? null, $base, $cuota);
+    }
+
+    /**
+     * Routes movements of special invoice operations (reverse charge, intracommunity, import)
+     * to their specific squares. Returns true if the movement has been handled (or intentionally
+     * skipped) and must not follow the standard mapping.
+     *
+     * @param string $tipo
+     * @param string $operacion
+     * @param string $tipodoc
+     * @param float $base
+     * @param float $cuota
+     * @return bool
+     */
+    private function addMovimientoEspecial(string $tipo, string $operacion, string $tipodoc, float $base, float $cuota): bool
+    {
+        $esDevengado = in_array($tipo, ['IVAREP', 'IVARUE', 'IVAREX'], true);
+        $esDeducible = in_array($tipo, ['IVASOP', 'IVASUE', 'IVASIM', 'IVASEX'], true);
+
+        // El recargo de equivalencia y cuentas no fiscales siguen el tratamiento estándar.
+        if (false === $esDevengado && false === $esDeducible) {
+            return false;
+        }
+
+        switch ($operacion) {
+            case InvoiceOperation::REVERSE_CHARGE:
+                // Inversión del sujeto pasivo en COMPRAS: autorrepercusión.
+                // Devengado → 12/13, deducible → 28/29 (el IVA se compensa).
+                if ($tipodoc === 'compra') {
+                    $esDevengado
+                        ? $this->addCasilla('12', '13', $base, $cuota)
+                        : $this->addCasilla('28', '29', $base, $cuota);
+                }
+                // En ventas con ISP el vendedor no repercute IVA; la base informativa (122)
+                // se carga desde las facturas en loadFromSalesInvoices().
+                return true;
+
+            case InvoiceOperation::INTRA_COMMUNITY:
+            case InvoiceOperation::INTRA_COMMUNITY_SERVICES:
+                // Adquisición intracomunitaria (COMPRA): devengado → 10/11, deducible → 36/37.
+                if ($tipodoc === 'compra') {
+                    $esDevengado
+                        ? $this->addCasilla('10', '11', $base, $cuota)
+                        : $this->addCasilla('36', '37', $base, $cuota);
+                }
+                // Entrega intracomunitaria (VENTA): exenta. Las partidas de autorrepercusión
+                // (IVARUE/IVASUE) se compensan y no forman parte del régimen general; la base
+                // informativa (casilla 59) se carga desde las facturas.
+                return true;
+
+            case InvoiceOperation::IMPORT:
+                // Importación (COMPRA): el IVA lo liquida la aduana (DUA). Solo el soportado deducible.
+                if ($esDeducible) {
+                    $this->addCasilla('32', '33', $base, $cuota);
+                }
+                // El IVA devengado de importación (casilla 77 / IVA diferido) no tiene origen
+                // contable automático en FacturaScripts.
+                return true;
+
+            default:
+                return false;
         }
     }
 
@@ -271,23 +427,31 @@ class Modelo303
         $this->square['46'] = $this->square['27'] - $this->square['45'];
     }
 
-    protected static function treasurySaldoCuenta(string $cuenta, string $desde, string $hasta, DataBase $dataBase): float
+    /**
+     * Records a warning for an amount that could not be assigned to any square,
+     * so the user can understand why the summary may not match the purchases/sales tabs.
+     *
+     * @param string $tipo
+     * @param string $operacion
+     * @param float $base
+     * @param float $cuota
+     * @param float|null $tax
+     * @return void
+     */
+    private function registrarNoMapeado(string $tipo, string $operacion, float $base, float $cuota, ?float $tax = null): void
     {
-        $saldo = 0.0;
-
-        if ($dataBase->tableExists('partidas')) {
-            // calculamos el saldo de todos aquellos asientos que afecten a caja
-            $sql = "select sum(debe-haber) as total from partidas where codsubcuenta LIKE " . $dataBase->var2str($cuenta)
-                . " and idasiento in (select idasiento from asientos where fecha >= " . $dataBase->var2str($desde)
-                . " and fecha <= " . $dataBase->var2str($hasta) . ");";
-
-            $data = $dataBase->select($sql);
-            if ($data && $data[0]['total'] !== null) {
-                $saldo = floatval($data[0]['total']);
-            }
+        // No avisamos si no hay importe relevante.
+        if (empty($base) && empty($cuota)) {
+            return;
         }
 
-        return $saldo;
+        $this->avisos[] = Tools::lang()->trans('model303-amount-without-square', [
+            '%type%' => $tipo,
+            '%rate%' => $tax === null ? '-' : Tools::number($tax, 2),
+            '%operation%' => $operacion === '' ? '-' : $operacion,
+            '%base%' => Tools::number($base, 2),
+            '%quota%' => Tools::number($cuota, 2),
+        ]);
     }
 
     protected static function treasuryDates(Ejercicio $exercise, string $period): array
@@ -319,5 +483,24 @@ class Modelo303
                 date('31-12-Y', strtotime($exercise->fechainicio))
             ],
         };
+    }
+
+    protected static function treasurySaldoCuenta(string $cuenta, string $desde, string $hasta, DataBase $dataBase): float
+    {
+        $saldo = 0.0;
+
+        if ($dataBase->tableExists('partidas')) {
+            // calculamos el saldo de todos aquellos asientos que afecten a caja
+            $sql = "select sum(debe-haber) as total from partidas where codsubcuenta LIKE " . $dataBase->var2str($cuenta)
+                . " and idasiento in (select idasiento from asientos where fecha >= " . $dataBase->var2str($desde)
+                . " and fecha <= " . $dataBase->var2str($hasta) . ");";
+
+            $data = $dataBase->select($sql);
+            if ($data && $data[0]['total'] !== null) {
+                $saldo = floatval($data[0]['total']);
+            }
+        }
+
+        return $saldo;
     }
 }

@@ -289,3 +289,44 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <i class="fa-solid fa-circle-info me-2" aria-hidden="true"></i>{{ trans('info-operations-no-vat') }}
+            </div>
+            <table class="table table-bordered table-sm mb-0">
+                <thead class="text-center">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>{{ trans('tax-base') }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ trans('intra-community-deliveries') }}</td>
+                    <td class="text-center">59</td>
+                    <td class="text-end">
+                        <strong>{{ fsc.modelo303.casillaStr('59') }}</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ trans('exports') }}</td>
+                    <td class="text-center">60</td>
+                    <td class="text-end">
+                        <strong>{{ fsc.modelo303.casillaStr('60') }}</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ trans('sales-reverse-charge') }}</td>
+                    <td class="text-center">122</td>
+                    <td class="text-end">
+                        <strong>{{ fsc.modelo303.casillaStr('122') }}</strong>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
