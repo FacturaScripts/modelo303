@@ -127,12 +127,10 @@ class VatRegularizationToAccounting
     {
         $accTools = new SubAccountTools();
         $field = 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
-        $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
         $where = [
             Where::eq('asientos.codejercicio', $reg->codejercicio),
             Where::gte('asientos.fecha', $reg->fechainicio),
             Where::lte('asientos.fecha', $reg->fechafin),
-            Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
             $accTools->whereForSpecialAccounts($field, SubAccountTools::SPECIAL_GROUP_TAX_ALL)
         ];
         $orderBy = [
