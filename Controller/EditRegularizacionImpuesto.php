@@ -20,7 +20,6 @@
 namespace FacturaScripts\Plugins\Modelo303\Controller;
 
 use Exception;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Impuestos;
 use FacturaScripts\Core\DataSrc\Series;
 use FacturaScripts\Core\Lib\ExtendedController\BaseView;
@@ -287,17 +286,17 @@ class EditRegularizacionImpuesto extends EditController
                 $mainModel = $this->getModel();
                 $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
                 $where = [
-                    new DataBaseWhere('partidas.codsubcuenta', '477%', 'LIKE'),
-                    new DataBaseWhere('partidas.codsubcuenta', '472%', 'LIKE', 'OR'),
-                    new DataBaseWhere('asientos.idempresa', $mainModel->idempresa),
-                    new DataBaseWhere('asientos.fecha', $mainModel->fechainicio, '>='),
-                    new DataBaseWhere('asientos.fecha', $mainModel->fechafin, '<='),
-                    new DataBaseWhere('COALESCE(series.siniva, false)', false),
-                    new DataBaseWhere("COALESCE(asientos.operacion, '')", $excludedOperations, 'NOT IN'),
+                    Where::like('partidas.codsubcuenta', '477%'),
+                    Where::orLike('partidas.codsubcuenta', '472%'),
+                    Where::eq('asientos.idempresa', $mainModel->idempresa),
+                    Where::gte('asientos.fecha', $mainModel->fechainicio),
+                    Where::lte('asientos.fecha', $mainModel->fechafin),
+                    Where::eq('COALESCE(series.siniva, false)', false),
+                    Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
                 ];
 
                 if (false === empty($mainModel->idasiento)) {
-                    $where[] = new DataBaseWhere('partidas.idasiento', $mainModel->idasiento, '<>');
+                    $where[] = Where::notEq('partidas.idasiento', $mainModel->idasiento);
                 }
                 $view->loadData(false, $where, [
                     'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)' => 'ASC',
@@ -347,7 +346,7 @@ class EditRegularizacionImpuesto extends EditController
     private function getListPartida(BaseView $view): void
     {
         if (false === empty($this->getModel()->idasiento)) {
-            $where = [new DataBaseWhere('idasiento', $this->getModel()->idasiento)];
+            $where = [Where::eq('idasiento', $this->getModel()->idasiento)];
             $view->loadData(false, $where, ['orden' => 'ASC']);
         }
     }
@@ -372,10 +371,8 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Get DataBaseWhere filter for tax group
-     *
      * @param int $group
-     * @return DataBaseWhere[]
+     * @return array
      */
     private function getPartidaImpuestoWhere(int $group): array
     {
@@ -389,13 +386,13 @@ class EditRegularizacionImpuesto extends EditController
 
         $subAccountTools = new SubAccountTools();
         return [
-            new DataBaseWhere('asientos.idasiento', implode(',', $ids), 'NOT IN'),
-            new DataBaseWhere('asientos.codejercicio', $this->getModel()->codejercicio),
-            new DataBaseWhere('asientos.fecha', $this->getModel()->fechainicio, '>='),
-            new DataBaseWhere('asientos.fecha', $this->getModel()->fechafin, '<='),
-            new DataBaseWhere('COALESCE(series.siniva, 0)', 0),
-            new DataBaseWhere('partidas.baseimponible', 0, '!='),
-            new DataBaseWhere('COALESCE(partidas.iva, 0)', 0, '>', 'OR'),
+            Where::notIn('asientos.idasiento', $ids),
+            Where::eq('asientos.codejercicio', $this->getModel()->codejercicio),
+            Where::gte('asientos.fecha', $this->getModel()->fechainicio),
+            Where::lte('asientos.fecha', $this->getModel()->fechafin),
+            Where::eq('COALESCE(series.siniva, 0)', 0),
+            Where::notEq('partidas.baseimponible', 0),
+            Where::orGt('COALESCE(partidas.iva, 0)', 0),
             $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group)
         ];
     }

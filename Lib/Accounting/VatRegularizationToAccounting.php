@@ -19,8 +19,8 @@
 
 namespace FacturaScripts\Plugins\Modelo303\Lib\Accounting;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\FacturaCliente;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Model\FacturaProveedor;
 use FacturaScripts\Core\Model\RegularizacionImpuesto;
 use FacturaScripts\Core\Tools;
@@ -129,10 +129,10 @@ class VatRegularizationToAccounting
         $field = 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
         $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
         $where = [
-            new DataBaseWhere('asientos.codejercicio', $reg->codejercicio),
-            new DataBaseWhere('asientos.fecha', $reg->fechainicio, '>='),
-            new DataBaseWhere('asientos.fecha', $reg->fechafin, '<='),
-            new DataBaseWhere("COALESCE(asientos.operacion, '')", $excludedOperations, 'NOT IN'),
+            Where::eq('asientos.codejercicio', $reg->codejercicio),
+            Where::gte('asientos.fecha', $reg->fechainicio),
+            Where::lte('asientos.fecha', $reg->fechafin),
+            Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
             $accTools->whereForSpecialAccounts($field, SubAccountTools::SPECIAL_GROUP_TAX_ALL)
         ];
         $orderBy = [
@@ -170,11 +170,11 @@ class VatRegularizationToAccounting
     private function checkInvoicesWithoutAccEntry($reg): bool
     {
         $where = [
-            new DataBaseWhere('codejercicio', $reg->codejercicio),
-            new DataBaseWhere('idempresa', $reg->idempresa),
-            new DataBaseWhere('fecha', $reg->fechainicio, '>='),
-            new DataBaseWhere('fecha', $reg->fechafin, '<='),
-            new DataBaseWhere('idasiento', 'IS NULL')
+            Where::eq('codejercicio', $reg->codejercicio),
+            Where::eq('idempresa', $reg->idempresa),
+            Where::gte('fecha', $reg->fechainicio),
+            Where::lte('fecha', $reg->fechafin),
+            Where::isNull('idasiento'),
         ];
 
         $facturasSinAsiento = FacturaCliente::all($where, [], 0, 1);
