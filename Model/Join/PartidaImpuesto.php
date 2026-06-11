@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,9 +19,9 @@
 
 namespace FacturaScripts\Plugins\Modelo303\Model\Join;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\Base\BusinessDocument;
-use FacturaScripts\Core\Template\JoinModel;
-use FacturaScripts\Core\Where;
+use FacturaScripts\Core\Model\Base\JoinModel;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
 
@@ -54,7 +54,7 @@ class PartidaImpuesto extends JoinModel
 
     protected function getFactura(): BusinessDocument
     {
-        $where = [Where::eq('idasiento', $this->idasiento ?? 0)];
+        $where = [new DataBaseWhere('idasiento', $this->idasiento ?? 0)];
 
         $facturaCliente = new FacturaCliente();
         if ($facturaCliente->loadWhere($where)) {

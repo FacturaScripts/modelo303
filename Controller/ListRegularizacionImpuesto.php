@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
- * Copyright (C) 2017-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2024 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,8 +19,8 @@
 
 namespace FacturaScripts\Plugins\Modelo303\Controller;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\DataSrc\Empresas;
-use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Lib\ExtendedController\ListController;
 use FacturaScripts\Core\Tools;
 
@@ -67,7 +67,7 @@ class ListRegularizacionImpuesto extends ListController
             ->addFilterSelect('idempresa', 'company', 'idempresa', Empresas::codeModel())
             ->addFilterSelect('codejercicio', 'exercise', 'codejercicio', $exercises)
             ->addFilterSelectWhere('status', [
-                ['label' => Tools::lang()->trans('model-303'), 'where' => [Where::notEq('periodo', 'Y')]]
+                ['label' => Tools::lang()->trans('model-303'), 'where' => [new DataBaseWhere('periodo', 'Y', '!=')]]
             ]);
     }
 
@@ -89,7 +89,7 @@ class ListRegularizacionImpuesto extends ListController
             ->addFilterSelect('idempresa', 'company', 'idempresa', Empresas::codeModel())
             ->addFilterSelect('codejercicio', 'exercise', 'codejercicio', $exercises)
             ->addFilterSelectWhere('status', [
-                ['label' => Tools::lang()->trans('model-390'), 'where' => [Where::eq('periodo', 'Y')]]
+                ['label' => Tools::lang()->trans('model-390'), 'where' => [new DataBaseWhere('periodo', 'Y')]]
             ]);
     }
 }
