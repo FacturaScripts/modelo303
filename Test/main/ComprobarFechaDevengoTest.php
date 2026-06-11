@@ -3,8 +3,8 @@
 namespace FacturaScripts\Test\Plugins;
 
 use Exception;
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Core\Model\FacturaCliente;
+use FacturaScripts\Core\Where;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Plugins\Modelo303\Model\Join\PartidaImpuestoResumen;
 use FacturaScripts\Test\Traits\RandomDataTrait;
@@ -67,8 +67,8 @@ class ComprobarFechaDevengoTest extends Modelo303TestCase
         // comprobamos que solo obtiene los resultados de la factura de hoy
         $partidaImpuestoResumen = new PartidaImpuestoResumen();
         $partida = $partidaImpuestoResumen->all([
-            new DataBaseWhere('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
-            new DataBaseWhere('asientos.fecha', Tools::date()),
+            Where::eq('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
+            Where::eq('fecha', Tools::date()),
         ])[0];
         $this->assertEquals($invoiceFechaHoy->totaliva, $partida->cuotaiva);
         $this->assertEquals($invoiceFechaHoy->totaliva, $partida->haber);
@@ -76,8 +76,8 @@ class ComprobarFechaDevengoTest extends Modelo303TestCase
         // comprobamos que solo obtiene los resultados de la factura de fecha anterior
         $partidaImpuestoResumen = new PartidaImpuestoResumen();
         $partida = $partidaImpuestoResumen->all([
-            new DataBaseWhere('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
-            new DataBaseWhere('asientos.fecha', Tools::date('-1 month')),
+            Where::eq('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
+            Where::eq('fecha', Tools::date('-1 month')),
         ])[0];
         $this->assertEquals($invoiceFechaDevengoAnterior->totaliva, $partida->cuotaiva);
         $this->assertEquals($invoiceFechaDevengoAnterior->totaliva, $partida->haber);
@@ -85,8 +85,8 @@ class ComprobarFechaDevengoTest extends Modelo303TestCase
         // comprobamos que solo obtiene los resultados de la factura de fecha posterior
         $partidaImpuestoResumen = new PartidaImpuestoResumen();
         $partida = $partidaImpuestoResumen->all([
-            new DataBaseWhere('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
-            new DataBaseWhere('asientos.fecha', Tools::date('+1 month')),
+            Where::eq('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
+            Where::eq('fecha', Tools::date('+1 month')),
         ])[0];
         $this->assertEquals($invoiceFechaDevengoPosterior->totaliva, $partida->cuotaiva);
         $this->assertEquals($invoiceFechaDevengoPosterior->totaliva, $partida->haber);
@@ -96,7 +96,7 @@ class ComprobarFechaDevengoTest extends Modelo303TestCase
 
         $partidaImpuestoResumen = new PartidaImpuestoResumen();
         $partida = $partidaImpuestoResumen->all([
-            new DataBaseWhere('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
+            Where::eq('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', 'IVAREP'),
         ])[0];
         $this->assertEquals($totalIVAFacturasCliente, $partida->cuotaiva);
         $this->assertEquals($totalIVAFacturasCliente, $partida->haber);

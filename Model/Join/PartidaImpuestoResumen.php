@@ -18,7 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Modelo303\Model\Join;
 
-use FacturaScripts\Core\Model\Base\JoinModel;
+use FacturaScripts\Core\Template\JoinModel;
 
 /**
  * Auxiliary model to load a resume of accounting entries with VAT
@@ -111,7 +111,7 @@ class PartidaImpuestoResumen extends JoinModel
      *
      * @param array $data
      */
-    protected function loadFromData(array $data)
+    protected function loadFromData(array $data): void
     {
         parent::loadFromData($data);
 

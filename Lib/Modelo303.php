@@ -86,10 +86,20 @@ class Modelo303
         ],
 
         // Compras en importaciones
-        'IVASIM' => ['21' => ['base' => '32', 'cuota' => '33']],
+        'IVASIM' => [
+            '21' => ['base' => '32', 'cuota' => '33'],
+            '10' => ['base' => '32', 'cuota' => '33'],
+            '4'  => ['base' => '32', 'cuota' => '33'],
+            '0'  => ['base' => '32', 'cuota' => '33'],
+        ],
 
         // Compras en adquisiciones intracomunitarias
-        'IVASUE' => ['21' => ['base' => '36', 'cuota' => '37']],
+        'IVASUE' => [
+            '21' => ['base' => '36', 'cuota' => '37'],
+            '10' => ['base' => '36', 'cuota' => '37'],
+            '4'  => ['base' => '36', 'cuota' => '37'],
+            '0'  => ['base' => '36', 'cuota' => '37'],
+        ],
 
         // Operaciones exentas
         'IVASEX' => ['0'  => ['base' => '60', 'cuota' => null]],
