@@ -127,19 +127,23 @@ class PartidaImpuesto extends JoinModel
     {
         parent::loadFromData($data);
 
-        if ($this->iva > 0 && $this->recargo > 0) {
-            $this->cuotaiva = $this->baseimponible * ($this->iva / 100.0);
-            $this->cuotarecargo = $this->baseimponible * ($this->recargo / 100.0);
-        } elseif ($this->iva > 0) {
-            $this->cuotaiva = $this->codcuentaesp === 'IVAREP'
-                ? $data['haber'] - $data['debe']
-                : $data['debe'] - $data['haber'];
-            $this->cuotarecargo = 0.0;
-        } else {
-            $this->cuotarecargo = $this->codcuentaesp === 'IVAREP'
-                ? $data['haber'] - $data['debe']
-                : $data['debe'] - $data['haber'];
+        // La cuota es SIEMPRE el importe realmente contabilizado (debe/haber), nunca un
+        // recálculo base*tipo (que introduce desfases de céntimos). Usamos la misma fórmula
+        // que PartidaImpuestoResumen: debe+haber da el importe en positivo (una de las dos
+        // columnas siempre es 0) y solo invertimos el signo en bases negativas (rectificativas).
+        $debe = (float)($data['debe'] ?? 0.0);
+        $haber = (float)($data['haber'] ?? 0.0);
+        $cuota = ($this->baseimponible < 0 && ($debe + $haber) > 0)
+            ? ($debe + $haber) * -1
+            : $debe + $haber;
+
+        // El destino (IVA o recargo) lo determina la cuenta especial, igual que en el resumen.
+        if ($this->codcuentaesp === 'IVARRE') {
+            $this->cuotarecargo = $cuota;
             $this->cuotaiva = 0.0;
+        } else {
+            $this->cuotaiva = $cuota;
+            $this->cuotarecargo = 0.0;
         }
 
         // si el campo factura está vacío, buscamos la factura con este asiento

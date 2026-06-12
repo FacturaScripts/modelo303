@@ -94,6 +94,44 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Builds the common filter used by the summary, purchases/sales and accounting-entry
+     * queries, so the three of them always work over the SAME set of accounting entries.
+     *
+     * @param int $group grupo de cuentas especiales (TAX_ALL, TAX_INPUT, TAX_OUTPUT)
+     * @return array
+     */
+    private function commonTaxWhere(int $group): array
+    {
+        $model = $this->getModel();
+        $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
+
+        // ids de los asientos de TODAS las regularizaciones (para excluirlos)
+        $regIds = [];
+        foreach (RegularizacionImpuesto::all() as $reg) {
+            if ($reg->idasiento) {
+                $regIds[] = $reg->idasiento;
+            }
+        }
+
+        $subAccountTools = new SubAccountTools();
+        $where = [
+            Where::eq('asientos.idempresa', $model->idempresa),
+            Where::eq('asientos.codejercicio', $model->codejercicio),
+            Where::gte('asientos.fecha', $model->fechainicio),
+            Where::lte('asientos.fecha', $model->fechafin),
+            Where::eq('COALESCE(series.siniva, false)', false),
+            Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
+            $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group),
+        ];
+
+        if (false === empty($regIds)) {
+            $where[] = Where::notIn('asientos.idasiento', implode(',', $regIds));
+        }
+
+        return $where;
+    }
+
+    /**
      * Create accounting entry action procedure.
      *
      * @return void
@@ -200,6 +238,22 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Setup actions for view.
+     *
+     * @param string $viewName
+     * @param bool $clickable
+     * @return void
+     */
+    private function disableButtons(string $viewName, bool $clickable = false): void
+    {
+        $this->setSettings($viewName, 'btnDelete', false)
+            ->setSettings('btnNew', false)
+            ->setSettings('checkBoxes', false)
+            ->setSettings('clickable', $clickable)
+            ->setSettings('btnPrint', true);
+    }
+
+    /**
      * Run the actions that alter data before reading it.
      *
      * @param string $action
@@ -271,78 +325,6 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Load data view procedure
-     *
-     * @param string $viewName
-     * @param BaseView $view
-     * @throws Exception
-     */
-    protected function loadData($viewName, $view): void
-    {
-        switch ($viewName) {
-            case 'EditRegularizacionImpuesto':
-                parent::loadData($viewName, $view);
-                $this->settingsMainView();
-                break;
-
-            case 'ListPartidaImpuestoResumen':
-                $mainModel = $this->getModel();
-                $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
-                $where = [
-                    Where::sub([
-                        Where::like('partidas.codsubcuenta', '477%'),
-                        Where::orLike('partidas.codsubcuenta', '472%'),
-                    ]),
-                    Where::eq('asientos.idempresa', $mainModel->idempresa),
-                    Where::gte('asientos.fecha', $mainModel->fechainicio),
-                    Where::lte('asientos.fecha', $mainModel->fechafin),
-                    Where::eq('COALESCE(series.siniva, false)', false),
-                    Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
-                ];
-
-                if (false === empty($mainModel->idasiento)) {
-                    $where[] = Where::notEq('partidas.idasiento', $mainModel->idasiento);
-                }
-                $view->loadData(false, $where, [
-                    'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)' => 'ASC',
-                    'partidas.codsubcuenta' => 'ASC',
-                ]);
-
-                $this->modelo303->loadFromResumen($view->cursor); // Load data into Modelo303 View
-                $this->checkInvoicesWithoutAccounting($mainModel);
-                break;
-
-            case 'ListPartida':
-                $this->getListPartida($view);
-                break;
-
-            case 'ListPartidaImpuesto-1':
-                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
-                break;
-
-            case 'ListPartidaImpuesto-2':
-                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
-                break;
-        }
-    }
-
-    /**
-     * Setup actions for view.
-     *
-     * @param string $viewName
-     * @param bool $clickable
-     * @return void
-     */
-    private function disableButtons(string $viewName, bool $clickable = false): void
-    {
-        $this->setSettings($viewName, 'btnDelete', false)
-            ->setSettings('btnNew', false)
-            ->setSettings('checkBoxes', false)
-            ->setSettings('clickable', $clickable)
-            ->setSettings('btnPrint', true);
-    }
-
-    /**
      * Load data for accounting entry.
      *
      * @param BaseView $view
@@ -383,27 +365,65 @@ class EditRegularizacionImpuesto extends EditController
      */
     private function getPartidaImpuestoWhere(int $group): array
     {
-        // obtenemos todos los ids de los asientos de las regularizaciones
-        $ids = [];
-        foreach (RegularizacionImpuesto::all() as $reg) {
-            if ($reg->idasiento) {
-                $ids[] = $reg->idasiento;
-            }
-        }
+        return $this->commonTaxWhere($group);
+    }
 
-        $subAccountTools = new SubAccountTools();
-        return [
-            Where::notIn('asientos.idasiento', implode(',', $ids)),
-            Where::eq('asientos.codejercicio', $this->getModel()->codejercicio),
-            Where::gte('asientos.fecha', $this->getModel()->fechainicio),
-            Where::lte('asientos.fecha', $this->getModel()->fechafin),
-            Where::eq('COALESCE(series.siniva, 0)', 0),
-            Where::sub([
-                Where::notEq('partidas.baseimponible', 0),
-                Where::orGt('COALESCE(partidas.iva, 0)', 0),
-            ]),
-            $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group)
-        ];
+    /**
+     * Load data view procedure
+     *
+     * @param string $viewName
+     * @param BaseView $view
+     * @throws Exception
+     */
+    protected function loadData($viewName, $view): void
+    {
+        switch ($viewName) {
+            case 'EditRegularizacionImpuesto':
+                parent::loadData($viewName, $view);
+                $this->settingsMainView();
+                break;
+
+            case 'ListPartidaImpuestoResumen':
+                $mainModel = $this->getModel();
+
+                // mismo criterio que las pestañas Compras/Ventas y que el asiento de regularización
+                $where = $this->commonTaxWhere(SubAccountTools::SPECIAL_GROUP_TAX_ALL);
+                $view->loadData(false, $where, [
+                    'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)' => 'ASC',
+                    'partidas.codsubcuenta' => 'ASC',
+                ]);
+
+                // cargamos el resumen de IVA (casillas del régimen general)
+                $this->modelo303->loadFromResumen($view->cursor);
+
+                // cargamos las bases exentas/informativas de ventas (casillas 59, 60 y 122)
+                $this->modelo303->loadFromSalesInvoices(
+                    (int)$mainModel->idempresa,
+                    (string)$mainModel->codejercicio,
+                    (string)$mainModel->fechainicio,
+                    (string)$mainModel->fechafin
+                );
+
+                // mostramos los avisos de importes que no encajan en ninguna casilla
+                foreach ($this->modelo303->getAvisos() as $aviso) {
+                    Tools::log()->warning($aviso);
+                }
+
+                $this->checkInvoicesWithoutAccounting($mainModel);
+                break;
+
+            case 'ListPartida':
+                $this->getListPartida($view);
+                break;
+
+            case 'ListPartidaImpuesto-1':
+                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
+                break;
+
+            case 'ListPartidaImpuesto-2':
+                $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
+                break;
+        }
     }
 
     /**

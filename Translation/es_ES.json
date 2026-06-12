@@ -21,5 +21,10 @@
     "year-model-390": "Año (modelo 390)",
     "deductible-vat-28": "por operaciones interiores corrientes",
     "deductible-vat-32": "por importaciones",
-    "deductible-vat-36": "por adquisiciones intracomunitarias"
+    "deductible-vat-36": "por adquisiciones intracomunitarias",
+    "info-operations-no-vat": "Operaciones sin repercusión de IVA (informativas)",
+    "intra-community-deliveries": "Entregas intracomunitarias de bienes y servicios",
+    "exports": "Exportaciones y operaciones asimiladas",
+    "sales-reverse-charge": "Ventas con inversión del sujeto pasivo",
+    "model303-amount-without-square": "Hay un importe que no se refleja en ninguna casilla del modelo 303: cuenta %type%, tipo %rate%%, operación %operation%, base %base%, cuota %quota%. Revise la configuración de cuentas especiales o el tipo de operación de la factura."
 }
