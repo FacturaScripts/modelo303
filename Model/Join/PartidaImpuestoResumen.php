@@ -45,6 +45,15 @@ class PartidaImpuestoResumen extends JoinModel
             'codcuentaesp' => 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)',
             'tipo_desc' => 'cuentasesp.descripcion',
 
+            // operación de la factura (compra o venta) que originó el asiento,
+            // necesaria para decidir las casillas del 303 en operaciones especiales
+            // (intracomunitaria, inversión del sujeto pasivo, importación, etc.)
+            'operacion' => "COALESCE(facturasprov.operacion, facturascli.operacion, '')",
+
+            // tipo de documento: una compra y una venta intracomunitarias generan las mismas
+            // partidas de IVA (IVARUE/IVASUE), pero van a casillas distintas del 303.
+            'tipodoc' => $this->sqlForTipoDoc(),
+
             'baseimponible' => $this->sqlForRoundedSum('partidas.baseimponible'),
             'debe' => $this->sqlForRoundedSum('partidas.debe'),
             'haber' => $this->sqlForRoundedSum('partidas.haber'),
@@ -65,7 +74,9 @@ class PartidaImpuestoResumen extends JoinModel
             . ', partidas.recargo'
             . ', subcuentas.descripcion'
             . ', COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)'
-            . ', cuentasesp.descripcion';
+            . ', cuentasesp.descripcion'
+            . ", COALESCE(facturasprov.operacion, facturascli.operacion, '')"
+            . ', ' . $this->sqlForTipoDoc();
     }
 
     /**
@@ -80,7 +91,12 @@ class PartidaImpuestoResumen extends JoinModel
             . ' INNER JOIN subcuentas on subcuentas.idsubcuenta = partidas.idsubcuenta'
             . ' INNER JOIN cuentas on cuentas.idcuenta = subcuentas.idcuenta'
             . ' LEFT JOIN cuentasesp on cuentasesp.codcuentaesp = coalesce(subcuentas.codcuentaesp, cuentas.codcuentaesp)'
-            . ' LEFT JOIN series on series.codserie = partidas.codserie';
+            . ' LEFT JOIN series on series.codserie = partidas.codserie'
+            // enlazamos la factura por el asiento contable para conocer el tipo de operación.
+            // Usamos subconsultas que solo exponen idasiento y operacion para no introducir
+            // columnas duplicadas (p.ej. "fecha") que harían ambiguos otros filtros.
+            . ' LEFT JOIN (SELECT idasiento, operacion FROM facturasprov) facturasprov on facturasprov.idasiento = asientos.idasiento'
+            . ' LEFT JOIN (SELECT idasiento, operacion FROM facturascli) facturascli on facturascli.idasiento = asientos.idasiento';
     }
 
     /**
@@ -97,6 +113,8 @@ class PartidaImpuestoResumen extends JoinModel
             'cuentas',
             'cuentasesp',
             'series',
+            'facturasprov',
+            'facturascli',
         ];
     }
 
@@ -136,5 +154,17 @@ class PartidaImpuestoResumen extends JoinModel
     private function sqlForRoundedSum(string $field): string
     {
         return 'ROUND(CAST(SUM(' . $field . ') AS DECIMAL(20, 6)), 2)';
+    }
+
+    /**
+     * SQL snippet to know if the entry comes from a purchase or a sale invoice.
+     *
+     * @return string
+     */
+    private function sqlForTipoDoc(): string
+    {
+        return "CASE WHEN facturasprov.idasiento IS NOT NULL THEN 'compra'
+                     WHEN facturascli.idasiento IS NOT NULL THEN 'venta'
+                     ELSE '' END";
     }
 }

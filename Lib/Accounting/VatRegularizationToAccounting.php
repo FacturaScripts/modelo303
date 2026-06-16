@@ -123,43 +123,6 @@ class VatRegularizationToAccounting
         return true;
     }
 
-    protected function getSubtotals(RegularizacionImpuesto $reg): array
-    {
-        $accTools = new SubAccountTools();
-        $field = 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
-        $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
-        $where = [
-            Where::eq('asientos.codejercicio', $reg->codejercicio),
-            Where::gte('asientos.fecha', $reg->fechainicio),
-            Where::lte('asientos.fecha', $reg->fechafin),
-            Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
-            $accTools->whereForSpecialAccounts($field, SubAccountTools::SPECIAL_GROUP_TAX_ALL)
-        ];
-        $orderBy = [
-            $field => 'ASC',
-            'partidas.iva' => 'ASC',
-            'partidas.recargo' => 'ASC'
-        ];
-
-        $subtotals = [];
-        $inputTaxGroup = $accTools->specialAccountsForGroup(SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
-        $outputTaxGroup = $accTools->specialAccountsForGroup(SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
-        $totals = new PartidaImpuestoResumen();
-        foreach ($totals->all($where, $orderBy) as $row) {
-            if (!isset($subtotals[$row->idsubcuenta])) {
-                $subtotals[$row->idsubcuenta] = ['debe' => 0.0, 'haber' => 0.0];
-            }
-
-            if (in_array($row->codcuentaesp, $outputTaxGroup)) {
-                $subtotals[$row->idsubcuenta]['debe'] += $row->cuotaiva + $row->cuotarecargo;
-            } elseif (in_array($row->codcuentaesp, $inputTaxGroup)) {
-                $subtotals[$row->idsubcuenta]['haber'] += $row->cuotaiva + $row->cuotarecargo;
-            }
-        }
-
-        return $subtotals;
-    }
-
     /**
      * Comprueba si hay facturas sin asiento contable
      *
@@ -184,5 +147,57 @@ class VatRegularizationToAccounting
 
         $facturasSinAsiento = FacturaProveedor::all($where, [], 0, 1);
         return empty($facturasSinAsiento);
+    }
+
+    protected function getSubtotals(RegularizacionImpuesto $reg): array
+    {
+        $accTools = new SubAccountTools();
+        $field = 'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)';
+        $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
+
+        // mismo criterio que las pestañas Resumen/Compras/Ventas para que el asiento cuadre con ellas
+        $regIds = [];
+        foreach (RegularizacionImpuesto::all() as $other) {
+            if ($other->idasiento) {
+                $regIds[] = $other->idasiento;
+            }
+        }
+
+        $where = [
+            Where::eq('asientos.idempresa', $reg->idempresa),
+            Where::eq('asientos.codejercicio', $reg->codejercicio),
+            Where::gte('asientos.fecha', $reg->fechainicio),
+            Where::lte('asientos.fecha', $reg->fechafin),
+            Where::eq('COALESCE(series.siniva, false)', false),
+            Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
+            $accTools->whereForSpecialAccounts($field, SubAccountTools::SPECIAL_GROUP_TAX_ALL)
+        ];
+
+        if (false === empty($regIds)) {
+            $where[] = Where::notIn('asientos.idasiento', implode(',', $regIds));
+        }
+        $orderBy = [
+            $field => 'ASC',
+            'partidas.iva' => 'ASC',
+            'partidas.recargo' => 'ASC'
+        ];
+
+        $subtotals = [];
+        $inputTaxGroup = $accTools->specialAccountsForGroup(SubAccountTools::SPECIAL_GROUP_TAX_INPUT);
+        $outputTaxGroup = $accTools->specialAccountsForGroup(SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
+        $totals = new PartidaImpuestoResumen();
+        foreach ($totals->all($where, $orderBy) as $row) {
+            if (!isset($subtotals[$row->idsubcuenta])) {
+                $subtotals[$row->idsubcuenta] = ['debe' => 0.0, 'haber' => 0.0];
+            }
+
+            if (in_array($row->codcuentaesp, $outputTaxGroup)) {
+                $subtotals[$row->idsubcuenta]['debe'] += $row->cuotaiva + $row->cuotarecargo;
+            } elseif (in_array($row->codcuentaesp, $inputTaxGroup)) {
+                $subtotals[$row->idsubcuenta]['haber'] += $row->cuotaiva + $row->cuotarecargo;
+            }
+        }
+
+        return $subtotals;
     }
 }
