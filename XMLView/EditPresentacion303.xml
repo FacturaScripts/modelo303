@@ -12,14 +12,14 @@
             <column name="declaration-type" order="100">
                 <widget type="select" fieldname="tipodeclaracion" translate="true">
                     <values title="auto-detect"></values>
-                    <values title="model303-type-I">I</values>
-                    <values title="model303-type-U">U</values>
-                    <values title="model303-type-D">D</values>
-                    <values title="model303-type-C">C</values>
-                    <values title="model303-type-N">N</values>
-                    <values title="model303-type-G">G</values>
-                    <values title="model303-type-V">V</values>
-                    <values title="model303-type-X">X</values>
+                    <values title="model303-type-i">I</values>
+                    <values title="model303-type-u">U</values>
+                    <values title="model303-type-d">D</values>
+                    <values title="model303-type-c">C</values>
+                    <values title="model303-type-n">N</values>
+                    <values title="model303-type-g">G</values>
+                    <values title="model303-type-v">V</values>
+                    <values title="model303-type-x">X</values>
                 </widget>
             </column>
             <column name="iban" order="110">
