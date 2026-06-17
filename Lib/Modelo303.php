@@ -56,7 +56,8 @@ class Modelo303
         'IVAREP' => [
             '2'   => ['base' => '165', 'cuota' => '167'],
             '4'   => ['base' => '01', 'cuota' => '03'],
-            '7.5' => ['base' => '153', 'cuota' => '155'],
+            '5'   => ['base' => '153', 'cuota' => '155'],
+            '7.5' => ['base' => '162', 'cuota' => '164'],
             '10'  => ['base' => '04', 'cuota' => '06'],
             '21'  => ['base' => '07', 'cuota' => '09'],
         ],
@@ -124,8 +125,9 @@ class Modelo303
         $this->square['17'] = 1.00;
         $this->square['20'] = 1.40;
         $this->square['23'] = 5.20;
-        $this->square['154'] = 7.50;
+        $this->square['154'] = 5.00;
         $this->square['157'] = 1.75;
+        $this->square['163'] = 7.50;
         $this->square['169'] = 0.26;
         $this->square['166'] = 2.00;
     }
@@ -234,6 +236,56 @@ class Modelo303
             'iva-soportado' => static::treasurySaldoCuenta('472%', $dateStart, $dateEnd, $dataBase),
             'iva-devolver' => static::treasurySaldoCuenta('4700%', $dateStart, $dateEnd, $dataBase),
         ];
+    }
+
+    protected static function treasuryDates(Ejercicio $exercise, string $period): array
+    {
+        // si el periodo no es T1, T2, T3, T4 o Annual, se asume que es el primer trimestre
+        if (!in_array($period, ['T1', 'T2', 'T3', 'T4', 'ANNUAL'])) {
+            $period = 'T1';
+        }
+
+        return match ($period) {
+            'T1' => [
+                date('01-01-Y', strtotime($exercise->fechainicio)),
+                date('31-03-Y', strtotime($exercise->fechainicio))
+            ],
+            'T2' => [
+                date('01-04-Y', strtotime($exercise->fechainicio)),
+                date('30-06-Y', strtotime($exercise->fechainicio))
+            ],
+            'T3' => [
+                date('01-07-Y', strtotime($exercise->fechainicio)),
+                date('30-09-Y', strtotime($exercise->fechainicio))
+            ],
+            'ANNUAL' => [
+                date('01-01-Y', strtotime($exercise->fechainicio)),
+                date('31-12-Y', strtotime($exercise->fechainicio))
+            ],
+            default => [
+                date('01-10-Y', strtotime($exercise->fechainicio)),
+                date('31-12-Y', strtotime($exercise->fechainicio))
+            ],
+        };
+    }
+
+    protected static function treasurySaldoCuenta(string $cuenta, string $desde, string $hasta, DataBase $dataBase): float
+    {
+        $saldo = 0.0;
+
+        if ($dataBase->tableExists('partidas')) {
+            // calculamos el saldo de todos aquellos asientos que afecten a caja
+            $sql = "select sum(debe-haber) as total from partidas where codsubcuenta LIKE " . $dataBase->var2str($cuenta)
+                . " and idasiento in (select idasiento from asientos where fecha >= " . $dataBase->var2str($desde)
+                . " and fecha <= " . $dataBase->var2str($hasta) . ");";
+
+            $data = $dataBase->select($sql);
+            if ($data && $data[0]['total'] !== null) {
+                $saldo = floatval($data[0]['total']);
+            }
+        }
+
+        return $saldo;
     }
 
     /**
@@ -452,55 +504,5 @@ class Modelo303
             '%base%' => Tools::number($base, 2),
             '%quota%' => Tools::number($cuota, 2),
         ]);
-    }
-
-    protected static function treasuryDates(Ejercicio $exercise, string $period): array
-    {
-        // si el periodo no es T1, T2, T3, T4 o Annual, se asume que es el primer trimestre
-        if (!in_array($period, ['T1', 'T2', 'T3', 'T4', 'ANNUAL'])) {
-            $period = 'T1';
-        }
-
-        return match ($period) {
-            'T1' => [
-                date('01-01-Y', strtotime($exercise->fechainicio)),
-                date('31-03-Y', strtotime($exercise->fechainicio))
-            ],
-            'T2' => [
-                date('01-04-Y', strtotime($exercise->fechainicio)),
-                date('30-06-Y', strtotime($exercise->fechainicio))
-            ],
-            'T3' => [
-                date('01-07-Y', strtotime($exercise->fechainicio)),
-                date('30-09-Y', strtotime($exercise->fechainicio))
-            ],
-            'ANNUAL' => [
-                date('01-01-Y', strtotime($exercise->fechainicio)),
-                date('31-12-Y', strtotime($exercise->fechainicio))
-            ],
-            default => [
-                date('01-10-Y', strtotime($exercise->fechainicio)),
-                date('31-12-Y', strtotime($exercise->fechainicio))
-            ],
-        };
-    }
-
-    protected static function treasurySaldoCuenta(string $cuenta, string $desde, string $hasta, DataBase $dataBase): float
-    {
-        $saldo = 0.0;
-
-        if ($dataBase->tableExists('partidas')) {
-            // calculamos el saldo de todos aquellos asientos que afecten a caja
-            $sql = "select sum(debe-haber) as total from partidas where codsubcuenta LIKE " . $dataBase->var2str($cuenta)
-                . " and idasiento in (select idasiento from asientos where fecha >= " . $dataBase->var2str($desde)
-                . " and fecha <= " . $dataBase->var2str($hasta) . ");";
-
-            $data = $dataBase->select($sql);
-            if ($data && $data[0]['total'] !== null) {
-                $saldo = floatval($data[0]['total']);
-            }
-        }
-
-        return $saldo;
     }
 }

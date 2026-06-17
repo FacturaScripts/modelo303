@@ -32,6 +32,7 @@
 							<strong>{{ fsc.modelo303.casillaStr('152') }}</strong>
 						</td>
 					</tr>
+					{% if fsc.modelo303.casilla('165') or fsc.modelo303.casilla('167') %}
 					<tr>
 						<td class="text-center">165</td>
 						<td class="text-end">
@@ -46,6 +47,7 @@
 							<strong>{{ fsc.modelo303.casillaStr('167') }}</strong>
 						</td>
 					</tr>
+					{% endif %}
 					<tr>
 						<td class="text-center">01</td>
 						<td class="text-end">
@@ -60,6 +62,7 @@
 							<strong>{{ fsc.modelo303.casillaStr('03') }}</strong>
 						</td>
 					</tr>
+					{% if fsc.modelo303.casilla('153') or fsc.modelo303.casilla('155') %}
 					<tr>
 						<td class="text-center">153</td>
 						<td class="text-end">
@@ -74,6 +77,23 @@
 							<strong>{{ fsc.modelo303.casillaStr('155') }}</strong>
 						</td>
 					</tr>
+					{% endif %}
+					{% if fsc.modelo303.casilla('162') or fsc.modelo303.casilla('164') %}
+					<tr>
+						<td class="text-center">162</td>
+						<td class="text-end">
+							<strong>{{ fsc.modelo303.casillaStr('162') }}</strong>
+						</td>
+						<td class="text-center">163</td>
+						<td class="text-center">
+							<strong>{{ fsc.modelo303.casillaStr('163') }}</strong>
+						</td>
+						<td class="text-center">164</td>
+						<td class="text-end">
+							<strong>{{ fsc.modelo303.casillaStr('164') }}</strong>
+						</td>
+					</tr>
+					{% endif %}
 					<tr>
 						<td class="text-center">04</td>
 						<td class="text-end">
@@ -135,6 +155,7 @@
 							<strong>{{ fsc.modelo303.casillaStr('15') }}</strong>
 						</td>
 					</tr>
+					{% if fsc.modelo303.casilla('156') or fsc.modelo303.casilla('158') %}
 					<tr>
 						<td class="text-center">156</td>
 						<td class="text-end">
@@ -149,6 +170,8 @@
 							<strong>{{ fsc.modelo303.casillaStr('158') }}</strong>
 						</td>
 					</tr>
+					{% endif %}
+					{% if fsc.modelo303.casilla('168') or fsc.modelo303.casilla('170') %}
 					<tr>
 						<td class="text-center">168</td>
 						<td class="text-end">
@@ -163,6 +186,7 @@
 							<strong>{{ fsc.modelo303.casillaStr('170') }}</strong>
 						</td>
 					</tr>
+					{% endif %}
 					<tr>
 						<td class="text-center">16</td>
 						<td class="text-end">
