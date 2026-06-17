@@ -30,9 +30,12 @@ use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\Accounting\VatRegularizationToAccounting;
 use FacturaScripts\Dinamic\Lib\Modelo303;
+use FacturaScripts\Dinamic\Lib\Txt303Export;
 use FacturaScripts\Dinamic\Model\Asiento;
+use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
 use FacturaScripts\Dinamic\Model\FacturaProveedor;
+use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 
 /**
@@ -64,6 +67,49 @@ class EditRegularizacionImpuesto extends EditController
         $data['title'] = 'model-303';
         $data['icon'] = 'fa-solid fa-balance-scale-right';
         return $data;
+    }
+
+    /**
+     * Builds and configures a Modelo303 instance for the given tax settlement record,
+     * computing the general regime squares plus the manually-entered ones and the result chain.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return Modelo303
+     */
+    private function buildModelo303(RegularizacionImpuesto $reg): Modelo303
+    {
+        $modelo = new Modelo303();
+
+        // mismo criterio que las pestañas Compras/Ventas y que el asiento de regularización
+        $where = $this->commonTaxWhere(SubAccountTools::SPECIAL_GROUP_TAX_ALL, $reg);
+        $resumen = PartidaImpuestoResumen::all($where, [
+            'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)' => 'ASC',
+            'partidas.codsubcuenta' => 'ASC',
+        ], 0, 0);
+
+        // casillas del régimen general (devengado, deducible y resultado 46)
+        $modelo->loadFromResumen($resumen);
+
+        // bases exentas/informativas de ventas (casillas 59, 60 y 122)
+        $modelo->loadFromSalesInvoices(
+            (int)$reg->idempresa,
+            (string)$reg->codejercicio,
+            (string)$reg->fechainicio,
+            (string)$reg->fechafin
+        );
+
+        // casillas de introducción manual (sin origen automático en la contabilidad)
+        foreach (['65', '68', '70', '76', '77', '78', '108', '109', '110', '111', '112'] as $box) {
+            $value = $reg->{'c' . $box} ?? null;
+            if ($value !== null) {
+                $modelo->setCasilla($box, (float)$value);
+            }
+        }
+
+        // cadena de resultado (casillas 64, 66, 69, 71, 87)
+        $modelo->computeResultado();
+
+        return $modelo;
     }
 
     protected function checkInvoicesWithoutAccounting($model): void
@@ -100,9 +146,9 @@ class EditRegularizacionImpuesto extends EditController
      * @param int $group grupo de cuentas especiales (TAX_ALL, TAX_INPUT, TAX_OUTPUT)
      * @return array
      */
-    private function commonTaxWhere(int $group): array
+    private function commonTaxWhere(int $group, ?RegularizacionImpuesto $model = null): array
     {
-        $model = $this->getModel();
+        $model = $model ?? $this->getModel();
         $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
 
         // ids de los asientos de TODAS las regularizaciones (para excluirlos)
@@ -179,6 +225,7 @@ class EditRegularizacionImpuesto extends EditController
         $this->createViewsTaxLine('ListPartidaImpuesto-1', 'purchases', 'fas fa-sign-in-alt');
         $this->createViewsTaxLine('ListPartidaImpuesto-2', 'sales', 'fas fa-sign-out-alt');
         $this->createViewsEntryLine();
+        $this->createViewsPresentacion();
     }
 
     /**
@@ -191,6 +238,19 @@ class EditRegularizacionImpuesto extends EditController
     {
         $this->addListView($viewName, 'Partida', 'accounting-entry', 'fa-solid fa-balance-scale');
         $this->disableButtons($viewName, true);
+    }
+
+    /**
+     * Add view for the AEAT .303 file presentation data (manual boxes + download button).
+     *
+     * @param string $viewName
+     * @return void
+     */
+    protected function createViewsPresentacion(string $viewName = 'EditPresentacion303'): void
+    {
+        $this->addEditView($viewName, 'RegularizacionImpuesto', 'aeat-file-303', 'fa-solid fa-file-arrow-down');
+        $this->setSettings($viewName, 'btnNew', false);
+        $this->setSettings($viewName, 'btnDelete', false);
     }
 
     /**
@@ -254,6 +314,42 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Generates and sends the AEAT .303 text file for download.
+     *
+     * @return bool
+     */
+    protected function downloadTxtAction(): bool
+    {
+        $reg = new RegularizacionImpuesto();
+        $code = $this->request->input('code');
+        if (false === $reg->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return true;
+        }
+
+        $empresa = new Empresa();
+        if (false === $empresa->load($reg->idempresa)) {
+            Tools::log()->warning('company-not-found');
+            return true;
+        }
+
+        $modelo = $this->buildModelo303($reg);
+        $content = Txt303Export::export($reg, $modelo->getSquares(), $empresa);
+
+        $fileName = $empresa->cifnif . '_' . date('Y', strtotime((string)$reg->fechainicio))
+            . '_' . $reg->periodo . '.303';
+
+        $this->setTemplate(false);
+        $this->response->headers->set('Content-Type', 'text/plain; charset=ISO-8859-1');
+        $this->response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+        $this->response->headers->set('Pragma', 'no-cache');
+        $this->response->headers->set('Expires', '0');
+        $this->response->setContent($content);
+
+        return false;
+    }
+
+    /**
      * Run the actions that alter data before reading it.
      *
      * @param string $action
@@ -264,6 +360,10 @@ class EditRegularizacionImpuesto extends EditController
         if ($action == 'create-accounting-entry') {
             $this->createAccountingEntryAction();
             return true;
+        }
+
+        if ($action === 'download-303') {
+            return $this->downloadTxtAction();
         }
 
         return parent::execPreviousAction($action);
@@ -422,6 +522,26 @@ class EditRegularizacionImpuesto extends EditController
 
             case 'ListPartidaImpuesto-2':
                 $this->getListPartidaImpuesto($view, SubAccountTools::SPECIAL_GROUP_TAX_OUTPUT);
+                break;
+
+            case 'EditPresentacion303':
+                // solo mostramos la pestaña cuando el registro ya existe
+                $id = $this->getViewModelValue($this->getMainViewName(), 'idregiva');
+                if (empty($id)) {
+                    $view->setSettings('active', false);
+                    break;
+                }
+
+                $view->loadData($id);
+
+                // botón para descargar el fichero .303
+                $view->addButton([
+                    'action' => 'download-303',
+                    'color' => 'success',
+                    'icon' => 'fa-solid fa-file-arrow-down',
+                    'label' => 'download-file-303',
+                    'type' => 'action',
+                ]);
                 break;
         }
     }

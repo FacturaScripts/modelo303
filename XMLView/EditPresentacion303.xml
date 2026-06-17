@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * This file is part of Modelo303 plugin for FacturaScripts
+ * Copyright (C) 2017-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+ *
+ * Datos de presentación del modelo 303 ante la AEAT: tipo de declaración, IBAN y
+ * casillas que no tienen origen automático en la contabilidad (introducción manual).
+-->
+<view>
+    <columns>
+        <group name="aeat-presentation" title="aeat-file-303" icon="fa-solid fa-file-arrow-down" numcolumns="12" valign="bottom">
+            <column name="declaration-type" order="100">
+                <widget type="select" fieldname="tipodeclaracion" translate="true">
+                    <values title="auto-detect"></values>
+                    <values title="model303-type-I">I</values>
+                    <values title="model303-type-U">U</values>
+                    <values title="model303-type-D">D</values>
+                    <values title="model303-type-C">C</values>
+                    <values title="model303-type-N">N</values>
+                    <values title="model303-type-G">G</values>
+                    <values title="model303-type-V">V</values>
+                    <values title="model303-type-X">X</values>
+                </widget>
+            </column>
+            <column name="iban" order="110">
+                <widget type="text" fieldname="iban" maxlength="34"/>
+            </column>
+            <column name="previous-receipt-number" order="120">
+                <widget type="text" fieldname="justificanteant" maxlength="13"/>
+            </column>
+            <column name="no-activity" order="130">
+                <widget type="checkbox" fieldname="sinactividad"/>
+            </column>
+            <column name="rectifying-self-assessment" order="140">
+                <widget type="checkbox" fieldname="rectificativa"/>
+            </column>
+        </group>
+        <group name="aeat-manual-boxes" title="model303-manual-boxes" icon="fa-solid fa-pen-to-square" numcolumns="12">
+            <column name="model303-box-65" order="100">
+                <widget type="number" fieldname="c65" min="0" max="100" step="0.01"/>
+            </column>
+            <column name="model303-box-76" order="110">
+                <widget type="money" fieldname="c76"/>
+            </column>
+            <column name="model303-box-77" order="120">
+                <widget type="money" fieldname="c77"/>
+            </column>
+            <column name="model303-box-110" order="130">
+                <widget type="money" fieldname="c110"/>
+            </column>
+            <column name="model303-box-78" order="140">
+                <widget type="money" fieldname="c78"/>
+            </column>
+            <column name="model303-box-68" order="150">
+                <widget type="money" fieldname="c68"/>
+            </column>
+            <column name="model303-box-108" order="160">
+                <widget type="money" fieldname="c108"/>
+            </column>
+            <column name="model303-box-70" order="170">
+                <widget type="money" fieldname="c70"/>
+            </column>
+            <column name="model303-box-109" order="180">
+                <widget type="money" fieldname="c109"/>
+            </column>
+            <column name="model303-box-112" order="190">
+                <widget type="money" fieldname="c112"/>
+            </column>
+            <column name="model303-box-111" order="200">
+                <widget type="money" fieldname="c111"/>
+            </column>
+        </group>
+    </columns>
+</view>

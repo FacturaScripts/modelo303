@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : regularizacionimpuestos
+    Description:
+        Columnas adicionales para la generación del fichero del modelo 303 (AEAT).
+        Se fusionan con la tabla del core. Almacenan los datos sin origen automático
+        en FacturaScripts (tipo de declaración, IBAN y casillas de introducción manual).
+-->
+<table>
+    <column>
+        <name>tipodeclaracion</name>
+        <type>character varying(1)</type>
+    </column>
+    <column>
+        <name>iban</name>
+        <type>character varying(34)</type>
+    </column>
+    <column>
+        <name>sinactividad</name>
+        <type>boolean</type>
+        <default>false</default>
+    </column>
+    <column>
+        <name>rectificativa</name>
+        <type>boolean</type>
+        <default>false</default>
+    </column>
+    <column>
+        <name>justificanteant</name>
+        <type>character varying(13)</type>
+    </column>
+    <!-- Casillas de introducción manual (sin origen automático en la contabilidad) -->
+    <column>
+        <name>c65</name>
+        <type>double precision</type>
+        <default>100</default>
+    </column>
+    <column>
+        <name>c68</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c70</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c76</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c77</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c78</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c108</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c109</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c110</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c111</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c112</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+</table>
