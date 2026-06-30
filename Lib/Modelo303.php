@@ -447,6 +447,11 @@ class Modelo303
                 // contable automático en FacturaScripts.
                 return true;
 
+            case InvoiceOperation::EXPORT:
+                // Exportación (VENTA): exenta, IVA al 0%. La base informativa (casilla 60)
+                // se carga desde las facturas en loadFromSalesInvoices().
+                return true;
+
             default:
                 return false;
         }
