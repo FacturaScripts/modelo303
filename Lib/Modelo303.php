@@ -49,11 +49,19 @@ class Modelo303
      * @var array<string, array<string, array<string, ?string>>>
      */
     private array $casillaMap = [
+
+        /***********************************
+        *      OPERACIONES DE VENTAS      *
+        ***********************************/
+
         /*
          * IVA devengado (repercutido).
          * Ventas nacionales (régimen general)
          */
         'IVAREP' => [
+            // El tipo 0% va a la casilla 150 (exentas), igual que en en la cuenta especial IVAREX,
+            // por si la subcuenta del impuesto no está marcada como cuenta especial de exentas en el plan contable
+            '0'   => ['base' => '150', 'cuota' => null],
             '2'   => ['base' => '165', 'cuota' => '167'],
             '4'   => ['base' => '01', 'cuota' => '03'],
             '5'   => ['base' => '153', 'cuota' => '155'],
@@ -79,11 +87,19 @@ class Modelo303
         // Operaciones exentas
         'IVAREX' => ['*' => ['base' => '150', 'cuota' => null]],
 
+
+        /***********************************
+        *      OPERACIONES DE COMPRAS      *
+        ***********************************/
+
         /*
          * IVA soportado (deducible)
          * Compras nacionales (régimen general)
          */
         'IVASOP' => [
+            // El tipo 0% se descarta, igual que en en la cuenta especial IVASEX,
+            // por si la subcuenta del impuesto no está marcada como cuenta especial de exentas en el plan contable
+            '0' => ['base' => null, 'cuota' => null], 
             '*' => ['base' => '28', 'cuota' => '29'],
         ],
 

@@ -114,6 +114,21 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEmpty($modelo->getAvisos());
     }
 
+    public function testCompraExentaNoContaminaRegimenGeneral(): void
+    {
+        $modelo = new Modelo303();
+        // Compra exenta (0%): no debe imputarse en 28/29 del régimen general
+        $modelo->loadFromResumen([
+            $this->row('IVASOP', 0, 1500.0, 0.0, '', 'compra'),
+            $this->row('IVASEX', 0, 800.0, 0.0, '', 'compra'),
+        ]);
+
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('28'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('29'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('45'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
     public function testImporteSinCasillaGeneraAviso(): void
     {
         $modelo = new Modelo303();
@@ -160,6 +175,8 @@ final class Modelo303SquaresTest extends TestCase
             $this->row('IVAREP', 21, 1000.0, 210.0),
             $this->row('IVAREP', 10, 500.0, 50.0),
             $this->row('IVAREP', 4, 100.0, 4.0),
+            $this->row('IVAREP', 0, 10.0, 0.0, '', 'venta'),
+            $this->row('IVAREX', 0, 500.0, 0.0, '', 'venta'),
         ]);
 
         // 21% -> base 07 / cuota 09
@@ -171,6 +188,8 @@ final class Modelo303SquaresTest extends TestCase
         // 4% -> base 01 / cuota 03
         $this->assertEqualsWithDelta(100.0, $modelo->casilla('01'), 0.001);
         $this->assertEqualsWithDelta(4.0, $modelo->casilla('03'), 0.001);
+         // 0% -> base 150
+        $this->assertEqualsWithDelta(510.0, $modelo->casilla('150'), 0.001);
 
         // total devengado (casilla 27) = 210 + 50 + 4
         $this->assertEqualsWithDelta(264.0, $modelo->casilla('27'), 0.001);
