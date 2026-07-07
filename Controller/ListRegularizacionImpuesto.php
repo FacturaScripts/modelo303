@@ -67,7 +67,7 @@ class ListRegularizacionImpuesto extends ListController
             ->addFilterSelect('idempresa', 'company', 'idempresa', Empresas::codeModel())
             ->addFilterSelect('codejercicio', 'exercise', 'codejercicio', $exercises)
             ->addFilterSelectWhere('status', [
-                ['label' => Tools::lang()->trans('model-303'), 'where' => [Where::notEq('periodo', 'Y')]]
+                ['label' => Tools::trans('model-303'), 'where' => [Where::notEq('periodo', 'Y')]]
             ]);
     }
 
@@ -89,7 +89,7 @@ class ListRegularizacionImpuesto extends ListController
             ->addFilterSelect('idempresa', 'company', 'idempresa', Empresas::codeModel())
             ->addFilterSelect('codejercicio', 'exercise', 'codejercicio', $exercises)
             ->addFilterSelectWhere('status', [
-                ['label' => Tools::lang()->trans('model-390'), 'where' => [Where::eq('periodo', 'Y')]]
+                ['label' => Tools::trans('model-390'), 'where' => [Where::eq('periodo', 'Y')]]
             ]);
     }
 }

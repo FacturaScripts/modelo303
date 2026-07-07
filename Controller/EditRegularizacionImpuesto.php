@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of Modelo303 plugin for FacturaScripts
  * Copyright (C) 2017-2026 Carlos Garcia Gomez <carlos@facturascripts.com>
@@ -39,7 +38,7 @@ use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 
 /**
- * @author Carlos García Gómez <carlos@facturascripts.com>
+ * @author Carlos García Gómez           <carlos@facturascripts.com>
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  */
 class EditRegularizacionImpuesto extends EditController
@@ -248,9 +247,9 @@ class EditRegularizacionImpuesto extends EditController
      */
     protected function createViewsPresentacion(string $viewName = 'EditPresentacion303'): void
     {
-        $this->addEditView($viewName, 'RegularizacionImpuesto', 'aeat-file-303', 'fa-solid fa-file-arrow-down');
-        $this->setSettings($viewName, 'btnNew', false);
-        $this->setSettings($viewName, 'btnDelete', false);
+        $this->addEditView($viewName, 'RegularizacionImpuesto', 'aeat-file-303', 'fa-solid fa-file-arrow-down')
+            ->setSettings('btnNew', false)
+            ->setSettings('btnDelete', false);
     }
 
     /**
@@ -340,11 +339,12 @@ class EditRegularizacionImpuesto extends EditController
             . '_' . $reg->periodo . '.303';
 
         $this->setTemplate(false);
-        $this->response->headers->set('Content-Type', 'text/plain; charset=ISO-8859-1');
-        $this->response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
-        $this->response->headers->set('Pragma', 'no-cache');
-        $this->response->headers->set('Expires', '0');
-        $this->response->setContent($content);
+        $this->response
+            ->header('Content-Type', 'text/plain; charset=ISO-8859-1')
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0')
+            ->setContent($content);
 
         return false;
     }

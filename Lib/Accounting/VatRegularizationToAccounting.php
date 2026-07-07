@@ -45,7 +45,7 @@ class VatRegularizationToAccounting
 
     public function generate(RegularizacionImpuesto &$reg): bool
     {
-        if(false === $this->checkInvoicesWithoutAccEntry($reg)){
+        if (false === $this->checkInvoicesWithoutAccEntry($reg)) {
             Tools::log()->warning('invoices-without-acc-entry');
             return false;
         }
@@ -53,7 +53,7 @@ class VatRegularizationToAccounting
         // creamos el asiento contable
         $accEntry = new Asiento();
         $accEntry->codejercicio = $reg->codejercicio;
-        $accEntry->concepto = Tools::lang()->trans('vat-regularization') . ' ' . $reg->periodo;
+        $accEntry->concepto = Tools::trans('vat-regularization') . ' ' . $reg->periodo;
         $accEntry->fecha = $reg->fechafin;
         $accEntry->idempresa = $reg->idempresa;
         if (false === $accEntry->save()) {

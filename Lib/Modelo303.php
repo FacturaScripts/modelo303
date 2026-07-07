@@ -505,7 +505,7 @@ class Modelo303
             return;
         }
 
-        $this->avisos[] = Tools::lang()->trans('model303-amount-without-square', [
+        $this->avisos[] = Tools::trans('model303-amount-without-square', [
             '%type%' => $tipo,
             '%rate%' => $tax === null ? '-' : Tools::number($tax, 2),
             '%operation%' => $operacion === '' ? '-' : $operacion,
