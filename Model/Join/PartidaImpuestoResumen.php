@@ -127,8 +127,13 @@ class PartidaImpuestoResumen extends JoinModel
     {
         parent::loadFromData($data);
 
-        $this->cuotaiva = $this->codcuentaesp === 'IVARRE' ? 0.0 : (float)$this->cuota;
-        $this->cuotarecargo = $this->codcuentaesp === 'IVARRE' ? (float)$this->cuota : 0.0;
+        // El destino (IVA o recargo) lo determina el tipo de recargo de la partida, no la cuenta
+        // especial: el núcleo contabiliza el recargo de equivalencia en la cuenta de IVA
+        // repercutido (IVAREP) cuando no hay una subcuenta IVARRE configurada, siempre con
+        // recargo > 0 e iva = 0.
+        $esRecargo = (float)$this->recargo > 0.0;
+        $this->cuotaiva = $esRecargo ? 0.0 : (float)$this->cuota;
+        $this->cuotarecargo = $esRecargo ? (float)$this->cuota : 0.0;
     }
 
     /**

@@ -358,6 +358,14 @@ class Modelo303
      */
     private function addMovimiento(string $tipo, string $operacion, string $tipodoc, float $iva, float $recargo, float $base, float $cuota): void
     {
+        // El recargo de equivalencia se reconoce por el tipo de recargo (> 0), no por la cuenta
+        // especial: cuando no existe una subcuenta IVARRE configurada, el núcleo contabiliza el
+        // recargo en la propia cuenta de IVA repercutido (IVAREP), con iva = 0 y recargo > 0. En
+        // ese caso también debe mapearse a las casillas de recargo, no quedar sin casilla.
+        if ($recargo > 0.0) {
+            $tipo = 'IVARRE';
+        }
+
         // Las operaciones especiales (ISP, intracomunitarias, importación) deciden la casilla
         // por el tipo de operación de la factura, no solo por la cuenta especial.
         if ($this->addMovimientoEspecial($tipo, $operacion, $tipodoc, $base, $cuota)) {

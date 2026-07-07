@@ -137,8 +137,10 @@ class PartidaImpuesto extends JoinModel
             ? ($debe + $haber) * -1
             : $debe + $haber;
 
-        // El destino (IVA o recargo) lo determina la cuenta especial, igual que en el resumen.
-        if ($this->codcuentaesp === 'IVARRE') {
+        // El destino (IVA o recargo) lo determina el tipo de recargo de la partida, igual que en
+        // el resumen: el núcleo contabiliza el recargo de equivalencia en la cuenta de IVA
+        // repercutido (IVAREP) cuando no hay subcuenta IVARRE configurada (recargo > 0, iva = 0).
+        if ((float)$this->recargo > 0.0) {
             $this->cuotarecargo = $cuota;
             $this->cuotaiva = 0.0;
         } else {

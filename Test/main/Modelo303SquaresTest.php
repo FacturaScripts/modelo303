@@ -137,6 +137,27 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEqualsWithDelta(52.0, $modelo->casilla('24'), 0.001);
     }
 
+    public function testRecargoEquivalenciaEnCuentaIVAREP(): void
+    {
+        // Cuando no hay subcuenta IVARRE configurada, el núcleo contabiliza el recargo en la
+        // cuenta de IVA repercutido (IVAREP), con iva = 0 y recargo > 0. Una venta al 21% con
+        // recargo 5.2 genera dos partidas sobre IVAREP: la cuota de IVA y la del recargo.
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVAREP', 21, 1000.0, 210.0, '', 'venta'),
+            $this->row('IVAREP', 0, 1000.0, 52.0, '', 'venta', 5.2),
+        ]);
+
+        // el IVA sigue yendo al régimen general 21% -> base 07 / cuota 09
+        $this->assertEqualsWithDelta(1000.0, $modelo->casilla('07'), 0.001);
+        $this->assertEqualsWithDelta(210.0, $modelo->casilla('09'), 0.001);
+        // el recargo 5.2 -> base 22 / cuota 24, aunque esté en la cuenta IVAREP
+        $this->assertEqualsWithDelta(1000.0, $modelo->casilla('22'), 0.001);
+        $this->assertEqualsWithDelta(52.0, $modelo->casilla('24'), 0.001);
+        // y no debe quedar ningún importe sin casilla
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
     public function testVentaIntracomunitariaNoContaminaRegimenGeneral(): void
     {
         $modelo = new Modelo303();
