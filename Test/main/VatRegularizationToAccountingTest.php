@@ -101,9 +101,4 @@ final class VatRegularizationToAccountingTest extends Modelo303TestCase
         // comprobamos que se ha eliminado el asiento contable
         $this->assertFalse($reg->getAccountingEntry()->exists());
     }
-
-    protected function tearDown(): void
-    {
-        $this->logErrors();
-    }
 }
