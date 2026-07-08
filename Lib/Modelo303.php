@@ -87,6 +87,9 @@ class Modelo303
          * Compras nacionales (régimen general)
          */
         'IVASOP' => [
+            // tipo 0%: compra exenta, igual que IVASEX; no genera cuota deducible
+            // y no debe sumarse a la base de la casilla 28
+            '0' => ['base' => null, 'cuota' => null],
             '*' => ['base' => '28', 'cuota' => '29'],
         ],
 

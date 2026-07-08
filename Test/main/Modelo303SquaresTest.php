@@ -114,6 +114,20 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEmpty($modelo->getAvisos());
     }
 
+    public function testCompraExentaNoContaminaRegimenGeneral(): void
+    {
+        // compra exenta (0%) en IVASOP: no debe imputarse en 28/29 del régimen general
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVASOP', 0, 1500.0, 0.0, '', 'compra'),
+        ]);
+
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('28'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('29'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('45'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
     public function testImporteSinCasillaGeneraAviso(): void
     {
         $modelo = new Modelo303();
