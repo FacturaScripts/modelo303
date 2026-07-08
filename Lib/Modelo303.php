@@ -54,6 +54,9 @@ class Modelo303
          * Ventas nacionales (régimen general)
          */
         'IVAREP' => [
+            // tipo 0%: en la práctica es una operación exenta, aunque la subcuenta
+            // no esté etiquetada como IVAREX; se trata igual, como base informativa (150)
+            '0'   => ['base' => '150', 'cuota' => null],
             '2'   => ['base' => '165', 'cuota' => '167'],
             '4'   => ['base' => '01', 'cuota' => '03'],
             '5'   => ['base' => '153', 'cuota' => '155'],

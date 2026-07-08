@@ -158,6 +158,21 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEmpty($modelo->getAvisos());
     }
 
+    public function testVentaExentaAlCeroPorCientoEnCuentaIVAREP(): void
+    {
+        // issue #5443: comisiones financieras / gastos de aval repercutidos sin IVA,
+        // contabilizados en la cuenta genérica IVAREP con tipo 0%. No debe generar
+        // aviso de importe sin casilla; se trata como operación exenta (casilla 150).
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVAREP', 0, 141.16, 0.0),
+        ]);
+
+        $this->assertEqualsWithDelta(141.16, $modelo->casilla('150'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('27'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
     public function testVentaIntracomunitariaNoContaminaRegimenGeneral(): void
     {
         $modelo = new Modelo303();
