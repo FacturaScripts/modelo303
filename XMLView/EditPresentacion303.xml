@@ -36,37 +36,37 @@
             </column>
         </group>
         <group name="aeat-manual-boxes" title="model303-manual-boxes" icon="fa-solid fa-pen-to-square" numcolumns="12">
-            <column name="model303-box-65" order="100">
+            <column name="model303-box-65" order="100" numcolumns="4">
                 <widget type="number" fieldname="c65" min="0" max="100" step="0.01"/>
             </column>
-            <column name="model303-box-76" order="110">
+            <column name="model303-box-76" order="110" numcolumns="4">
                 <widget type="money" fieldname="c76"/>
             </column>
-            <column name="model303-box-77" order="120">
+            <column name="model303-box-77" order="120" numcolumns="4">
                 <widget type="money" fieldname="c77"/>
             </column>
-            <column name="model303-box-110" order="130">
+            <column name="model303-box-110" order="130" numcolumns="4">
                 <widget type="money" fieldname="c110"/>
             </column>
-            <column name="model303-box-78" order="140">
+            <column name="model303-box-78" order="140" numcolumns="4">
                 <widget type="money" fieldname="c78"/>
             </column>
-            <column name="model303-box-68" order="150">
+            <column name="model303-box-68" order="150" numcolumns="4">
                 <widget type="money" fieldname="c68"/>
             </column>
-            <column name="model303-box-108" order="160">
+            <column name="model303-box-108" order="160" numcolumns="4">
                 <widget type="money" fieldname="c108"/>
             </column>
-            <column name="model303-box-70" order="170">
+            <column name="model303-box-70" order="170" numcolumns="4">
                 <widget type="money" fieldname="c70"/>
             </column>
-            <column name="model303-box-109" order="180">
+            <column name="model303-box-109" order="180" numcolumns="4">
                 <widget type="money" fieldname="c109"/>
             </column>
-            <column name="model303-box-112" order="190">
+            <column name="model303-box-112" order="190" numcolumns="4">
                 <widget type="money" fieldname="c112"/>
             </column>
-            <column name="model303-box-111" order="200">
+            <column name="model303-box-111" order="200" numcolumns="4">
                 <widget type="money" fieldname="c111"/>
             </column>
         </group>

@@ -350,6 +350,42 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Looks up the immediately previous tax settlement of the same company and copies its
+     * pending-for-later-periods result (box 87) into box 110 (cuotas a compensar pendientes
+     * de periodos anteriores) of the current settlement.
+     *
+     * @return void
+     */
+    private function fillPreviousCarryoverAction(): void
+    {
+        $reg = new RegularizacionImpuesto();
+        $code = $this->request->input('code');
+        if (false === $reg->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return;
+        }
+
+        $where = [
+            Where::eq('idempresa', $reg->idempresa),
+            Where::lt('fechafin', $reg->fechainicio),
+        ];
+        $previous = RegularizacionImpuesto::all($where, ['fechafin' => 'DESC'], 0, 1);
+        if (empty($previous)) {
+            Tools::log()->warning('previous-tax-settlement-not-found');
+            return;
+        }
+
+        $previousModelo = $this->buildModelo303($previous[0]);
+        $reg->c110 = $previousModelo->casilla('87');
+        if (false === $reg->save()) {
+            Tools::log()->warning('record-save-error');
+            return;
+        }
+
+        Tools::log()->notice('record-updated-correctly');
+    }
+
+    /**
      * Run the actions that alter data before reading it.
      *
      * @param string $action
@@ -357,16 +393,25 @@ class EditRegularizacionImpuesto extends EditController
      */
     protected function execPreviousAction($action): bool
     {
-        if ($action == 'create-accounting-entry') {
-            $this->createAccountingEntryAction();
-            return true;
-        }
+        switch ($action) {
+            case 'create-accounting-entry':
+                $this->createAccountingEntryAction();
+                return true;
 
-        if ($action === 'download-303') {
-            return $this->downloadTxtAction();
-        }
+            case 'download-303':
+                // guardamos primero los cambios de la pestaña para que el fichero
+                // descargado coincida siempre con lo que se ve en pantalla
+                $this->editAction();
+                return $this->downloadTxtAction();
 
-        return parent::execPreviousAction($action);
+            case 'fill-previous-carryover':
+                $this->editAction();
+                $this->fillPreviousCarryoverAction();
+                return true;
+
+            default:
+                return parent::execPreviousAction($action);
+        }
     }
 
     /**
@@ -514,6 +559,17 @@ class EditRegularizacionImpuesto extends EditController
 
             case 'ListPartida':
                 $this->getListPartida($view);
+
+                // botón para crear el asiento contable cuando aún no existe
+                if ($this->getModel()->exists() && empty($this->getModel()->idasiento)) {
+                    $view->addButton([
+                        'action' => 'create-accounting-entry',
+                        'label' => 'create-accounting-entry',
+                        'icon' => 'fa-solid fa-balance-scale',
+                        'color' => 'success',
+                        'confirm' => true,
+                    ]);
+                }
                 break;
 
             case 'ListPartidaImpuesto-1':
@@ -533,6 +589,16 @@ class EditRegularizacionImpuesto extends EditController
                 }
 
                 $view->loadData($id);
+
+                // botón para rellenar la casilla 110 con el pendiente de la liquidación anterior
+                $view->addButton([
+                    'action' => 'fill-previous-carryover',
+                    'color' => 'info',
+                    'confirm' => true,
+                    'icon' => 'fa-solid fa-wand-magic-sparkles',
+                    'label' => 'fill-previous-carryover',
+                    'type' => 'action',
+                ]);
 
                 // botón para descargar el fichero .303
                 $view->addButton([
@@ -560,15 +626,5 @@ class EditRegularizacionImpuesto extends EditController
         $this->tab($viewName)
             ->disableColumn('tax-credit-account', $exists, 'true')
             ->disableColumn('tax-debit-account', $exists, 'true');
-
-        if ($exists && empty($this->getModel()->idasiento)) {
-            $this->addButton($viewName, [
-                'action' => 'create-accounting-entry',
-                'label' => 'create-accounting-entry',
-                'icon' => 'fa-solid fa-balance-scale',
-                'color' => 'success',
-                'confirm' => true,
-            ]);
-        }
     }
 }
