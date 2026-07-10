@@ -184,7 +184,9 @@ class EditRegularizacionImpuesto extends EditController
     protected function createAccountingEntryAction(): void
     {
         $reg = new RegularizacionImpuesto();
-        $code = $this->request->input('code');
+        // la pestaña Asiento es una vista de lista y su formulario no envía 'code'
+        // en el cuerpo del POST, así que lo recuperamos también de la query string
+        $code = $this->request->inputOrQuery('code');
         if (false === $reg->load($code)) {
             Tools::log()->warning('record-not-found');
             return;
