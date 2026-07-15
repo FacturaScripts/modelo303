@@ -385,7 +385,7 @@ class Modelo303
 
         // Determine the correct group based on the tax rate.
         $tax = ($tipo === 'IVARRE') ? $recargo : $iva;
-        $key = rtrim(rtrim(number_format($tax, 1, '.', ''), '0'), '.');
+        $key = rtrim(rtrim(number_format($tax, 2, '.', ''), '0'), '.');
         $grupo = $this->casillaMap[$tipo][$key]
             ?? $this->casillaMap[$tipo][(string)(int)$tax]
             ?? $this->casillaMap[$tipo]['*']

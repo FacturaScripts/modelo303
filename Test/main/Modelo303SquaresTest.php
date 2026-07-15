@@ -151,6 +151,26 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEqualsWithDelta(52.0, $modelo->casilla('24'), 0.001);
     }
 
+    public function testRecargoEquivalenciaConDosDecimales(): void
+    {
+        // los tipos de recargo 0.26% y 1.75% tienen 2 decimales; number_format() con solo
+        // 1 decimal los redondeaba (0.26 -> "0.3", 1.75 -> "1.8") y no encajaban en el mapa
+        // de casillas, generando un aviso de importe sin casilla.
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVARRE', 0, 400.0, 1.04, '', 'venta', 0.26),
+            $this->row('IVARRE', 0, 400.0, 7.0, '', 'venta', 1.75),
+        ]);
+
+        // recargo 0.26 -> base 168 / cuota 170
+        $this->assertEqualsWithDelta(400.0, $modelo->casilla('168'), 0.001);
+        $this->assertEqualsWithDelta(1.04, $modelo->casilla('170'), 0.001);
+        // recargo 1.75 -> base 156 / cuota 158
+        $this->assertEqualsWithDelta(400.0, $modelo->casilla('156'), 0.001);
+        $this->assertEqualsWithDelta(7.0, $modelo->casilla('158'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
     public function testRecargoEquivalenciaEnCuentaIVAREP(): void
     {
         // Cuando no hay subcuenta IVARRE configurada, el núcleo contabiliza el recargo en la
