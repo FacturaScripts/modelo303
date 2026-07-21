@@ -35,6 +35,7 @@ class ListRegularizacionImpuesto extends ListController
     {
         $data = parent::getPageData();
         $data['menu'] = 'reports';
+        $data['submenu'] = 'tax-models';
         $data['title'] = 'model-303-390';
         $data['icon'] = 'fa-solid fa-book';
         return $data;
