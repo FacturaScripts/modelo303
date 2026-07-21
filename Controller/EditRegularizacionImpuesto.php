@@ -224,8 +224,8 @@ class EditRegularizacionImpuesto extends EditController
 
         $this->createViewsTaxSummary();
         $this->createViewsTaxDetail();
-        $this->createViewsTaxLine('ListPartidaImpuesto-1', 'purchases', 'fas fa-sign-in-alt');
-        $this->createViewsTaxLine('ListPartidaImpuesto-2', 'sales', 'fas fa-sign-out-alt');
+        $this->createViewsTaxLine('ListPartidaImpuesto-1', 'deductible-vat', 'fas fa-sign-in-alt');
+        $this->createViewsTaxLine('ListPartidaImpuesto-2', 'vat-accrued', 'fas fa-sign-out-alt');
         $this->createViewsEntryLine();
         $this->createViewsPresentacion();
     }
