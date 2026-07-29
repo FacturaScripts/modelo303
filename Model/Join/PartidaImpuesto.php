@@ -122,10 +122,11 @@ class PartidaImpuesto extends JoinModel
      * Assign the values of the $data array to the model view properties.
      *
      * @param array $data
+     * @param array $exclude
      */
-    protected function loadFromData(array $data): void
+    public function loadFromData(array $data = [], array $exclude = []): void
     {
-        parent::loadFromData($data);
+        parent::loadFromData($data, $exclude);
 
         // La cuota es SIEMPRE el importe realmente contabilizado (debe/haber), nunca un
         // recálculo base*tipo (que introduce desfases de céntimos). Usamos la misma fórmula
