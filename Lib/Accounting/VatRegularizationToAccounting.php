@@ -125,6 +125,7 @@ class VatRegularizationToAccounting
 
     /**
      * Comprueba si hay facturas sin asiento contable
+     * y cuyo importe sea distinto de cero.
      *
      * @param $reg
      *
@@ -138,6 +139,7 @@ class VatRegularizationToAccounting
             Where::gte('fecha', $reg->fechainicio),
             Where::lte('fecha', $reg->fechafin),
             Where::isNull('idasiento'),
+            Where::notEq('total', 0),
         ];
 
         $facturasSinAsiento = FacturaCliente::all($where, [], 0, 1);
