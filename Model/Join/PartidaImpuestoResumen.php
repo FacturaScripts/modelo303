@@ -122,10 +122,11 @@ class PartidaImpuestoResumen extends JoinModel
      * Assign derived compatibility fields used by existing consumers.
      *
      * @param array $data
+     * @param array $exclude
      */
-    protected function loadFromData(array $data): void
+    public function loadFromData(array $data = [], array $exclude = []): void
     {
-        parent::loadFromData($data);
+        parent::loadFromData($data, $exclude);
 
         // El destino (IVA o recargo) lo determina el tipo de recargo de la partida, no la cuenta
         // especial: el núcleo contabiliza el recargo de equivalencia en la cuenta de IVA
