@@ -353,6 +353,59 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Runs the standard edit save and, when the record didn't have an accounting entry yet,
+     * checks whether the user has just linked an existing one by hand (picking it in the
+     * "accounting-entry" field instead of using the "create-accounting-entry" button). In
+     * that case, validates it and completes the derived fields (accounting date and lock)
+     * so it gets correctly excluded from later tax settlements, exactly as it already
+     * happens for entries generated automatically.
+     *
+     * @return bool
+     */
+    protected function editAction(): bool
+    {
+        $before = new RegularizacionImpuesto();
+        $hadEntry = $before->load($this->request->input('code', '')) && !empty($before->idasiento);
+
+        if (false === parent::editAction()) {
+            return false;
+        }
+
+        if (false === $hadEntry) {
+            $this->linkManualAccountingEntry();
+        }
+
+        return true;
+    }
+
+    /**
+     * Validates the accounting entry the user has just picked in the "accounting-entry"
+     * field and completes its derived fields (accounting date and lock). If it's not a
+     * valid entry (different company or already linked to another settlement), the field
+     * is cleared so no invalid link remains stored.
+     *
+     * @return void
+     */
+    private function linkManualAccountingEntry(): void
+    {
+        $reg = $this->getModel();
+        if (empty($reg->idasiento)) {
+            return;
+        }
+
+        $idasiento = (int)$reg->idasiento;
+        $reg->idasiento = null;
+
+        $linker = new VatRegularizationToAccounting();
+        if (false === $linker->linkExisting($reg, $idasiento)) {
+            $reg->save();
+            return;
+        }
+
+        Tools::log()->notice('record-updated-correctly');
+    }
+
+    /**
      * Looks up the immediately previous tax settlement of the same company and copies its
      * pending-for-later-periods result (box 87) into box 110 (cuotas a compensar pendientes
      * de periodos anteriores) of the current settlement.

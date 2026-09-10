@@ -1,5 +1,7 @@
 {
     "accounting-entry-already-created": "Asiento ya creado anteriormente.",
+    "accounting-entry-already-linked": "El asiento seleccionado ya está vinculado a otra regularización de impuestos.",
+    "accounting-entry-invalid": "El asiento seleccionado no existe o pertenece a otra empresa.",
     "accounting-entry-not-created": "Asiento no creado.",
     "accounting-entry-not-found": "No se han encontrado asientos para este periodo",
     "aeat-file-303": "Presentación AEAT (fichero .303)",

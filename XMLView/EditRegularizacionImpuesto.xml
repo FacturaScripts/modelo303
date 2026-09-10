@@ -78,8 +78,8 @@
                 </widget>
             </column>
             <column name="accounting-entry" order="120">
-                <widget type="autocomplete" fieldname="idasiento" onclick="EditAsiento" readonly="true">
-                    <values source="asientos" fieldcode="idasiento" fieldtitle="numero"/>
+                <widget type="autocomplete" fieldname="idasiento" onclick="EditAsiento" readonly="dinamic">
+                    <values source="asientos" fieldcode="idasiento" fieldtitle="numero" fieldfilter="idempresa"/>
                 </widget>
             </column>
             <column name="accounting-date" order="130">
