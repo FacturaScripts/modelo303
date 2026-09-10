@@ -1,7 +1,13 @@
 {
     "accounting-entry-already-created": "Sarrera jadanik sortuta dago.",
+    "accounting-entry-already-linked": "El asiento seleccionado ya está vinculado a otra regularización de impuestos.",
+    "accounting-entry-before-end-date": "La fecha del asiento debe ser igual o posterior a la fecha de fin de la regularización.",
+    "accounting-entry-invalid": "El asiento seleccionado no existe o pertenece a otra empresa.",
     "accounting-entry-not-created": "Asiento ez da sortu.",
     "accounting-entry-not-found": "Epe honetarako kontabilitate asenterik ez da aurkitu.",
+    "accounting-entry-not-linked": "La regularización no tiene ningún asiento vinculado.",
+    "accounting-entry-not-selected": "Debe seleccionar un asiento.",
+    "accounting-entry-with-operation": "El asiento seleccionado tiene asignada una operación especial.",
     "aeat-file-303": "AEAT aurkezpena (.303 fitxategia)",
     "auto-detect": "Automatikoa (emaitzaren arabera)",
     "base": "Oinarria",
@@ -15,6 +21,8 @@
     "info-operations-no-vat": "BEZ jasanarazi gabeko eragiketak (informatiboak)",
     "intra-community-deliveries": "Ondasun eta zerbitzuen intrakomunitateko entregak",
     "invoices-without-acc-entry": "Faktura batzuk ez daude sartuak. Faktura guztien sarrerak sortu beharko dituzu.",
+    "link-accounting-entry": "Vincular asiento",
+    "link-accounting-entry-p": "Seleccione un asiento para vincularlo a esta regularización. No se creará ningún asiento nuevo.",
     "model-303": "303 Eredua",
     "model-303-390": "Modeloa 303\/390",
     "model-303-new": "303 ereduak (2025)",
@@ -52,6 +60,7 @@
     "total-accrued-fee": "Kuota totala devengatua",
     "total-result-of-the-general-regime": "Orokorreko araubidearen emaitza osoa",
     "total-to-deduct": "Guztira deskontzeko",
+    "unlink-accounting-entry": "Desvincular asiento",
     "vat-accrued": "Zergak aurreratua",
     "year-model-390": "Urtea (390 modeloa)"
 }

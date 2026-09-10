@@ -1,7 +1,13 @@
 {
     "accounting-entry-already-created": "Asentament ja creat anteriorment.",
+    "accounting-entry-already-linked": "El asiento seleccionado ya está vinculado a otra regularización de impuestos.",
+    "accounting-entry-before-end-date": "La fecha del asiento debe ser igual o posterior a la fecha de fin de la regularización.",
+    "accounting-entry-invalid": "El asiento seleccionado no existe o pertenece a otra empresa.",
     "accounting-entry-not-created": "Asentament no creat.",
     "accounting-entry-not-found": "No s'han trobat assentaments per a aquest període",
+    "accounting-entry-not-linked": "La regularización no tiene ningún asiento vinculado.",
+    "accounting-entry-not-selected": "Debe seleccionar un asiento.",
+    "accounting-entry-with-operation": "El asiento seleccionado tiene asignada una operación especial.",
     "aeat-file-303": "Presentació AEAT (fitxer .303)",
     "auto-detect": "Automàtic (segons resultat)",
     "base": "Base",
@@ -15,6 +21,8 @@
     "info-operations-no-vat": "Operacions sense repercussió de l'IVA (informatives)",
     "intra-community-deliveries": "Entregues intracomunitàries de béns i serveis",
     "invoices-without-acc-entry": "Hi ha factures sense assentament. Cal crear els assentaments de totes les factures.",
+    "link-accounting-entry": "Vincular asiento",
+    "link-accounting-entry-p": "Seleccione un asiento para vincularlo a esta regularización. No se creará ningún asiento nuevo.",
     "model-303": "Model 303",
     "model-303-390": "Model 303\/390",
     "model-303-new": "Models 303 (2025)",
@@ -52,6 +60,7 @@
     "total-accrued-fee": "Quota total devengada",
     "total-result-of-the-general-regime": "Resultat total del règim general",
     "total-to-deduct": "Total a deduir",
+    "unlink-accounting-entry": "Desvincular asiento",
     "vat-accrued": "IVA devengat",
     "year-model-390": "Any (model 390)"
 }
