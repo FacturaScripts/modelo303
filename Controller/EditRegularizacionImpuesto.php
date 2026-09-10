@@ -70,6 +70,70 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * El widget autocomplete del modal "Vincular asiento" necesita filtrar los asientos por
+     * empresa, fecha y operación de la regularización, datos que el formulario del modal no
+     * envía (por eso no se puede usar el atributo fieldfilter del widget). Los tomamos de la
+     * regularización que se está editando, cargada a partir del 'code' de la url.
+     *
+     * @return array
+     */
+    protected function autocompleteAction(): array
+    {
+        $data = $this->requestGet(['source', 'field', 'term']);
+        if ($data['source'] !== 'asientos' || $data['field'] !== 'linkidasiento') {
+            return parent::autocompleteAction();
+        }
+
+        $reg = new RegularizacionImpuesto();
+        if (false === $reg->load($this->request->inputOrQuery('code'))) {
+            return [];
+        }
+
+        $results = [];
+        $where = $this->availableAccEntriesWhere($reg);
+        foreach ($this->codeModel->search('asientos', 'idasiento', 'concepto', $data['term'], $where) as $value) {
+            $results[] = ['key' => Tools::fixHtml($value->code), 'value' => Tools::fixHtml($value->description)];
+        }
+
+        return empty($results) ?
+            [['key' => null, 'value' => Tools::trans('no-data')]] :
+            $results;
+    }
+
+    /**
+     * Filtro de los asientos que se pueden vincular a una regularización: los de la misma
+     * empresa, con fecha igual o posterior al fin del periodo liquidado, sin operación
+     * especial (apertura, cierre o regularización) y que no estén ya vinculados a otra
+     * regularización. El ejercicio es indiferente.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return array
+     */
+    protected function availableAccEntriesWhere(RegularizacionImpuesto $reg): array
+    {
+        $where = [
+            Where::eq('idempresa', $reg->idempresa),
+            Where::gte('fecha', $reg->fechafin),
+            // COALESCE porque operacion es null en los asientos sin operación especial,
+            // y las comparaciones sobre null en sql nunca se cumplen
+            Where::eq("COALESCE(operacion, '')", ''),
+        ];
+
+        // excluimos los asientos ya vinculados a otra regularización
+        $linked = [];
+        foreach (RegularizacionImpuesto::all() as $item) {
+            if ($item->idasiento && $item->idregiva != $reg->idregiva) {
+                $linked[] = $item->idasiento;
+            }
+        }
+        if (false === empty($linked)) {
+            $where[] = Where::notIn('idasiento', implode(',', $linked));
+        }
+
+        return $where;
+    }
+
+    /**
      * Builds and configures a Modelo303 instance for the given tax settlement record,
      * computing the general regime squares plus the manually-entered ones and the result chain.
      *
@@ -353,95 +417,6 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Runs the standard edit save and, when the record didn't have an accounting entry yet,
-     * checks whether the user has just linked an existing one by hand (picking it in the
-     * "accounting-entry" field instead of using the "create-accounting-entry" button). In
-     * that case, validates it and completes the derived fields (accounting date and lock)
-     * so it gets correctly excluded from later tax settlements, exactly as it already
-     * happens for entries generated automatically.
-     *
-     * @return bool
-     */
-    protected function editAction(): bool
-    {
-        $before = new RegularizacionImpuesto();
-        $hadEntry = $before->load($this->request->input('code', '')) && !empty($before->idasiento);
-
-        if (false === parent::editAction()) {
-            return false;
-        }
-
-        if (false === $hadEntry) {
-            $this->linkManualAccountingEntry();
-        }
-
-        return true;
-    }
-
-    /**
-     * Validates the accounting entry the user has just picked in the "accounting-entry"
-     * field and completes its derived fields (accounting date and lock). If it's not a
-     * valid entry (different company or already linked to another settlement), the field
-     * is cleared so no invalid link remains stored.
-     *
-     * @return void
-     */
-    private function linkManualAccountingEntry(): void
-    {
-        $reg = $this->getModel();
-        if (empty($reg->idasiento)) {
-            return;
-        }
-
-        $idasiento = (int)$reg->idasiento;
-        $reg->idasiento = null;
-
-        $linker = new VatRegularizationToAccounting();
-        if (false === $linker->linkExisting($reg, $idasiento)) {
-            $reg->save();
-            return;
-        }
-
-        Tools::log()->notice('record-updated-correctly');
-    }
-
-    /**
-     * Looks up the immediately previous tax settlement of the same company and copies its
-     * pending-for-later-periods result (box 87) into box 110 (cuotas a compensar pendientes
-     * de periodos anteriores) of the current settlement.
-     *
-     * @return void
-     */
-    private function fillPreviousCarryoverAction(): void
-    {
-        $reg = new RegularizacionImpuesto();
-        $code = $this->request->input('code');
-        if (false === $reg->load($code)) {
-            Tools::log()->warning('record-not-found');
-            return;
-        }
-
-        $where = [
-            Where::eq('idempresa', $reg->idempresa),
-            Where::lt('fechafin', $reg->fechainicio),
-        ];
-        $previous = RegularizacionImpuesto::all($where, ['fechafin' => 'DESC'], 0, 1);
-        if (empty($previous)) {
-            Tools::log()->warning('previous-tax-settlement-not-found');
-            return;
-        }
-
-        $previousModelo = $this->buildModelo303($previous[0]);
-        $reg->c110 = $previousModelo->casilla('87');
-        if (false === $reg->save()) {
-            Tools::log()->warning('record-save-error');
-            return;
-        }
-
-        Tools::log()->notice('record-updated-correctly');
-    }
-
-    /**
      * Run the actions that alter data before reading it.
      *
      * @param string $action
@@ -463,6 +438,14 @@ class EditRegularizacionImpuesto extends EditController
             case 'fill-previous-carryover':
                 $this->editAction();
                 $this->fillPreviousCarryoverAction();
+                return true;
+
+            case 'link-accounting-entry':
+                $this->linkAccountingEntryAction();
+                return true;
+
+            case 'unlink-accounting-entry':
+                $this->unlinkAccountingEntryAction();
                 return true;
 
             default:
@@ -526,6 +509,42 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Looks up the immediately previous tax settlement of the same company and copies its
+     * pending-for-later-periods result (box 87) into box 110 (cuotas a compensar pendientes
+     * de periodos anteriores) of the current settlement.
+     *
+     * @return void
+     */
+    private function fillPreviousCarryoverAction(): void
+    {
+        $reg = new RegularizacionImpuesto();
+        $code = $this->request->input('code');
+        if (false === $reg->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return;
+        }
+
+        $where = [
+            Where::eq('idempresa', $reg->idempresa),
+            Where::lt('fechafin', $reg->fechainicio),
+        ];
+        $previous = RegularizacionImpuesto::all($where, ['fechafin' => 'DESC'], 0, 1);
+        if (empty($previous)) {
+            Tools::log()->warning('previous-tax-settlement-not-found');
+            return;
+        }
+
+        $previousModelo = $this->buildModelo303($previous[0]);
+        $reg->c110 = $previousModelo->casilla('87');
+        if (false === $reg->save()) {
+            Tools::log()->warning('record-save-error');
+            return;
+        }
+
+        Tools::log()->notice('record-updated-correctly');
+    }
+
+    /**
      * Load data for accounting entry.
      *
      * @param BaseView $view
@@ -567,6 +586,91 @@ class EditRegularizacionImpuesto extends EditController
     private function getPartidaImpuestoWhere(int $group): array
     {
         return $this->commonTaxWhere($group);
+    }
+
+    /**
+     * Vincula un asiento contable ya existente (normalmente creado a mano, sin usar el
+     * asistente) a una regularización, en lugar de generar uno nuevo. Así la lógica que
+     * excluye los asientos de regularización al calcular los periodos siguientes (ver
+     * commonTaxWhere() y getSubtotals(), ambos basados en RegularizacionImpuesto::idasiento)
+     * también reconoce el asiento manual. El asiento no se modifica.
+     *
+     * Valida las mismas condiciones que filtra el modal, para que no se pueda colar un
+     * asiento inválido manipulando la petición.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @param int $idasiento
+     * @return bool
+     */
+    protected function linkAccountingEntry(RegularizacionImpuesto &$reg, int $idasiento): bool
+    {
+        if ($reg->idasiento) {
+            Tools::log()->warning('accounting-entry-already-created');
+            return false;
+        }
+
+        $asiento = new Asiento();
+        if (false === $asiento->load($idasiento) || $asiento->idempresa != $reg->idempresa) {
+            Tools::log()->warning('accounting-entry-invalid');
+            return false;
+        }
+
+        // el asiento no puede tener una operación especial (apertura, cierre o regularización)
+        if (false === empty($asiento->operacion)) {
+            Tools::log()->warning('accounting-entry-with-operation');
+            return false;
+        }
+
+        // la fecha del asiento debe ser igual o posterior al fin del periodo liquidado.
+        // ojo: las fechas de los modelos vienen en formato d-m-Y, así que hay que
+        // normalizarlas antes de compararlas
+        if (strtotime($asiento->fecha) < strtotime($reg->fechafin)) {
+            Tools::log()->warning('accounting-entry-before-end-date');
+            return false;
+        }
+
+        // el asiento no puede estar ya vinculado a otra regularización
+        $where = [
+            Where::eq('idasiento', $asiento->idasiento),
+            Where::notEq('idregiva', $reg->idregiva),
+        ];
+        if (false === empty(RegularizacionImpuesto::all($where, [], 0, 1))) {
+            Tools::log()->warning('accounting-entry-already-linked');
+            return false;
+        }
+
+        $reg->idasiento = $asiento->idasiento;
+        $reg->fechaasiento = $asiento->fecha;
+        $reg->bloquear = true;
+        return $reg->save();
+    }
+
+    /**
+     * Link accounting entry action procedure.
+     *
+     * @return void
+     */
+    protected function linkAccountingEntryAction(): void
+    {
+        $reg = new RegularizacionImpuesto();
+        // la pestaña Asiento es una vista de lista y el formulario del modal no envía 'code'
+        // en el cuerpo del POST, así que lo recuperamos también de la query string
+        $code = $this->request->inputOrQuery('code');
+        if (false === $reg->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return;
+        }
+
+        $idasiento = (int)$this->request->input('linkidasiento');
+        if (empty($idasiento)) {
+            Tools::log()->warning('accounting-entry-not-selected');
+            return;
+        }
+
+        // si no se puede vincular, linkAccountingEntry() ya ha registrado el motivo
+        if ($this->linkAccountingEntry($reg, $idasiento)) {
+            Tools::log()->notice('record-updated-correctly');
+        }
     }
 
     /**
@@ -616,8 +720,12 @@ class EditRegularizacionImpuesto extends EditController
             case 'ListPartida':
                 $this->getListPartida($view);
 
-                // botón para crear el asiento contable cuando aún no existe
-                if ($this->getModel()->exists() && empty($this->getModel()->idasiento)) {
+                if (false === $this->getModel()->exists()) {
+                    break;
+                }
+
+                if (empty($this->getModel()->idasiento)) {
+                    // botón para crear el asiento contable cuando aún no existe
                     $view->addButton([
                         'action' => 'create-accounting-entry',
                         'label' => 'create-accounting-entry',
@@ -625,7 +733,28 @@ class EditRegularizacionImpuesto extends EditController
                         'color' => 'success',
                         'confirm' => true,
                     ]);
+
+                    // botón para vincular un asiento existente, abre el modal definido
+                    // en Extension/XMLView/ListPartida.xml
+                    $view->addButton([
+                        'action' => 'link-accounting-entry',
+                        'label' => 'link-accounting-entry',
+                        'icon' => 'fa-solid fa-link',
+                        'color' => 'info',
+                        'type' => 'modal',
+                    ]);
+                    break;
                 }
+
+                // botón para desvincular el asiento, sin eliminarlo
+                $view->addButton([
+                    'action' => 'unlink-accounting-entry',
+                    'label' => 'unlink-accounting-entry',
+                    'icon' => 'fa-solid fa-link-slash',
+                    'color' => 'warning',
+                    'type' => 'action',
+                    'confirm' => true,
+                ]);
                 break;
 
             case 'ListPartidaImpuesto-1':
@@ -682,5 +811,48 @@ class EditRegularizacionImpuesto extends EditController
         $this->tab($viewName)
             ->disableColumn('tax-credit-account', $exists, 'true')
             ->disableColumn('tax-debit-account', $exists, 'true');
+    }
+
+    /**
+     * Desvincula el asiento de la regularización, sin eliminarlo de la contabilidad y sin
+     * modificarlo. Limpia la fecha del asiento y desbloquea la liquidación, para que el
+     * asiento vuelva a contar en los cálculos del periodo (ver commonTaxWhere()).
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return bool
+     */
+    protected function unlinkAccountingEntry(RegularizacionImpuesto &$reg): bool
+    {
+        if (empty($reg->idasiento)) {
+            Tools::log()->warning('accounting-entry-not-linked');
+            return false;
+        }
+
+        $reg->idasiento = null;
+        $reg->fechaasiento = null;
+        $reg->bloquear = false;
+        return $reg->save();
+    }
+
+    /**
+     * Unlink accounting entry action procedure.
+     *
+     * @return void
+     */
+    protected function unlinkAccountingEntryAction(): void
+    {
+        $reg = new RegularizacionImpuesto();
+        // la pestaña Asiento es una vista de lista y su formulario no envía 'code'
+        // en el cuerpo del POST, así que lo recuperamos también de la query string
+        $code = $this->request->inputOrQuery('code');
+        if (false === $reg->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return;
+        }
+
+        // si no se puede desvincular, unlinkAccountingEntry() ya ha registrado el motivo
+        if ($this->unlinkAccountingEntry($reg)) {
+            Tools::log()->notice('record-updated-correctly');
+        }
     }
 }

@@ -27,7 +27,6 @@ use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
-use FacturaScripts\Dinamic\Model\RegularizacionImpuesto as DinRegularizacionImpuesto;
 use FacturaScripts\Dinamic\Model\Subcuenta;
 
 /**
@@ -76,46 +75,6 @@ class VatRegularizationToAccounting
         Tools::log()->warning('accounting-lines-error');
         $accEntry->delete();
         return false;
-    }
-
-    /**
-     * Links an already-existing accounting entry (typically created by hand, without using
-     * this assistant) to a tax settlement, instead of generating a new one. This lets the
-     * exclusion logic used to compute later settlements (see commonTaxWhere() and
-     * getSubtotals(), both keyed on RegularizacionImpuesto::idasiento) recognize the manual
-     * entry and exclude it, exactly as it already does for automatically generated entries.
-     *
-     * @param RegularizacionImpuesto $reg
-     * @param int $idasiento
-     * @return bool
-     */
-    public function linkExisting(RegularizacionImpuesto &$reg, int $idasiento): bool
-    {
-        if ($reg->idasiento) {
-            Tools::log()->warning('accounting-entry-already-created');
-            return false;
-        }
-
-        $asiento = new Asiento();
-        if (false === $asiento->load($idasiento) || $asiento->idempresa != $reg->idempresa) {
-            Tools::log()->warning('accounting-entry-invalid');
-            return false;
-        }
-
-        // el asiento no puede estar ya vinculado a otra regularización
-        $where = [
-            Where::eq('idasiento', $asiento->idasiento),
-            Where::notEq('idregiva', $reg->idregiva),
-        ];
-        if (false === empty(DinRegularizacionImpuesto::all($where, [], 0, 1))) {
-            Tools::log()->warning('accounting-entry-already-linked');
-            return false;
-        }
-
-        $reg->idasiento = $asiento->idasiento;
-        $reg->fechaasiento = $asiento->fecha;
-        $reg->bloquear = true;
-        return $reg->save();
     }
 
     protected function addAccountingResultLine(Asiento $accEntry, RegularizacionImpuesto $reg): bool
