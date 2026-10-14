@@ -113,6 +113,18 @@ final class Txt303ExportTest extends Modelo303TestCase
         $this->assertSame('ES9121000418450200051332', $iban, 'IBAN mal posicionado');
     }
 
+    public function testMarcaSepaSoloEnDevolucion(): void
+    {
+        // ingreso con domiciliación (tipo U): el IBAN figura pero la marca SEPA va a "0"
+        $pageDid = $this->pageDidConResultado(105.0);
+        $this->assertSame('ES9121000418450200051332', rtrim(substr($pageDid, 22, 34)));
+        $this->assertSame('0', substr($pageDid, 193, 1), 'En un ingreso la marca SEPA debe ser 0');
+
+        // devolución (tipo D) con IBAN español: marca "1" (cuenta España)
+        $pageDid = $this->pageDidConResultado(-105.0);
+        $this->assertSame('1', substr($pageDid, 193, 1), 'En una devolución la marca SEPA debe ser 1');
+    }
+
     public function testLongitudPaginas(): void
     {
         $reg = new RegularizacionImpuesto();
@@ -167,6 +179,33 @@ final class Txt303ExportTest extends Modelo303TestCase
         $page3 = $this->extractPage($content, '<T30303000>', '</T30303000>');
         $box65 = substr($page3, 215, 5); // posición 216, longitud 5
         $this->assertSame('10000', $box65, 'Casilla 65 (%) mal posicionada');
+    }
+
+    /**
+     * Genera el fichero con un IBAN español y el resultado de régimen general indicado
+     * (positivo = a ingresar, negativo = a devolver) y devuelve la página DID.
+     *
+     * @param float $resultado
+     * @return string
+     */
+    private function pageDidConResultado(float $resultado): string
+    {
+        $reg = new RegularizacionImpuesto();
+        $reg->fechainicio = '2026-01-01';
+        $reg->periodo = 'T1';
+        $reg->iban = 'ES9121000418450200051332';
+
+        $empresa = new Empresa();
+        $empresa->cifnif = 'B12345678';
+        $empresa->nombre = 'EMPRESA TEST SL';
+
+        $modelo = new Modelo303();
+        $modelo->setCasilla('46', $resultado);
+        $modelo->computeResultado();
+
+        $content = Txt303Export::export($reg, $modelo->getSquares(), $empresa);
+
+        return $this->extractPage($content, '<T303DID00>', '</T303DID00>');
     }
 
     /**
