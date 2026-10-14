@@ -452,9 +452,16 @@ class Modelo303
                 // informativa (casilla 59) se carga desde las facturas.
                 return true;
 
+            case InvoiceOperation::EXPORT:
+                // Exportación (VENTA): operación exenta. Su base va a la casilla 60 (se carga desde
+                // las facturas en loadFromSalesInvoices()), no debe sumarse a la 150 (base al 0%).
+                return $tipodoc === 'venta';
+
             case InvoiceOperation::IMPORT:
-                // Importación (COMPRA): el IVA lo liquida la aduana (DUA). Solo el soportado deducible.
-                if ($esDeducible) {
+                // Importación (COMPRA): el IVA lo liquida la aduana (DUA). Solo cuenta el IVA soportado
+                // de importaciones (IVASIM); la factura del proveedor extracomunitario (IVA 0%, cuenta
+                // IVASOP) no aporta base a la casilla 32.
+                if ($tipo === 'IVASIM') {
                     $this->addCasilla('32', '33', $base, $cuota);
                 }
                 // El IVA devengado de importación (casilla 77 / IVA diferido) no tiene origen

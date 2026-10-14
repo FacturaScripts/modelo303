@@ -40,6 +40,34 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEqualsWithDelta(1050.0, $modelo->casilla('33'), 0.001);
     }
 
+    public function testFacturaProveedorImportacionNoAportaBase(): void
+    {
+        // la factura del proveedor extracomunitario (IVA 0%, cuenta IVASOP, operación importación)
+        // no debe sumar base a la casilla 32; solo cuenta el IVA de importación del DUA (IVASIM).
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVASIM', 21, 848.32, 178.15),
+            $this->row('IVASOP', 0, 1523.23, 0.0, InvoiceOperation::IMPORT, 'compra'),
+        ]);
+
+        $this->assertEqualsWithDelta(848.32, $modelo->casilla('32'), 0.001);
+        $this->assertEqualsWithDelta(178.15, $modelo->casilla('33'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('28'), 0.001);
+    }
+
+    public function testVentaExportacionNoSumaEnCasilla150(): void
+    {
+        // la venta de exportación genera una partida IVAREP al 0%; su base va a la casilla 60
+        // (desde las facturas), no a la 150.
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVAREP', 0, 472.0, 0.0, InvoiceOperation::EXPORT, 'venta'),
+        ]);
+
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('150'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
     public function testCompraIntracomunitaria(): void
     {
         $modelo = new Modelo303();

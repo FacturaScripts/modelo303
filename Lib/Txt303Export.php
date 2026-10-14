@@ -489,8 +489,10 @@ class Txt303Export
 
             case 'marca_sepa':
                 // "1" cuenta España, "2" UE-SEPA, "3" resto países, "0" vacía.
+                // Es la marca de la cuenta de DEVOLUCIÓN: solo se rellena si la declaración
+                // es a devolución; en ingresos domiciliados (U) el IBAN figura pero la marca va a "0".
                 $iban = strtoupper(trim((string)self::$reg->iban));
-                if (empty($iban)) {
+                if (empty($iban) || false === in_array(self::tipoDeclaracion(), ['D', 'X'], true)) {
                     return '0';
                 }
                 return str_starts_with($iban, 'ES') ? '1' : '2';
