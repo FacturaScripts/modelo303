@@ -211,6 +211,18 @@ class Txt303Export
         ['l' => 12, 'k' => 'c', 'v' => '</T303DID00>'],
     ];
 
+    /**
+     * Tipos de declaración que admiten datos bancarios en la página DID:
+     * U (domiciliación del ingreso), D (devolución) y X (devolución por transferencia al extranjero).
+     */
+    private const TIPOS_CON_CUENTA = ['U', 'D', 'X'];
+
+    /**
+     * Tipos de declaración a devolver. Solo en estos la AEAT admite contenido en los campos
+     * "Devolución - ..." de la página DID (p. ej. la marca SEPA).
+     */
+    private const TIPOS_DEVOLUCION = ['D', 'X'];
+
     /** @var Empresa */
     private static Empresa $company;
 
@@ -247,8 +259,9 @@ class Txt303Export
             . self::buildPage(self::PAGE1)
             . self::buildPage(self::PAGE3);
 
-        // la página de domiciliación/devolución solo se incluye si hay IBAN
-        if (false === empty($reg->iban)) {
+        // la página de domiciliación/devolución solo se incluye si hay IBAN y la declaración
+        // es de domiciliación o devolución (en el resto de tipos la AEAT no admite datos bancarios)
+        if (false === empty($reg->iban) && in_array(self::tipoDeclaracion(), self::TIPOS_CON_CUENTA, true)) {
             $content .= self::buildPage(self::PAGE_DID);
         }
 
@@ -489,8 +502,9 @@ class Txt303Export
 
             case 'marca_sepa':
                 // "1" cuenta España, "2" UE-SEPA, "3" resto países, "0" vacía.
+                // La AEAT solo admite contenido si la declaración es a devolver (error EDID113).
                 $iban = strtoupper(trim((string)self::$reg->iban));
-                if (empty($iban)) {
+                if (empty($iban) || false === in_array(self::tipoDeclaracion(), self::TIPOS_DEVOLUCION, true)) {
                     return '0';
                 }
                 return str_starts_with($iban, 'ES') ? '1' : '2';
