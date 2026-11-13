@@ -57,7 +57,8 @@ class VatRegularizationToAccounting
         $accEntry->fecha = $reg->fechafin;
         $accEntry->idempresa = $reg->idempresa;
         if (false === $accEntry->save()) {
-            Tools::log()->warning('accounting-entry-error');
+            // el concepto identifica la regularización con su periodo, p. ej. «Regularización de IVA T1»
+            Tools::log()->warning('accounting-entry-error', ['%document%' => $accEntry->concepto]);
             return false;
         }
 
