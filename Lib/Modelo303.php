@@ -374,7 +374,7 @@ class Modelo303
 
         // Las operaciones especiales (ISP, intracomunitarias, importación) deciden la casilla
         // por el tipo de operación de la factura, no solo por la cuenta especial.
-        if ($this->addMovimientoEspecial($tipo, $operacion, $tipodoc, $base, $cuota)) {
+        if ($this->addMovimientoEspecial($tipo, $operacion, $tipodoc, $iva, $base, $cuota)) {
             return;
         }
 
@@ -412,11 +412,12 @@ class Modelo303
      * @param string $tipo
      * @param string $operacion
      * @param string $tipodoc
+     * @param float $iva tipo de IVA de la partida (%)
      * @param float $base
      * @param float $cuota
      * @return bool
      */
-    private function addMovimientoEspecial(string $tipo, string $operacion, string $tipodoc, float $base, float $cuota): bool
+    private function addMovimientoEspecial(string $tipo, string $operacion, string $tipodoc, float $iva, float $base, float $cuota): bool
     {
         $esDevengado = in_array($tipo, ['IVAREP', 'IVARUE', 'IVAREX'], true);
         $esDeducible = in_array($tipo, ['IVASOP', 'IVASUE', 'IVASIM', 'IVASEX'], true);
@@ -458,10 +459,12 @@ class Modelo303
                 return $tipodoc === 'venta';
 
             case InvoiceOperation::IMPORT:
-                // Importación (COMPRA): el IVA lo liquida la aduana (DUA). Solo cuenta el IVA soportado
-                // de importaciones (IVASIM); la factura del proveedor extracomunitario (IVA 0%, cuenta
-                // IVASOP) no aporta base a la casilla 32.
-                if ($tipo === 'IVASIM') {
+                // Importación (COMPRA): el IVA lo liquida la aduana (DUA). Solo el soportado deducible.
+                // La factura del proveedor extracomunitario va al 0% y no aporta base ni cuota: la base
+                // de las casillas 32/33 es solo la del DUA (art. 83 LIVA). El DUA sí lleva IVA (> 0%),
+                // y el núcleo lo contabiliza en la cuenta de IVA soportado del impuesto (IVASOP), no en
+                // IVASIM, por lo que se decide por el tipo de IVA y no por la cuenta especial.
+                if ($esDeducible && $iva > 0.0) {
                     $this->addCasilla('32', '33', $base, $cuota);
                 }
                 // El IVA devengado de importación (casilla 77 / IVA diferido) no tiene origen

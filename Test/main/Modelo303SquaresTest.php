@@ -29,6 +29,20 @@ use PHPUnit\Framework\TestCase;
  */
 final class Modelo303SquaresTest extends TestCase
 {
+    public function testCompraExentaNoContaminaRegimenGeneral(): void
+    {
+        // compra exenta (0%) en IVASOP: no debe imputarse en 28/29 del régimen general
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVASOP', 0, 1500.0, 0.0, '', 'compra'),
+        ]);
+
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('28'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('29'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('45'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
     public function testCompraImportacion(): void
     {
         $modelo = new Modelo303();
@@ -40,31 +54,36 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEqualsWithDelta(1050.0, $modelo->casilla('33'), 0.001);
     }
 
-    public function testFacturaProveedorImportacionNoAportaBase(): void
+    public function testCompraImportacionDuaEnCuentaIVASOP(): void
     {
-        // la factura del proveedor extracomunitario (IVA 0%, cuenta IVASOP, operación importación)
-        // no debe sumar base a la casilla 32; solo cuenta el IVA de importación del DUA (IVASIM).
+        // el núcleo contabiliza el DUA (factura de compra con operación importación) en la cuenta
+        // de IVA soportado del impuesto (IVASOP), nunca en IVASIM: debe ir igualmente a 32/33.
         $modelo = new Modelo303();
         $modelo->loadFromResumen([
-            $this->row('IVASIM', 21, 848.32, 178.15),
+            $this->row('IVASOP', 21, 848.32, 178.15, InvoiceOperation::IMPORT, 'compra'),
+        ]);
+
+        $this->assertEqualsWithDelta(848.32, $modelo->casilla('32'), 0.001);
+        $this->assertEqualsWithDelta(178.15, $modelo->casilla('33'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('28'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('29'), 0.001);
+        $this->assertEqualsWithDelta(178.15, $modelo->casilla('45'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
+    public function testCompraImportacionFacturaProveedorNoAportaBase(): void
+    {
+        // issue 122-493-432: la factura del proveedor extracomunitario (IVA 0%, operación
+        // importación) no debe sumar su base a la casilla 32; solo cuenta la base del DUA.
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVASOP', 21, 848.32, 178.15, InvoiceOperation::IMPORT, 'compra'),
             $this->row('IVASOP', 0, 1523.23, 0.0, InvoiceOperation::IMPORT, 'compra'),
         ]);
 
         $this->assertEqualsWithDelta(848.32, $modelo->casilla('32'), 0.001);
         $this->assertEqualsWithDelta(178.15, $modelo->casilla('33'), 0.001);
         $this->assertEqualsWithDelta(0.0, $modelo->casilla('28'), 0.001);
-    }
-
-    public function testVentaExportacionNoSumaEnCasilla150(): void
-    {
-        // la venta de exportación genera una partida IVAREP al 0%; su base va a la casilla 60
-        // (desde las facturas), no a la 150.
-        $modelo = new Modelo303();
-        $modelo->loadFromResumen([
-            $this->row('IVAREP', 0, 472.0, 0.0, InvoiceOperation::EXPORT, 'venta'),
-        ]);
-
-        $this->assertEqualsWithDelta(0.0, $modelo->casilla('150'), 0.001);
         $this->assertEmpty($modelo->getAvisos());
     }
 
@@ -139,20 +158,6 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEqualsWithDelta(2100.0, $modelo->casilla('28'), 0.001);
         $this->assertEqualsWithDelta(425.0, $modelo->casilla('29'), 0.001);
         $this->assertEqualsWithDelta(425.0, $modelo->casilla('45'), 0.001);
-        $this->assertEmpty($modelo->getAvisos());
-    }
-
-    public function testCompraExentaNoContaminaRegimenGeneral(): void
-    {
-        // compra exenta (0%) en IVASOP: no debe imputarse en 28/29 del régimen general
-        $modelo = new Modelo303();
-        $modelo->loadFromResumen([
-            $this->row('IVASOP', 0, 1500.0, 0.0, '', 'compra'),
-        ]);
-
-        $this->assertEqualsWithDelta(0.0, $modelo->casilla('28'), 0.001);
-        $this->assertEqualsWithDelta(0.0, $modelo->casilla('29'), 0.001);
-        $this->assertEqualsWithDelta(0.0, $modelo->casilla('45'), 0.001);
         $this->assertEmpty($modelo->getAvisos());
     }
 
@@ -232,6 +237,19 @@ final class Modelo303SquaresTest extends TestCase
 
         $this->assertEqualsWithDelta(141.16, $modelo->casilla('150'), 0.001);
         $this->assertEqualsWithDelta(0.0, $modelo->casilla('27'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
+    public function testVentaExportacionNoSumaEnCasilla150(): void
+    {
+        // la venta de exportación genera una partida IVAREP al 0%; su base va a la casilla 60
+        // (desde las facturas), no a la 150.
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVAREP', 0, 472.0, 0.0, InvoiceOperation::EXPORT, 'venta'),
+        ]);
+
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('150'), 0.001);
         $this->assertEmpty($modelo->getAvisos());
     }
 
