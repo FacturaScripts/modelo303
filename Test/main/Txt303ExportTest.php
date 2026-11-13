@@ -43,6 +43,9 @@ final class Txt303ExportTest extends Modelo303TestCase
 
     private const LEN_PAGE_DID = 823;
 
+    /** posición (base 0) del campo "Devolución - Marca SEPA" dentro de la página DID */
+    private const POS_MARCA_SEPA = 193;
+
      // </T3030AAAAPP0000>
 
     public function testEstructuraYLongitudes(): void
@@ -94,15 +97,9 @@ final class Txt303ExportTest extends Modelo303TestCase
         $reg->fechainicio = '2026-01-01';
         $reg->periodo = 'T1';
         $reg->iban = 'ES9121000418450200051332';
+        $reg->tipodeclaracion = 'U';
 
-        $empresa = new Empresa();
-        $empresa->cifnif = 'B12345678';
-        $empresa->nombre = 'EMPRESA TEST SL';
-
-        $modelo = new Modelo303();
-        $modelo->computeResultado();
-
-        $content = Txt303Export::export($reg, $modelo->getSquares(), $empresa);
+        $content = $this->exportSimple($reg);
 
         $this->assertStringContainsString('<T303DID00>', $content);
         $pageDid = $this->extractPage($content, '<T303DID00>', '</T303DID00>');
@@ -111,18 +108,6 @@ final class Txt303ExportTest extends Modelo303TestCase
         // IBAN en posición 23, longitud 34, alineado a la izquierda
         $iban = rtrim(substr($pageDid, 22, 34));
         $this->assertSame('ES9121000418450200051332', $iban, 'IBAN mal posicionado');
-    }
-
-    public function testMarcaSepaSoloEnDevolucion(): void
-    {
-        // ingreso con domiciliación (tipo U): el IBAN figura pero la marca SEPA va a "0"
-        $pageDid = $this->pageDidConResultado(105.0);
-        $this->assertSame('ES9121000418450200051332', rtrim(substr($pageDid, 22, 34)));
-        $this->assertSame('0', substr($pageDid, 193, 1), 'En un ingreso la marca SEPA debe ser 0');
-
-        // devolución (tipo D) con IBAN español: marca "1" (cuenta España)
-        $pageDid = $this->pageDidConResultado(-105.0);
-        $this->assertSame('1', substr($pageDid, 193, 1), 'En una devolución la marca SEPA debe ser 1');
     }
 
     public function testLongitudPaginas(): void
@@ -147,6 +132,37 @@ final class Txt303ExportTest extends Modelo303TestCase
         // página 3
         $page3 = $this->extractPage($content, '<T30303000>', '</T30303000>');
         $this->assertSame(self::LEN_PAGE3, strlen($page3), 'La página 3 no tiene 1017 posiciones');
+    }
+
+    /**
+     * En una devolución (D) con cuenta española la marca SEPA debe ser "1".
+     */
+    public function testMarcaSepaEnDevolucion(): void
+    {
+        $reg = new RegularizacionImpuesto();
+        $reg->fechainicio = '2026-01-01';
+        $reg->periodo = 'T1';
+        $reg->iban = 'ES9121000418450200051332';
+        $reg->tipodeclaracion = 'D';
+
+        $pageDid = $this->extractPage($this->exportSimple($reg), '<T303DID00>', '</T303DID00>');
+        $this->assertSame('1', substr($pageDid, self::POS_MARCA_SEPA, 1), 'Marca SEPA incorrecta en devolución');
+    }
+
+    /**
+     * En una domiciliación (U) la marca SEPA debe ser "0": la AEAT rechaza el fichero con el
+     * error EDID113 si tiene contenido y la declaración no es a devolver.
+     */
+    public function testMarcaSepaVaciaEnDomiciliacion(): void
+    {
+        $reg = new RegularizacionImpuesto();
+        $reg->fechainicio = '2026-01-01';
+        $reg->periodo = 'T1';
+        $reg->iban = 'ES9121000418450200051332';
+        $reg->tipodeclaracion = 'U';
+
+        $pageDid = $this->extractPage($this->exportSimple($reg), '<T303DID00>', '</T303DID00>');
+        $this->assertSame('0', substr($pageDid, self::POS_MARCA_SEPA, 1), 'Marca SEPA con contenido en domiciliación');
     }
 
     public function testPosicionCasillas(): void
@@ -182,30 +198,35 @@ final class Txt303ExportTest extends Modelo303TestCase
     }
 
     /**
-     * Genera el fichero con un IBAN español y el resultado de régimen general indicado
-     * (positivo = a ingresar, negativo = a devolver) y devuelve la página DID.
-     *
-     * @param float $resultado
-     * @return string
+     * En un ingreso (I) no se deben enviar datos bancarios aunque el usuario haya rellenado el IBAN.
      */
-    private function pageDidConResultado(float $resultado): string
+    public function testSinPaginaDidEnIngreso(): void
     {
         $reg = new RegularizacionImpuesto();
         $reg->fechainicio = '2026-01-01';
         $reg->periodo = 'T1';
         $reg->iban = 'ES9121000418450200051332';
+        $reg->tipodeclaracion = 'I';
 
+        $this->assertStringNotContainsString('<T303DID00>', $this->exportSimple($reg));
+    }
+
+    /**
+     * Exporta la regularización indicada con una empresa de prueba y sin casillas calculadas.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return string
+     */
+    private function exportSimple(RegularizacionImpuesto $reg): string
+    {
         $empresa = new Empresa();
         $empresa->cifnif = 'B12345678';
         $empresa->nombre = 'EMPRESA TEST SL';
 
         $modelo = new Modelo303();
-        $modelo->setCasilla('46', $resultado);
         $modelo->computeResultado();
 
-        $content = Txt303Export::export($reg, $modelo->getSquares(), $empresa);
-
-        return $this->extractPage($content, '<T303DID00>', '</T303DID00>');
+        return Txt303Export::export($reg, $modelo->getSquares(), $empresa);
     }
 
     /**
