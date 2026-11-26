@@ -31,6 +31,16 @@ class Modelo303TestCase extends TestCase
             }
         }
 
+        // también las tablas de líneas, recibos y pagos: si se crean por primera vez dentro de la
+        // transacción de guardar o borrar una factura, la operación falla y deja la transacción
+        // abierta para los tests siguientes
+        foreach (['LineaFactura', 'Recibo', 'Pago'] as $model) {
+            foreach (['Cliente', 'Proveedor'] as $subject) {
+                $className = '\\FacturaScripts\\Dinamic\\Model\\' . $model . $subject;
+                new $className();
+            }
+        }
+
         self::setDefaultSettings();
         self::installAccountingPlan();
     }

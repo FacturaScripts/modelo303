@@ -141,6 +141,22 @@ final class LinkAccountingEntryTest extends Modelo303TestCase
         $this->assertTrue($this->hasWarning('accounting-entry-before-end-date'));
     }
 
+    /**
+     * La regularización anual (modelo 390) solo resume el año: no admite asiento propio.
+     */
+    public function testCannotLinkEntryToAnnualSettlement(): void
+    {
+        $exercise = $this->getRandomExercise();
+        $reg = $this->createRegularization($exercise, 'Y');
+        $entry = $this->createAccEntry($exercise, $reg->fechafin);
+
+        $controller = $this->getController();
+        MiniLog::clear();
+        $this->assertFalse($controller->linkAccountingEntry($reg, $entry->idasiento));
+        $this->assertEmpty($reg->idasiento);
+        $this->assertTrue($this->hasWarning('model390-no-accounting-entry'));
+    }
+
     public function testCannotLinkEntryWithOperation(): void
     {
         $exercise = $this->getRandomExercise();

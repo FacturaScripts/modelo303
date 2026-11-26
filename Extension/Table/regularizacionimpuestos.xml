@@ -2,7 +2,7 @@
 <!--
     Document   : regularizacionimpuestos
     Description:
-        Columnas adicionales para la generación del fichero del modelo 303 (AEAT).
+        Columnas adicionales para la generación de los ficheros de los modelos 303 y 390 (AEAT).
         Se fusionan con la tabla del core. Almacenan los datos sin origen automático
         en FacturaScripts (tipo de declaración, IBAN y casillas de introducción manual).
 -->
@@ -82,6 +82,45 @@
     </column>
     <column>
         <name>c112</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <!-- Modelo 390 (regularización anual): datos de identificación del fichero DR390 -->
+    <column>
+        <name>actividad390</name>
+        <type>character varying(40)</type>
+    </column>
+    <column>
+        <name>claveactividad390</name>
+        <type>character varying(3)</type>
+    </column>
+    <column>
+        <name>epigrafeiae390</name>
+        <type>character varying(4)</type>
+    </column>
+    <column>
+        <name>operaciones347</name>
+        <type>boolean</type>
+        <default>false</default>
+    </column>
+    <!-- Modelo 390: casillas de introducción manual (sin origen automático en la contabilidad) -->
+    <column>
+        <name>c390_96</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c390_106</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c390_107</name>
+        <type>double precision</type>
+        <default>0</default>
+    </column>
+    <column>
+        <name>c390_112</name>
         <type>double precision</type>
         <default>0</default>
     </column>

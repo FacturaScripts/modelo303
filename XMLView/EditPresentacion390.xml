@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * This file is part of Modelo303 plugin for FacturaScripts
+ * Copyright (C) 2026 Carlos Garcia Gomez <carlos@facturascripts.com>
+ *
+ * Datos de presentación del modelo 390 (resumen anual de IVA) ante la AEAT: datos de
+ * identificación del fichero DR390 y casillas que no tienen origen automático en la
+ * contabilidad. Solo se muestra en las regularizaciones anuales (periodo Y).
+-->
+<view>
+    <columns>
+        <group name="aeat-presentation-390" title="aeat-file-390" icon="fa-solid fa-file-arrow-down" numcolumns="12" valign="bottom">
+            <column name="model390-main-activity" order="100" numcolumns="5">
+                <widget type="text" fieldname="actividad390" maxlength="40"/>
+            </column>
+            <column name="model390-activity-code" order="110" numcolumns="3">
+                <widget type="select" fieldname="claveactividad390" translate="true">
+                    <values title="------"></values>
+                    <values title="model390-activity-a01">A01</values>
+                    <values title="model390-activity-a02">A02</values>
+                    <values title="model390-activity-a03">A03</values>
+                    <values title="model390-activity-a04">A04</values>
+                    <values title="model390-activity-a05">A05</values>
+                    <values title="model390-activity-b01">B01</values>
+                    <values title="model390-activity-b02">B02</values>
+                    <values title="model390-activity-b03">B03</values>
+                    <values title="model390-activity-b04">B04</values>
+                    <values title="model390-activity-b05">B05</values>
+                    <values title="model390-activity-b06">B06</values>
+                </widget>
+            </column>
+            <column name="model390-iae-heading" order="120" numcolumns="2">
+                <widget type="text" fieldname="epigrafeiae390" maxlength="4"/>
+            </column>
+            <column name="model390-third-party-operations" order="130" numcolumns="2">
+                <widget type="checkbox" fieldname="operaciones347"/>
+            </column>
+            <column name="model390-substitute" order="140" numcolumns="2">
+                <widget type="checkbox" fieldname="rectificativa"/>
+            </column>
+            <column name="previous-receipt-number" order="150" numcolumns="3">
+                <widget type="text" fieldname="justificanteant" maxlength="13"/>
+            </column>
+        </group>
+        <group name="aeat-manual-boxes-390" title="model390-manual-boxes" icon="fa-solid fa-pen-to-square" numcolumns="12">
+            <column name="model390-box-96" order="100" numcolumns="3">
+                <widget type="money" fieldname="c390_96"/>
+            </column>
+            <column name="model390-box-106" order="110" numcolumns="3">
+                <widget type="money" fieldname="c390_106"/>
+            </column>
+            <column name="model390-box-107" order="120" numcolumns="3">
+                <widget type="money" fieldname="c390_107"/>
+            </column>
+            <column name="model390-box-112" order="130" numcolumns="3">
+                <widget type="money" fieldname="c390_112"/>
+            </column>
+        </group>
+    </columns>
+</view>

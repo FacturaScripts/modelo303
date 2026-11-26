@@ -19,32 +19,38 @@
 
 namespace FacturaScripts\Plugins\Modelo303\Lib;
 
-use FacturaScripts\Core\Tools;
 use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 
 /**
  * Genera el fichero de texto del modelo 303 para su presentación telemática en la AEAT.
  *
- * El fichero sigue el "diseño de registro" oficial DR303 (ejercicio 2026, v1.01), que usa un
+ * El fichero sigue el "diseño de registro" oficial DR303 del ejercicio de la regularización: el de
+ * 2026 (v1.01) para 2026 y siguientes y el de 2025 (v1.02) para los ejercicios anteriores. Usa un
  * formato de posiciones fijas con bloques delimitados por etiquetas:
  *
  *   <T3030EEEEPP0000>   (cabecera)
  *   <AUX> ... </AUX>    (bloque reservado para la Administración / entidad desarrolladora)
  *   [página 1]          (<T30301000> ... </T30301000>) - Régimen general (1581 posiciones)
+ *                       En 2025 no existe el indicador de gasolinas (posición 130) y las casillas
+ *                       [165]-[167] y [168]-[170] van al final, tras la [46].
  *   [página 3]          (<T30303000> ... </T30303000>) - Información adicional y resultado (1017)
+ *                       En 2025 no existe la casilla [112] y la [108] va tras el justificante anterior.
  *   [página DID]        (<T303DID00> ... </T303DID00>) - Domiciliación/Devolución (823, opcional)
  *   </T3030EEEEPP0000>  (cierre)
  *
  * Los valores de las casillas se toman de la clase Modelo303 (que las calcula desde la
  * contabilidad). Los datos sin origen automático (tipo de declaración, IBAN, cuotas a compensar
  * de periodos anteriores, etc.) se toman del modelo RegularizacionImpuesto, donde el usuario los
- * introduce manualmente.
+ * introduce manualmente. Los formateadores de campos (alfanuméricos, importes y porcentajes)
+ * están en Modelo303FileTrait, compartido con el fichero del modelo 390.
  *
  * @author FacturaScripts
  */
-class Txt303Export
+class Modelo303File
 {
+    use Modelo303FileTrait;
+
     /**
      * Mapa de campos de la página 1 (régimen general). Cada campo es:
      *   ['l' => longitud, 'k' => tipo, 'v' => valor]
@@ -193,6 +199,55 @@ class Txt303Export
     ];
 
     /**
+     * Mapa de campos de la página 3 del diseño de registro de 2025 (DR303e25, v1.02): no tiene la casilla
+     * [112] (pago a cuenta de gasolinas), la [71] es [69] - [70] + [109] y la [108] va tras el número de
+     * justificante de la autoliquidación anterior. Mide lo mismo que la de 2026 (1017 posiciones).
+     */
+    private const PAGE3_2025 = [
+        ['l' => 2, 'k' => 'c', 'v' => '<T'],
+        ['l' => 3, 'k' => 'c', 'v' => '303'],
+        ['l' => 5, 'k' => 'c', 'v' => '03000'],
+        ['l' => 1, 'k' => 'c', 'v' => '>'],
+        ['l' => 17, 'k' => 'a', 'v' => '59'],
+        ['l' => 17, 'k' => 'a', 'v' => '60'],
+        ['l' => 17, 'k' => 'a', 'v' => '120'],
+        ['l' => 17, 'k' => 'a', 'v' => '122'],
+        ['l' => 17, 'k' => 'a', 'v' => '123'],
+        ['l' => 17, 'k' => 'a', 'v' => '124'],
+        ['l' => 17, 'k' => 'a', 'v' => '62'],
+        ['l' => 17, 'k' => 'a', 'v' => '63'],
+        ['l' => 17, 'k' => 'a', 'v' => '74'],
+        ['l' => 17, 'k' => 'a', 'v' => '75'],
+        ['l' => 17, 'k' => 'a', 'v' => '76'],
+        ['l' => 17, 'k' => 'a', 'v' => '64'],
+        ['l' => 5, 'k' => 'p', 'v' => '65'],
+        ['l' => 17, 'k' => 'a', 'v' => '66'],
+        ['l' => 17, 'k' => 'u', 'v' => '77'],
+        ['l' => 17, 'k' => 'u', 'v' => '110'],
+        ['l' => 17, 'k' => 'u', 'v' => '78'],
+        ['l' => 17, 'k' => 'u', 'v' => '87'],
+        ['l' => 17, 'k' => 'a', 'v' => '68'],
+        ['l' => 17, 'k' => 'a', 'v' => '69'],
+        ['l' => 17, 'k' => 'u', 'v' => '70'],
+        ['l' => 17, 'k' => 'u', 'v' => '109'],
+        ['l' => 17, 'k' => 'a', 'v' => '71'],
+        ['l' => 1, 'k' => 'id', 'v' => 'sin_actividad'],
+        ['l' => 1, 'k' => 'id', 'v' => 'rectificativa'],
+        ['l' => 13, 'k' => 'id', 'v' => 'justificante_ant'],
+        ['l' => 1, 'k' => 'id', 'v' => 'baja_domiciliacion'],
+        ['l' => 17, 'k' => 'a', 'v' => '108'],
+        ['l' => 17, 'k' => 'u', 'v' => '111'],
+        ['l' => 120, 'k' => 'b'],
+        ['l' => 1, 'k' => 'id', 'v' => 'motivo_rect_1'],
+        ['l' => 1, 'k' => 'id', 'v' => 'motivo_rect_2'],
+        ['l' => 443, 'k' => 'b'],
+        ['l' => 12, 'k' => 'c', 'v' => '</T30303000>'],
+    ];
+
+    /** Primer ejercicio que usa el diseño de registro de 2026 (PAGE1 y PAGE3). */
+    public const FIRST_YEAR_2026_LAYOUT = 2026;
+
+    /**
      * Mapa de campos de la página DID (datos de domiciliación / devolución).
      */
     private const PAGE_DID = [
@@ -246,7 +301,7 @@ class Txt303Export
      * @param Empresa $company
      * @return string
      */
-    public static function export(RegularizacionImpuesto $reg, array $squares, Empresa $company): string
+    public static function generate(RegularizacionImpuesto $reg, array $squares, Empresa $company): string
     {
         self::$reg = $reg;
         self::$squares = $squares;
@@ -256,8 +311,8 @@ class Txt303Export
 
         // cabecera + páginas + cierre
         $content = self::buildCabecera()
-            . self::buildPage(self::PAGE1)
-            . self::buildPage(self::PAGE3);
+            . self::buildPage(self::page1((int)self::$year))
+            . self::buildPage(self::page3((int)self::$year));
 
         // la página de domiciliación/devolución solo se incluye si hay IBAN y la declaración
         // es de domiciliación o devolución (en el resto de tipos la AEAT no admite datos bancarios)
@@ -271,52 +326,59 @@ class Txt303Export
     }
 
     /**
-     * Formatea un campo alfanumérico: mayúsculas, sin acentos, alineado a la izquierda y
-     * relleno con blancos por la derecha (según Nota 2 del diseño de registro).
+     * Devuelve el mapa de campos de la página 1 del diseño de registro del ejercicio. El de 2025 se
+     * obtiene del de 2026 con sus tres diferencias: no tiene el indicador de gasolinas (posición 130),
+     * las casillas [165]-[167] y [168]-[170] van al final, tras la [46], y el bloque reservado para la
+     * AEAT mide 522 posiciones en lugar de 521. Así ambos miden 1581 posiciones.
      *
-     * @param string $value
-     * @param int $length
-     * @return string
+     * @param int $year ejercicio de la regularización.
+     * @return array
      */
-    private static function alpha(string $value, int $length): string
+    public static function page1(int $year): array
     {
-        $value = mb_strtoupper(self::sanitize($value), 'UTF-8');
-        $value = mb_substr($value, 0, $length, 'UTF-8');
-        $pad = $length - mb_strlen($value, 'UTF-8');
-        if ($pad > 0) {
-            $value .= str_repeat(' ', $pad);
+        if ($year >= self::FIRST_YEAR_2026_LAYOUT) {
+            return self::PAGE1;
         }
-        return $value;
+
+        $fields = self::PAGE1;
+        $page = [];
+        $tail = [];
+        $count = count($fields);
+        for ($i = 0; $i < $count; $i++) {
+            $field = $fields[$i];
+            if (($field['v'] ?? '') === 'ind_gasolinas') {
+                continue;
+            }
+
+            // las casillas [165]-[167] y [168]-[170] (base, tipo constante y cuota) van al final
+            if ($field['k'] === 'u' && in_array($field['v'], ['165', '168'], true)) {
+                array_push($tail, ...array_slice($fields, $i, 3));
+                $i += 2;
+                continue;
+            }
+
+            if ($field['k'] === 'b' && $field['l'] === 521) {
+                $field['l'] = 522;
+            }
+
+            $page[] = $field;
+            if ($field['k'] === 'a' && $field['v'] === '46') {
+                array_push($page, ...$tail);
+            }
+        }
+
+        return $page;
     }
 
     /**
-     * Formatea un importe con signo (campo "N"): 'N' en la primera posición si es negativo,
-     * en otro caso relleno con ceros a la izquierda.
+     * Devuelve el mapa de campos de la página 3 del diseño de registro del ejercicio.
      *
-     * @param float $value
-     * @param int $length
-     * @return string
+     * @param int $year ejercicio de la regularización.
+     * @return array
      */
-    private static function amountSigned(float $value, int $length): string
+    public static function page3(int $year): array
     {
-        $cents = (int)round(abs($value) * 100.0);
-        if ($value < 0.0) {
-            return 'N' . str_pad((string)$cents, $length - 1, '0', STR_PAD_LEFT);
-        }
-        return str_pad((string)$cents, $length, '0', STR_PAD_LEFT);
-    }
-
-    /**
-     * Formatea un importe sin signo (campo "Num"): 2 decimales implícitos, relleno con ceros.
-     *
-     * @param float $value
-     * @param int $length
-     * @return string
-     */
-    private static function amountUnsigned(float $value, int $length): string
-    {
-        $cents = (int)round(abs($value) * 100.0);
-        return str_pad((string)$cents, $length, '0', STR_PAD_LEFT);
+        return $year >= self::FIRST_YEAR_2026_LAYOUT ? self::PAGE3 : self::PAGE3_2025;
     }
 
     /**
@@ -404,23 +466,11 @@ class Txt303Export
     }
 
     /**
-     * Formatea un porcentaje (3 enteros + 2 decimales), relleno con ceros a la izquierda.
-     *
-     * @param float $value
-     * @param int $length
-     * @return string
-     */
-    private static function percent(float $value, int $length): string
-    {
-        $hundredths = (int)round(abs($value) * 100.0);
-        return str_pad((string)$hundredths, $length, '0', STR_PAD_LEFT);
-    }
-
-    /**
      * Convierte el período de RegularizacionImpuesto (T1..T4, 01..12) al formato AEAT (1T..4T, 01..12).
      *
      * @param string $periodo
      * @return string
+     * @throws \InvalidArgumentException si el periodo no es un trimestre ni un mes (por ejemplo, el anual Y)
      */
     private static function periodAeat(string $periodo): string
     {
@@ -434,8 +484,8 @@ class Txt303Export
             return str_pad($periodo, 2, '0', STR_PAD_LEFT);
         }
 
-        // por defecto, primer trimestre
-        return '1T';
+        // el 303 no tiene periodo anual (el resumen anual es el modelo 390)
+        throw new \InvalidArgumentException('El modelo 303 no admite el periodo ' . $periodo . ': solo trimestres (T1-T4) y meses (01-12).');
     }
 
     /**
@@ -523,33 +573,6 @@ class Txt303Export
             default:
                 return str_repeat(' ', $len);
         }
-    }
-
-    /**
-     * Elimina acentos y caracteres no admitidos en los campos alfanuméricos.
-     *
-     * @param string|null $txt
-     * @return string
-     */
-    private static function sanitize(?string $txt): string
-    {
-        $changes = ['/à/' => 'a', '/á/' => 'a', '/â/' => 'a', '/ã/' => 'a', '/ä/' => 'a',
-            '/å/' => 'a', '/æ/' => 'ae', '/ç/' => 'c', '/è/' => 'e', '/é/' => 'e', '/ê/' => 'e',
-            '/ë/' => 'e', '/ì/' => 'i', '/í/' => 'i', '/î/' => 'i', '/ï/' => 'i', '/ð/' => 'd',
-            '/ñ/' => 'N', '/ò/' => 'o', '/ó/' => 'o', '/ô/' => 'o', '/õ/' => 'o', '/ö/' => 'o',
-            '/ő/' => 'o', '/ø/' => 'o', '/ù/' => 'u', '/ú/' => 'u', '/û/' => 'u', '/ü/' => 'u',
-            '/ű/' => 'u', '/ý/' => 'y', '/þ/' => 'th', '/ÿ/' => 'y',
-            '/&quot;/' => '-', '/€/' => 'EUR', '/º/' => '.',
-            '/À/' => 'A', '/Á/' => 'A', '/Â/' => 'A', '/Ä/' => 'A',
-            '/Ç/' => 'C', '/È/' => 'E', '/É/' => 'E', '/Ê/' => 'E',
-            '/Ë/' => 'E', '/Ì/' => 'I', '/Í/' => 'I', '/Î/' => 'I', '/Ï/' => 'I',
-            '/Ñ/' => 'N', '/Ò/' => 'O', '/Ó/' => 'O', '/Ô/' => 'O', '/Ö/' => 'O',
-            '/Ù/' => 'U', '/Ú/' => 'U', '/Û/' => 'U', '/Ü/' => 'U',
-            '/Ý/' => 'Y', '/Ÿ/' => 'Y'
-        ];
-
-        $txtNoHtml = Tools::noHtml($txt) ?? '';
-        return preg_replace(array_keys($changes), $changes, $txtNoHtml);
     }
 
     /**

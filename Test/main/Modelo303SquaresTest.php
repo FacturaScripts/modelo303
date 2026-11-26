@@ -186,22 +186,61 @@ final class Modelo303SquaresTest extends TestCase
 
     public function testRecargoEquivalenciaConDosDecimales(): void
     {
-        // los tipos de recargo 0.26% y 1.75% tienen 2 decimales; number_format() con solo
-        // 1 decimal los redondeaba (0.26 -> "0.3", 1.75 -> "1.8") y no encajaban en el mapa
-        // de casillas, generando un aviso de importe sin casilla.
+        // los tipos de recargo 0.5% y 1.75% tienen decimales; number_format() con solo 1 decimal
+        // redondeaba 1.75 a "1.8" y no encajaba en el mapa de casillas, generando un aviso de importe
+        // sin casilla.
         $modelo = new Modelo303();
         $modelo->loadFromResumen([
-            $this->row('IVARRE', 0, 400.0, 1.04, '', 'venta', 0.26),
+            $this->row('IVARRE', 0, 400.0, 2.0, '', 'venta', 0.5),
             $this->row('IVARRE', 0, 400.0, 7.0, '', 'venta', 1.75),
         ]);
 
-        // recargo 0.26 -> base 168 / cuota 170
+        // recargo 0.5 -> base 168 / cuota 170
         $this->assertEqualsWithDelta(400.0, $modelo->casilla('168'), 0.001);
-        $this->assertEqualsWithDelta(1.04, $modelo->casilla('170'), 0.001);
+        $this->assertEqualsWithDelta(2.0, $modelo->casilla('170'), 0.001);
         // recargo 1.75 -> base 156 / cuota 158
         $this->assertEqualsWithDelta(400.0, $modelo->casilla('156'), 0.001);
         $this->assertEqualsWithDelta(7.0, $modelo->casilla('158'), 0.001);
         $this->assertEmpty($modelo->getAvisos());
+    }
+
+    /**
+     * Según el diseño de registro DR303 de 2025 y 2026, la fila 168-170 es la del recargo del 0,5 %
+     * (ventas al 4 % a minoristas) y la 16-18 la del 0 %: el recargo del 0,5 % no puede quedar sin
+     * casilla y los tipos de esas filas son 0,50 y 0.
+     */
+    public function testRecargoEquivalenciaMedioPorCiento(): void
+    {
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVAREP', 4, 200.0, 8.0, '', 'venta'),
+            $this->row('IVAREP', 0, 200.0, 1.0, '', 'venta', 0.5),
+        ]);
+
+        $this->assertEqualsWithDelta(200.0, $modelo->casilla('168'), 0.001);
+        $this->assertEqualsWithDelta(0.5, $modelo->casilla('169'), 0.001);
+        $this->assertEqualsWithDelta(1.0, $modelo->casilla('170'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('16'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('17'), 0.001);
+        $this->assertEqualsWithDelta(9.0, $modelo->casilla('27'), 0.001);
+        $this->assertEmpty($modelo->getAvisos());
+    }
+
+    /**
+     * Los recargos del 0,26 % y del 1 % de 2024 no tienen casilla en el diseño vigente: se avisan como
+     * importe sin casilla en lugar de mezclarse con las filas del 0,5 % o del 0 %.
+     */
+    public function testRecargoEquivalenciaSinCasillaVigente(): void
+    {
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVARRE', 0, 100.0, 0.26, '', 'venta', 0.26),
+            $this->row('IVARRE', 0, 100.0, 1.0, '', 'venta', 1.0),
+        ]);
+
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('168'), 0.001);
+        $this->assertEqualsWithDelta(0.0, $modelo->casilla('16'), 0.001);
+        $this->assertCount(2, $modelo->getAvisos());
     }
 
     public function testRecargoEquivalenciaEnCuentaIVAREP(): void
@@ -223,6 +262,34 @@ final class Modelo303SquaresTest extends TestCase
         $this->assertEqualsWithDelta(52.0, $modelo->casilla('24'), 0.001);
         // y no debe quedar ningún importe sin casilla
         $this->assertEmpty($modelo->getAvisos());
+    }
+
+    /**
+     * La casilla 27 suma también las cuotas de los tipos del 2%, 5% y 7,5% y de los recargos
+     * del 1,75% y 0,5%, como indica el diseño de la AEAT.
+     */
+    public function testTotalDevengadoIncluyeTiposEspeciales(): void
+    {
+        $modelo = new Modelo303();
+        $modelo->loadFromResumen([
+            $this->row('IVAREP', 21, 1000.0, 210.0),
+            $this->row('IVAREP', 5, 200.0, 10.0),
+            $this->row('IVAREP', 2, 100.0, 2.0),
+            $this->row('IVAREP', 7.5, 100.0, 7.5),
+            $this->row('IVARRE', 21, 200.0, 3.5, '', '', 1.75),
+            $this->row('IVARRE', 4, 100.0, 0.5, '', '', 0.5),
+        ]);
+
+        // cada tipo va a su casilla de cuota
+        $this->assertEqualsWithDelta(10.0, $modelo->casilla('155'), 0.001);
+        $this->assertEqualsWithDelta(2.0, $modelo->casilla('167'), 0.001);
+        $this->assertEqualsWithDelta(7.5, $modelo->casilla('164'), 0.001);
+        $this->assertEqualsWithDelta(3.5, $modelo->casilla('158'), 0.001);
+        $this->assertEqualsWithDelta(0.5, $modelo->casilla('170'), 0.001);
+
+        // total devengado = 210 + 10 + 2 + 7,5 + 3,5 + 0,5
+        $this->assertEqualsWithDelta(233.5, $modelo->casilla('27'), 0.001);
+        $this->assertEqualsWithDelta(233.5, $modelo->casilla('46'), 0.001);
     }
 
     public function testVentaExentaAlCeroPorCientoEnCuentaIVAREP(): void

@@ -1,0 +1,102 @@
+{#
+ # Pestaña del modelo 390 (resumen anual de IVA) de la regularización anual.
+ # Muestra los apartados calculados por Lib/Modelo390.php (fsc.modelo390) y la lista de
+ # regularizaciones periódicas usadas en el resultado de las liquidaciones.
+ #}
+{% set modelo = fsc.modelo390 %}
+{% if modelo %}
+	{% set sections = modelo.getSections() %}
+	<div class="row">
+		<div class="col-lg-6">
+			{% for title in ['model390-section-accrued', 'model390-section-deductible'] %}
+				<div class="card shadow mb-3">
+					<div class="card-header">
+						<i class="fa-solid {{ title == 'model390-section-accrued' ? 'fa-file-invoice-dollar' : 'fa-arrow-down' }} me-2" aria-hidden="true"></i>
+						{{ trans(title) }}
+					</div>
+					<table class="table table-bordered table-sm mb-0">
+						<thead class="text-center">
+							<tr>
+								<th></th>
+								<th></th>
+								<th>{{ trans('tax-base') }}</th>
+								<th></th>
+								<th>{{ trans('quota') }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for row in sections[title] ?? [] %}
+								{% set isTotal = row.label starts with 'model390-total' or row.label == 'model390-general-regime-result' %}
+								<tr class="{{ isTotal ? 'fw-bold' : '' }}{{ row.label == 'model390-general-regime-result' ? ' table-success' : '' }}">
+									<td>
+										{{ trans(row.label) }}{% if row.rate is not null %} {{ row.rate|replace({'.': ','}) }} %{% endif %}
+									</td>
+									<td class="text-center">{{ row.base }}</td>
+									<td class="text-end text-nowrap">{{ row.base ? modelo.casillaStr(row.base) : '' }}</td>
+									<td class="text-center">{{ row.cuota }}</td>
+									<td class="text-end text-nowrap">{{ row.cuota ? modelo.casillaStr(row.cuota, isTotal) : '' }}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			{% endfor %}
+		</div>
+		<div class="col-lg-6">
+			{% for title in ['model390-section-annual-result', 'model390-section-settlements', 'model390-section-volume', 'model390-section-specific'] %}
+				{% if sections[title] is defined %}
+					<div class="card shadow mb-3{{ title == 'model390-section-annual-result' ? ' border-success' : '' }}">
+						<div class="card-header{{ title == 'model390-section-annual-result' ? ' bg-success text-white fw-bold' : '' }}">
+							<i class="fa-solid fa-calculator me-2" aria-hidden="true"></i>
+							{{ trans(title) }}
+						</div>
+						<table class="table table-bordered table-sm mb-0">
+							<tbody>
+								{% for row in sections[title] %}
+									{% set isTotal = row.cuota in ['86', '108'] %}
+									<tr class="{{ isTotal ? 'fw-bold table-success' : '' }}">
+										<td>{{ trans(row.label) }}</td>
+										<td class="text-center">{{ row.cuota }}</td>
+										<td class="text-end text-nowrap">{{ modelo.casillaStr(row.cuota, true) }}</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				{% endif %}
+			{% endfor %}
+			<div class="card shadow mb-3">
+				<div class="card-header">
+					<i class="fa-solid fa-list-ol me-2" aria-hidden="true"></i>
+					{{ trans('model390-periodic-settlements') }}
+				</div>
+				<table class="table table-bordered table-sm mb-0">
+					<thead class="text-center">
+						<tr>
+							<th>{{ trans('period') }}</th>
+							<th>{{ trans('model390-declaration-type') }}</th>
+							<th>{{ trans('result') }} (71)</th>
+							<th>{{ trans('model390-pending-compensation') }} (87)</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for periodo in modelo.getPeriodos() %}
+							<tr>
+								<td>
+									<a href="EditRegularizacionImpuesto?code={{ periodo.idregiva }}">{{ periodo.periodo }}</a>
+								</td>
+								<td class="text-center">{{ periodo.tipo }}</td>
+								<td class="text-end text-nowrap">{{ number(periodo.resultado) }}</td>
+								<td class="text-end text-nowrap">{{ number(periodo.pendiente) }}</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="4" class="table-warning">{{ trans('model390-no-periodic-settlements') }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endif %}

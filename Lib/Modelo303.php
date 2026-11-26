@@ -20,20 +20,37 @@
 namespace FacturaScripts\Plugins\Modelo303\Lib;
 
 use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Lib\SubAccountTools;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\InvoiceOperation;
+use FacturaScripts\Dinamic\Model\Asiento;
 use FacturaScripts\Dinamic\Model\Ejercicio;
 use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\FacturaProveedor;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
+use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 
 /**
  * Class to handle Modelo 303 tax form data.
+ *
+ * Además del reparto de importes a casillas, ofrece los métodos estáticos que calculan el
+ * modelo a partir de una regularización de IVA (fromRegularizacion(), taxWhere(),
+ * taxSummary() e invoicesWithoutAccounting()) y el arrastre de cuotas a compensar entre periodos
+ * (previousRegularization(), pendingCarryover() y declarationType()), compartidos por la pantalla
+ * EditRegularizacionImpuesto, el fichero .303 y el endpoint de la API /api/3/modelo303,
+ * para que todos den exactamente las mismas cifras.
  *
  * @author Jose Antonio Cuello Principal <yopli2000@gmail.com>
  */
 class Modelo303
 {
+    /**
+     * Casillas de introducción manual, guardadas en la regularización como c65, c68, ...
+     * (ver Extension/Table/regularizacionimpuestos.xml).
+     */
+    public const MANUAL_SQUARES = ['65', '68', '70', '76', '77', '78', '108', '109', '110', '111', '112'];
+
     private const MAX_SQUARE = 200;
 
     /**
@@ -70,12 +87,14 @@ class Modelo303
             '*' => ['base' => '10', 'cuota' => '11'],
         ],
 
-        // Recargo de equivalencia
+        // Recargo de equivalencia, según el diseño de registro DR303 de 2025 y 2026: la fila 168-170
+        // es la del 0,5 % (IVA del 4 %) y la 16-18 la del 0 %, que no genera cuota y se deja vacía. Los
+        // recargos del 0,26 % y del 1 % de 2024 ya no tienen casilla, así que se avisan como importe
+        // sin casilla.
         'IVARRE' => [
-            '1.75' => ['base' => '156', 'cuota' => '158'],
-            '0.26' => ['base' => '168',  'cuota' => '170'],
-            '1'    => ['base' => '16',  'cuota' => '18'],
+            '0.5'  => ['base' => '168', 'cuota' => '170'],
             '1.4'  => ['base' => '19',  'cuota' => '21'],
+            '1.75' => ['base' => '156', 'cuota' => '158'],
             '5.2'  => ['base' => '22',  'cuota' => '24'],
         ],
 
@@ -128,13 +147,13 @@ class Modelo303
         $this->square['02'] = 4.00;
         $this->square['05'] = 10.00;
         $this->square['08'] = 21.00;
-        $this->square['17'] = 1.00;
+        $this->square['17'] = 0.00;
         $this->square['20'] = 1.40;
         $this->square['23'] = 5.20;
         $this->square['154'] = 5.00;
         $this->square['157'] = 1.75;
         $this->square['163'] = 7.50;
-        $this->square['169'] = 0.26;
+        $this->square['169'] = 0.50;
         $this->square['166'] = 2.00;
 
         // % atribuible a la Administración del Estado (casilla 65), por defecto 100%
@@ -200,6 +219,91 @@ class Modelo303
     }
 
     /**
+     * Tipo de declaración de una regularización: el introducido a mano o, si no hay, el mismo que
+     * deduce el fichero .303 a partir del resultado (casilla 71) y del IBAN: I o U si sale a ingresar,
+     * C o D si sale negativa (a compensar sin IBAN, a devolver con IBAN) y N si sale 0.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @param float $resultado casilla 71 de la regularización.
+     * @return string
+     */
+    public static function declarationType(RegularizacionImpuesto $reg, float $resultado): string
+    {
+        $manual = strtoupper(trim((string)($reg->tipodeclaracion ?? '')));
+        if ($manual !== '') {
+            return substr($manual, 0, 1);
+        }
+
+        if ($reg->sinactividad) {
+            return 'N';
+        }
+
+        $tieneIban = false === empty($reg->iban);
+        if ($resultado > 0.0) {
+            return $tieneIban ? 'U' : 'I';
+        }
+
+        if ($resultado < 0.0) {
+            return $tieneIban ? 'D' : 'C';
+        }
+
+        return 'N';
+    }
+
+    /**
+     * Construye el modelo 303 completo de una regularización de IVA: casillas del régimen
+     * general (resumen de partidas de IVA), bases exentas e informativas de ventas, casillas de
+     * introducción manual guardadas en la regularización y cadena de resultado (64 a 87).
+     *
+     * La regularización no tiene por qué estar guardada: basta con que tenga idempresa,
+     * codejercicio, fechainicio y fechafin. Nunca se guarda ni se modifica.
+     *
+     * @param RegularizacionImpuesto $reg regularización de la que calcular el modelo.
+     * @param PartidaImpuestoResumen[]|null $resumen filas del resumen ya cargadas con
+     *                                               taxSummary(), para no repetir la consulta.
+     * @return static
+     */
+    public static function fromRegularizacion(RegularizacionImpuesto $reg, ?array $resumen = null): static
+    {
+        $modelo = new static();
+
+        // casillas del régimen general (devengado, deducible y resultado 46)
+        $modelo->loadFromResumen($resumen ?? static::taxSummary($reg));
+
+        // bases exentas/informativas de ventas (casillas 59, 60 y 122)
+        $modelo->loadFromSalesInvoices(
+            (int)$reg->idempresa,
+            (string)$reg->codejercicio,
+            (string)$reg->fechainicio,
+            (string)$reg->fechafin
+        );
+
+        // casillas de introducción manual (sin origen automático en la contabilidad)
+        foreach (self::MANUAL_SQUARES as $box) {
+            $value = $reg->{'c' . $box} ?? null;
+            if ($value !== null) {
+                $modelo->setCasilla($box, (float)$value);
+            }
+        }
+
+        // la casilla 112 (pago a cuenta de gasolinas) solo existe desde el diseño de 2026: en los
+        // ejercicios anteriores no forma parte del resultado ni del fichero
+        $year = (int)date('Y', strtotime((string)$reg->fechainicio));
+        if ($year < Modelo303File::FIRST_YEAR_2026_LAYOUT && abs($modelo->casilla('112')) >= 0.005) {
+            $modelo->avisos[] = Tools::trans('model303-box-112-not-in-year', [
+                '%amount%' => Tools::number($modelo->casilla('112')),
+                '%year%' => $year,
+            ]);
+            $modelo->setCasilla('112', 0.0);
+        }
+
+        // cadena de resultado (casillas 64, 66, 69, 71, 87)
+        $modelo->computeResultado();
+
+        return $modelo;
+    }
+
+    /**
      * Returns the list of warnings collected while loading data
      * (amounts that could not be assigned to any square).
      *
@@ -218,6 +322,30 @@ class Modelo303
     public function getSquares(): array
     {
         return $this->square;
+    }
+
+    /**
+     * Devuelve las facturas de compra y de venta del ejercicio y periodo de la regularización
+     * que no tienen asiento contable (y cuyo total no es cero), por lo que no se tienen en
+     * cuenta en el modelo.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return array{compra: FacturaProveedor[], venta: FacturaCliente[]}
+     */
+    public static function invoicesWithoutAccounting(RegularizacionImpuesto $reg): array
+    {
+        $where = [
+            Where::isNull('idasiento'),
+            Where::eq('codejercicio', $reg->codejercicio),
+            Where::gte('fecha', $reg->fechainicio),
+            Where::lte('fecha', $reg->fechafin),
+            Where::notEq('total', 0),
+        ];
+
+        return [
+            'compra' => FacturaProveedor::all($where, ['fecha' => 'ASC', 'codigo' => 'ASC'], 0, 0),
+            'venta' => FacturaCliente::all($where, ['fecha' => 'ASC', 'codigo' => 'ASC'], 0, 0),
+        ];
     }
 
     /**
@@ -271,6 +399,47 @@ class Modelo303
     }
 
     /**
+     * Cuotas pendientes de compensar que una regularización deja para el periodo siguiente (casilla
+     * 110 del siguiente 303): las pendientes de periodos anteriores que no se han aplicado (casilla 87)
+     * más el resultado negativo del propio periodo si se ha pedido compensar (tipo de declaración C).
+     * Si el resultado negativo se pide devolver, no queda nada que compensar por él.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return float
+     */
+    public static function pendingCarryover(RegularizacionImpuesto $reg): float
+    {
+        $modelo = static::fromRegularizacion($reg);
+        $pendiente = $modelo->casilla('87');
+
+        $resultado = round($modelo->casilla('71'), 2);
+        if ($resultado < 0.0 && static::declarationType($reg, $resultado) === 'C') {
+            $pendiente += abs($resultado);
+        }
+
+        return round($pendiente, 2);
+    }
+
+    /**
+     * Devuelve la regularización trimestral o mensual inmediatamente anterior de la misma empresa,
+     * aunque sea de otro ejercicio. Nunca devuelve una regularización anual (modelo 390), que comparte
+     * fecha de fin con el último periodo del año.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return RegularizacionImpuesto|null
+     */
+    public static function previousRegularization(RegularizacionImpuesto $reg): ?RegularizacionImpuesto
+    {
+        $where = [
+            Where::eq('idempresa', $reg->idempresa),
+            Where::lt('fechafin', $reg->fechainicio),
+            Where::notEq('periodo', 'Y'),
+        ];
+        $previous = RegularizacionImpuesto::all($where, ['fechafin' => 'DESC', 'idregiva' => 'DESC'], 0, 1);
+        return empty($previous) ? null : $previous[0];
+    }
+
+    /**
      * Set the value of a specific square (used to inject manually-entered amounts
      * that have no automatic source in FacturaScripts, e.g. cuotas a compensar).
      *
@@ -281,6 +450,64 @@ class Modelo303
     public function setCasilla(string $square, float $value): void
     {
         $this->square[$square] = $value;
+    }
+
+    /**
+     * Carga el resumen de partidas de IVA de la regularización (todas las filas, sin paginar),
+     * agrupado por subcuenta, tipo de IVA, recargo y operación, que alimenta las casillas del
+     * régimen general.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return PartidaImpuestoResumen[]
+     */
+    public static function taxSummary(RegularizacionImpuesto $reg): array
+    {
+        // mismo criterio que las pestañas Compras/Ventas y que el asiento de regularización
+        $where = static::taxWhere($reg, SubAccountTools::SPECIAL_GROUP_TAX_ALL);
+        return PartidaImpuestoResumen::all($where, [
+            'COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)' => 'ASC',
+            'partidas.codsubcuenta' => 'ASC',
+        ], 0, 0);
+    }
+
+    /**
+     * Construye el filtro común del resumen, de las pestañas de compras/ventas y del asiento
+     * de regularización, para que todos trabajen sobre el MISMO conjunto de partidas: asientos
+     * de la empresa y ejercicio dentro de las fechas de la regularización, sin series sin IVA,
+     * sin asientos de apertura o cierre y sin los asientos de ninguna regularización de IVA.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @param int $group grupo de cuentas especiales (TAX_ALL, TAX_INPUT, TAX_OUTPUT)
+     * @return array
+     */
+    public static function taxWhere(RegularizacionImpuesto $reg, int $group): array
+    {
+        $excludedOperations = implode(',', [Asiento::OPERATION_OPENING, Asiento::OPERATION_CLOSING]);
+
+        // ids de los asientos de TODAS las regularizaciones (para excluirlos)
+        $regIds = [];
+        foreach (RegularizacionImpuesto::all([Where::isNotNull('idasiento')], [], 0, 0) as $item) {
+            if ($item->idasiento) {
+                $regIds[] = $item->idasiento;
+            }
+        }
+
+        $subAccountTools = new SubAccountTools();
+        $where = [
+            Where::eq('asientos.idempresa', $reg->idempresa),
+            Where::eq('asientos.codejercicio', $reg->codejercicio),
+            Where::gte('asientos.fecha', $reg->fechainicio),
+            Where::lte('asientos.fecha', $reg->fechafin),
+            Where::eq('COALESCE(series.siniva, false)', false),
+            Where::notIn("COALESCE(asientos.operacion, '')", $excludedOperations),
+            $subAccountTools->whereForSpecialAccounts('COALESCE(subcuentas.codcuentaesp, cuentas.codcuentaesp)', $group),
+        ];
+
+        if (false === empty($regIds)) {
+            $where[] = Where::notIn('asientos.idasiento', implode(',', $regIds));
+        }
+
+        return $where;
     }
 
     public static function treasury(string $codejercicio, string $period): array
@@ -483,8 +710,16 @@ class Modelo303
      */
     private function calculateTotals(): void
     {
-        // Total cuota devengada
-        $this->square['27'] = $this->square['03']
+        // Total cuota devengada, según el diseño de la AEAT:
+        // [152] + [167] + [03] + [155] + [164] + [06] + [09] + [11] + [13] + [15]
+        // + [158] + [170] + [18] + [21] + [24] + [26]
+        $this->square['27'] = $this->square['152']
+            + $this->square['167']
+            + $this->square['155']
+            + $this->square['164']
+            + $this->square['158']
+            + $this->square['170']
+            + $this->square['03']
             + $this->square['06']
             + $this->square['09']
             + $this->square['11']
