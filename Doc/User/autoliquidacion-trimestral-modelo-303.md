@@ -8,10 +8,10 @@ La autoliquidación del IVA (modelo 303) se calcula para un periodo concreto de 
 ## 📋 Crear la autoliquidación
 
 1. Pulsa el menú **Informes**.
-2. Pasa el ratón por **Modelos fiscales**.
+2. Pasa el ratón por **Fiscalidad España**.
 3. Elige **Modelos 303 y 390**.
 
-![Menú Informes con el submenú Modelos fiscales y la opción Modelos 303 y 390 marcada](../Assets/autoliquidacion-trimestral-modelo-303/01-menu-modelos-303-y-390.png)
+![Menú Informes con el submenú Fiscalidad España y la opción Modelos 303 y 390 marcada](../Assets/autoliquidacion-trimestral-modelo-303/01-menu-modelos-303-y-390.png)
 
 Pulsa **Nuevo** y rellena el formulario:
 

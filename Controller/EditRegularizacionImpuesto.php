@@ -85,7 +85,7 @@ class EditRegularizacionImpuesto extends EditController
     {
         $data = parent::getPageData();
         $data['menu'] = 'reports';
-        $data['submenu'] = 'tax-models';
+        $data['submenu'] = 'taxation-spain';
         $data['title'] = $this->annualTitle ? 'model-390' : 'model-303';
         $data['icon'] = 'fa-solid fa-balance-scale-right';
         return $data;

@@ -32,7 +32,7 @@ use FacturaScripts\Core\Where;
 class ListRegularizacionImpuesto extends ListController
 {
     /**
-     * Datos de la página: cuelga del menú Informes, en el submenú de modelos fiscales.
+     * Datos de la página: cuelga del menú Informes, en el submenú Fiscalidad España.
      *
      * @return array
      */
@@ -40,7 +40,7 @@ class ListRegularizacionImpuesto extends ListController
     {
         $data = parent::getPageData();
         $data['menu'] = 'reports';
-        $data['submenu'] = 'tax-models';
+        $data['submenu'] = 'taxation-spain';
         $data['title'] = 'model-303-390';
         $data['icon'] = 'fa-solid fa-book';
         return $data;

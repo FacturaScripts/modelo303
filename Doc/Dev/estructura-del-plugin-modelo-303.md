@@ -1,6 +1,6 @@
 El plugin Modelo303 calcula las casillas del modelo 303 (autoliquidación trimestral o mensual del IVA) y del modelo 390 (resumen anual) **a partir de las partidas de los asientos contables**, y las comparte entre la pantalla, los ficheros de la AEAT, la exportación y la API. Esta página explica cómo se reparte el código, qué añade el plugin a la tabla de regularizaciones y cómo usarlo o extenderlo desde otro plugin.
 
-La pantalla está en **menú Informes** → **Modelos fiscales** → **Modelos 303 y 390**: el listado muestra las regularizaciones de IVA y cada una se abre en su ficha. Las trimestrales y mensuales muestran el modelo 303; la anual (periodo `Y`) muestra el modelo 390. El endpoint de solo lectura está explicado en [API REST de los modelos 303 y 390](api-modelo-303-y-390.md).
+La pantalla está en **menú Informes** → **Fiscalidad España** → **Modelos 303 y 390**: el listado muestra las regularizaciones de IVA y cada una se abre en su ficha. Las trimestrales y mensuales muestran el modelo 303; la anual (periodo `Y`) muestra el modelo 390. El endpoint de solo lectura está explicado en [API REST de los modelos 303 y 390](api-modelo-303-y-390.md).
 
 ## 1. Piezas del plugin
 
@@ -63,7 +63,7 @@ El controlador nombra los ficheros `<NIF>_<año>_<periodo>.303` y `<NIF>_<año>_
 
 ## 3. El controlador de la ficha
 
-`FacturaScripts\Plugins\Modelo303\Controller\EditRegularizacionImpuesto` extiende `EditController`, cuelga del menú `reports` y el submenú `tax-models` y trabaja sobre el modelo `RegularizacionImpuesto` del core. En `execPreviousAction()` atiende estas acciones:
+`FacturaScripts\Plugins\Modelo303\Controller\EditRegularizacionImpuesto` extiende `EditController`, cuelga del menú `reports` y el submenú `taxation-spain` y trabaja sobre el modelo `RegularizacionImpuesto` del core. En `execPreviousAction()` atiende estas acciones:
 
 | Acción | Qué hace |
 |---|---|

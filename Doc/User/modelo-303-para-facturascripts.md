@@ -5,10 +5,10 @@ El informe extrae los datos de la **contabilidad**, no de la facturación: todas
 ## 📋 Dónde está
 
 1. Pulsa el menú **Informes**.
-2. Pasa el ratón por **Modelos fiscales**.
+2. Pasa el ratón por **Fiscalidad España**.
 3. Elige **Modelos 303 y 390**.
 
-![Menú Informes con el submenú Modelos fiscales y la opción Modelos 303 y 390 marcada](../Assets/modelo-303-para-facturascripts/01-menu-modelos-303-y-390.png)
+![Menú Informes con el submenú Fiscalidad España y la opción Modelos 303 y 390 marcada](../Assets/modelo-303-para-facturascripts/01-menu-modelos-303-y-390.png)
 
 El listado tiene dos pestañas: **Modelo 303** (1), con las regularizaciones trimestrales y mensuales, y **Modelo 390** (2), con las anuales. El botón **Nuevo** (3) crea una regularización nueva para una empresa, un ejercicio y un periodo. Cada fila enseña el ejercicio, el periodo, las fechas de inicio y de fin y el asiento de la regularización, si ya lo has creado.
 

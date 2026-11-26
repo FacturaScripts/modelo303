@@ -1,0 +1,43 @@
+{
+    "base_url": "https://fs.localhost/",
+    "login": true,
+    "output_dir": "Doc/Assets/autoliquidacion-anual-modelo-390",
+    "redact": {
+        "keep": [],
+        "replace": {
+            "FS": "Mi Empresa"
+        }
+    },
+    "captures": [
+        {
+            "name": "01-menu-modelos-303-y-390",
+            "url": "Dashboard",
+            "steps": [
+                {
+                    "click": "text=Informes"
+                },
+                {
+                    "eval": "const a=[...document.querySelectorAll('.dropdown-menu.show a')].find(x=>x.textContent.trim()=='Fiscalidad España'); a.parentElement.querySelector('.dropdown-menu').classList.add('show')"
+                }
+            ],
+            "highlight": [
+                {
+                    "target": "text=Informes",
+                    "label": "1"
+                },
+                {
+                    "target": ".dropdown-menu.show >> text=Fiscalidad España",
+                    "label": "2"
+                },
+                {
+                    "target": ".dropdown-menu.show >> text=Modelos 303 y 390",
+                    "label": "3"
+                }
+            ],
+            "clip": [
+                "nav.navbar",
+                ".dropdown-menu.show .dropdown-menu.show"
+            ]
+        }
+    ]
+}

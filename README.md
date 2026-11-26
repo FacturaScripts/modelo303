@@ -15,7 +15,7 @@ Calcula automáticamente el IVA soportado y el repercutido a partir de la contab
 - Exporta el informe a **PDF y Excel**.
 
 ## Uso
-1. Instala el plugin y ve al menú **Informes → Modelo 303 y 390**.
+1. Instala el plugin y ve al menú **Informes → Fiscalidad España → Modelos 303 y 390**.
 2. Pulsa **Nuevo**, selecciona la empresa, el ejercicio y el periodo (trimestre para el 303, o la pestaña Modelo 390 para el resumen anual) y guarda.
 3. Revisa el resumen y el desglose de compras y ventas, y en la pestaña **Asiento** pulsa **Crear Asiento Contable** para generar el asiento del pago a Hacienda.
 

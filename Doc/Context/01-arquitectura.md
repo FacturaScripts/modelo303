@@ -8,7 +8,7 @@ No tiene modelos ni tablas propias, ni `require` en `facturascripts.ini` (versi�
 
 | Pieza | Ruta | Qué hace |
 |---|---|---|
-| Listado | `Controller/ListRegularizacionImpuesto.php` | Dos pestañas sobre `RegularizacionImpuesto`: 303 (`periodo` distinto de `Y`) y 390 (`periodo = Y`). Menú Informes, submenú modelos fiscales |
+| Listado | `Controller/ListRegularizacionImpuesto.php` | Dos pestañas sobre `RegularizacionImpuesto`: 303 (`periodo` distinto de `Y`) y 390 (`periodo = Y`). Menú Informes, submenú Fiscalidad España (`taxation-spain`) |
 | Ficha | `Controller/EditRegularizacionImpuesto.php` | Pestañas de resumen, compras, ventas, presentación AEAT, asiento y modelo 390. Descarga de ficheros, vincular/desvincular asiento, rellenar casilla 110, exportación |
 | API | `Controller/ApiModelo303.php`, `ApiModelo390.php` | Endpoints de solo lectura. Rutas registradas en `Init.php` |
 | Cálculo | `Lib/Modelo303.php`, `Lib/Modelo390.php` | Reparto de importes a casillas y cadena de resultado |

@@ -12,7 +12,7 @@ Vincularlo importa porque los asientos de regularización no cuentan como IVA en
 
 ## 🔗 Vincular el asiento
 
-1. Abre la regularización desde **menú Informes** → **Modelos fiscales** → **Modelos 303 y 390**.
+1. Abre la regularización desde **menú Informes** → **Fiscalidad España** → **Modelos 303 y 390**.
 2. Pulsa la pestaña **Asiento**.
 3. Pulsa **Vincular asiento**. Si no hay asiento, esta pestaña ofrece también **Crear Asiento Contable**, que genera uno nuevo.
 
