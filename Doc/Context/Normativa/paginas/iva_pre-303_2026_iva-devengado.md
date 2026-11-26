@@ -1,0 +1,442 @@
+<!-- Fuente: https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/2026/iva-devengado.html -->
+
+Agencia Tributaria: 2026 - IVA devengado
+
+ [Saltar al contenido principal](#acc-main) 
+
+ [Logotipo del Gobierno de EspañaLogotipo Organismo](/Sede/inicio.html)
+
+ Menú móvil[Menu](#)
+
+[Inicio](/Sede/inicio.html)
+[IVA](/Sede/iva.html)
+[PRE 303 (Servicio ayuda modelo 303)](/Sede/iva/pre-303.html)
+
+ 2026
+[Saltar índice de la información](#js-nombre-canal-paginado)ÍndiceÍndice:
+IVA devengado
+[IVA deducible](/Sede/iva/pre-303/2026/iva-deducible.html)
+[Información adicional](/Sede/iva/pre-303/2026/informacion-adicional.html)
+[Operaciones en el ejercicio](/Sede/iva/pre-303/2026/operaciones-ejercicio.html)
+
+IVA devengado
+Los campos incluidos en tipo de factura, tipo de operación y clave de régimen especial se pueden consultar en el documento "[Bloques Funcionales](/static_files/Sede/Procedimiento_ayuda/G417/FicherosSuministros/V_1_1/DR_v1.1.xls)"
+
+CASILLA
+LLAA 
+DATOS SII 
+
+ OPERACIÓN
+LR 
+TIPO FACTURA
+TIPO OPERACIÓN (TO)
+CLAVE RREE 
+
+00150
+BI AL 0%
+Tipo operación S1. SUMAR las BI mayor que cero, al 0% de S1 en el LRFE con fecha de operación y en su defecto fecha de expedición en el período autoliquidado.
+LRFE
+F1 F2 F4
+S1
+01
+
+00151
+0%
+Tipo 0%
+LRFE
+
+00152
+CI  AL 0%
+CI al 0% de S1
+LRFE
+F1 F2 F4
+S1
+01
+
+00001
+BI AL 4%
+Tipo operación S1 y S3. SUMAR las BI al 4% de S1 con cuota repercutida mayor que cero + BI al 4% de S3 (solo las líneas con cuota repercutida mayor que cero) en el LRFE con fecha de operación y en su defecto fecha de expedición en el período autoliquidado.
+LRFE
+F1 F2 F4
+S1 S3(CON CUOTA)
+01 11 12 13 15 03 05 09
+
+00002
+4%
+TIPO 4%
+LRFE
+
+00003
+CI AL 4%
+CI al 4% de S1 con cuota repercutida mayor que cero+ CI al 4% de S3 (solo lineas con cuota repercutida mayor que cero).
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+00004
+BI AL 10%
+Tipo operación S1 y S3. SUMAR las BI al 10% de S1 con cuota repercutida mayor que cero + BI al 10% de S3 (solo las líneas con cuota repercutida mayor que cero) en el LRFE con fecha de operación y en su defecto fecha de expedición en el período autoliquidado.
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+00005
+10%
+TIPO 10%
+LRFE
+
+00006
+CI AL 10%
+CI al 10% de S1 con cuota repercutida mayor que cero+ CI al 10% de S3(solo lineas con cuota repercutida mayor que cero).
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+00007
+BI AL 21%
+Tipo operación S1 y S3. SUMAR las BI al 21% de S1 con cuota repercutida mayor que cero+ BI al 21% de S3 (solo lineas con cuota repercutida mayor que cero) en el LRFE con fecha de operación y en su defecto fecha de expedición en el período autoliquidado.
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+00008
+21%
+TIPO 21%
+LRFE
+
+00009
+CI AL 21%
+CI al 21% de S1 con cuota repercutida mayor que cero+ CI al 21% de S3 (solo lineas con cuota repercutida mayor que cero).
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+00010
+BI AIB BIENES Y SERVICIOS
+LRFR . Sumar BI facturas con clave 09, solo lineas con cuota soportada mayor que cero y período consignado en la factura igual al período de autoliquidación. Si hay AIB a tipo cero las debe incluir el contribuyente.
+LRFR
+F1
+SIN DESGLOSE ISP
+O9
+
+00011
+CI AIB BIENES Y SERVICIOS
+LRFR. CI facturas con clave 09, solo lineas con cuota repercutida mayor que cero y período consignado en la factura igual al período de autoliquidación.
+LRFR
+F1
+SIN DESGLOSE ISP
+O9
+
+00012
+BI OTRAS OPERACIONES ISP
+LRFR. Sumar BI facturas con desglose ISP con linea de cuota soportada mayor que cero y período consignado en la factura igual al período de autoliquidación. Excepto facturas última línea casilla 14.
+LRFR
+F1 F2 F4 F6
+CON DESGLOSE ISP
+O1 12
+
+00013
+CI OTRAS OPERACIONES ISP
+LRFR. CI facturas con desglose ISP con linea de cuota soportada mayor que cero y período consignado en la factura igual al período de autoliquidación. Excepto facturas última línea casilla 14.
+LRFR
+F1 F2 F4 F6
+CON DESGLOSE ISP
+O1 12
+
+00014
+BI. MODIFICACIONES BASES Y CUOTAS
+En S1 + S3 (solo las líneas con cuota) del LRFE con período de liquidación declarado igual al período autoliquidado, sumar las BI de facturas emitidas rectificativas (R1 R2 R3 R4 R5) neteadas con el signo que corresponda, sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero/nulo y cuota rectificada distinto de cero/nulo en S1 + S3 (solo las líneas con cuota)del LRFE con periodo de liquidación declarado igual al periodo autoliquidado, sumar las BI de facturas emitidas rectificativas (R1 R2 R3 R4 R5) menos base rectificada contenida en cada una de ellas .Si son facturas rectificativas por sustitución S3 con base rectificada distinto de cero/nulo pero cuota rectificada igual a cero/nulo, deberá incluirse el importe integro de las bases cuyas lineas tengan cuota distinto de cero ( sin netear).
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+En S1 + S3 (solo las líneas con cuota) del LRFE con fecha de operación y en su defecto fecha de expedición en el período autoliquidado, sumar las BI negativas de facturas emitidas no identificadas con R y que tengan cuota negativa o cero con FO/FEX en el período autoliquidado.
+LRFE
+F1 F2 F4 <0
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+BI de facturas emitidas con período de liquidación declarado igual al período autoliquidado
+LRFE
+AJ
+S1
+03 05
+
+Sumar las BI en el tipo de operación S1, clave 02, en comunicación A5 y A6 (tienen signo negativo) y las BI/importe exento con clave 02 en comunicación A4 (convertir a signo negativo) registradas todas ellas en el LRFE con período correspondiente al de la autoliquidación.
+LRFE
+COMUNICACIÓN A5 A6 (TIENEN SIGNO NEGATIVO) COMUNICACIÓN A4 (CONVERTIR A SIGNO NEGATIVO)
+S1
+O2
+
+Sumar las BI de las facturas recibidas identificadas como rectificativas (R1 a R5) y clave RREE AIB que se han registrado con cuota soportada y período de liquidación consignado en la factura igual al período de autoliquidación, sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFR
+R1 R2 R3 R4 R5
+SIN DESGLOSE ISP
+O9
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero o nulo del LRFR con período de liquidación declarado igual al período autoliquidado, SUMAR las BI de las facturas recibidas identificadas como rectificativas (R1 a R5) y clave RREE AIB menos base rectificada contenida en cada una de ellas.
+LRFR
+R1 R2 R3 R4 R5
+SIN DESGLOSE ISP
+O9
+
+Sumar las BI de las facturas recibidas identificadas como rectificativas (R1 a R5) y con desglose ISP con cuota soportada que se han registrado con período de liquidación consignado en la factura igual al período de autoliquidación, sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFR
+R1 R2 R3 R4 R5
+CON DESGLOSE ISP
+O1 12
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero o nulo del LRFR con período de liquidación declarado igual al período autoliquidado, SUMAR las BI de las facturas recibidas identificadas como rectificativas (R1 a R5) y con desglose ISP menos base rectificada contenida en cada una de ellas.
+LRFR
+R1 R2 R3 R4 R5
+CON DESGLOSE ISP
+O1 12
+
+Sumar las BI de AIB con cuota soportada negativa distintas de rectificativas que se han registrado con período de liquidación consignado en la factura igual al período de autoliquidación.
+LRFR
+F1 F3 F4 F6 <0
+SIN DESGLOSE ISP
+O9
+
+Sumar las BI de operaciones ISP con cuota soportada negativa distintas de rectificativas que se han registrado con período de liquidación consignado en la factura igual al período de autoliquidación.
+LRFR
+F1 F3 F4 F6 <0
+CON DESGLOSE ISP
+O1 12
+
+Sumar las BI de las facturas recibidas contrastadas / parcialmente contrastadas no identificadas como R con cuota soportada positiva que se han emitido como rectificativas y registrado con período consignado en la factura igual al período de autoliquidación.
+LRFR
+F1 F3 F4 F6 > 0
+CON DESGLOSE ISP
+O1 12
+
+00015
+CI MODIFICACIONES BASES Y CUOTAS
+CI facturas emitidas del LRFE con período de liquidación declarado igual al período autoliquidado, SUMAR las CI de facturas emitidas rectificativas (R1 R2 R3 R4 R5) neteadas con el signo que corresponda, sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero/nulo y cuota rectificada distinto de cero/nulo en LRFE con periodo de liquidación declarado igual al periodo autoliquidado, sumar las CI de facturas emitidas rectificativas (R1 R2 R3 R4 R5) menos cuota rectificada contenida en cada una de ellas .Si son facturas rectificativas por sustitución S3 con base rectificada distinto de cero/nulo pero cuota rectificada igual a cero/nulo, deberá incluirse el importe integro de las bases cuyas lineas tengan cuota distinto de cero (sin netear).
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+Tipo operación S1 + S3 (solo las líneas con cuota) en el LRFE con fecha de operación o en su defecto fecha de expedición, en el periodo autoliquidado sumar las CI facturas emitidas no identificadas con R que tengan cuota negativa en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado.
+LRFE
+F1 F2 F4 <0
+S1 S3 (CON CUOTA)
+01 11 12 13 15 03 05 09
+
+CI de facturas emitidas con período de liquidación declarado igual al período autoliquidado.
+LRFE
+AJ
+S1
+03 05
+
+Sumar las CI en el tipo de operación S1, clave 02, en comunicación A5 Y A6 (tienen signo negativo) y las CI con clave 02 en comunicación A4 (calcular poniendo signo negativo BI/importe exento * 0,21) registradas todas ellas en el LRFE con periodo correspondiente al de la autoliquidación.
+LRFE
+COMUNICACIÓN A5 A6 (TIENEN SIGNO NEGATIVO) COMUNICACIÓN A4 (PONER CON SIGNO NEGATIVO BI*0,21)
+S1
+O2
+
+Sumar las CI soportadas de las facturas recibidas identificadas como rectificativas (R1 A R5) en caso de AIB que se han registrado con periodo de liquidación consignado en la factura igual al periodo de autoliquidación, sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFR
+R1 R2 R3 R4 R5
+SIN DESGLOSE ISP
+O9
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero/nulo en LRFR: sumar las CI soportadas de las facturas recibidas identificadas como rectificativas (R1 A R5) en caso de AIB que se han registrado con periodo de liquidación consignado en la factura igual al periodo de autoliquidación menos la cuota rectificada contenida en cada una de ellas.
+LRFR
+R1 R2 R3 R4 R5
+SIN DESGLOSE ISP
+O9
+
+Sumar las CI soportadas de las facturas recibidas identificadas como rectificativas (R1 a R5) en caso de ISP que se han registrado con periodo de liquidación consignado en la factura igual al periodo de autoliquidación, sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFR
+R1 R2 R3 R4 R5
+CON DESGLOSE ISP
+O1 12
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero/nulo en LRFR: sumar las CI soportadas de las facturas recibidas identificadas como rectificativas (R1 A R5) en caso de ISP que se han registrado con periodo de liquidación consignado en la factura igual al periodo de autoliquidación menos la cuota rectificada contenida en cada una de ellas.
+LRFR
+R1 R2 R3 R4 R5
+CON DESGLOSE ISP
+O1 12
+
+Sumar las CI de AIB con cuota soportada negativa que se han registrado con periodo de liquidación consignado en la factura igual al periodo de autoliquidación.
+LRFR
+F1 F3 F4 F6 <0
+SIN DESGLOSE ISP
+O9
+
+Sumar las CI de operaciones ISP con cuota soportada negativa que se han registrado con periodo de liquidación consignado en la factura igual al periodo de autoliquidación.
+LRFR
+F1 F3 F4 F6 <0
+CON DESGLOSE ISP
+O1 12
+
+Sumar las CI soportadas de las facturas recibidas contrastadas/parcialmente contrastadas no identificadas como R con cuotas soportada positiva (distinto de cero/nulo) que se han emitido como rectificativas y registrado con periodo consignado en la factura igual al periodo de autoliquidación.
+LRFR
+F1 F3 F4 F6 > 0
+CON DESGLOSE ISP
+O1 12
+
+00156
+
+BI CON RECARGO AL 1,75%
+
+Tipo de operación S1 con cuota repercutida mayor que cero + S3 (solo las líneas con cuota repercutida mayor que cero) en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado sumar la BI recargo facturas en el LRFE con línea de cuota repercutida mayor que cero al 1,75%.
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00157
+
+1,75%
+
+TIPO 1,75%
+
+00158
+CI CON RECARGO AL 1,75%
+CI recargo facturas en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado al 5,2% de S1 con cuota repercutida mayor que cero+S3 (solo líneas con cuota repercutida mayor que cero).
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00168
+BI CON RECARGO AL 0,5%
+Tipo de operación S1 con cuota repercutida mayor que cero + S3 (solo las líneas con cuota repercutida mayor que cero) en el LRFE con FO/FEX en el periodo autoliquidado sumar la BI recargo facturas en el LRFE con línea de cuota repercutida mayor que cero al 0,5%.
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00169
+ 0,5%
+TIPO 0,5%
+
+00170
+CI CON RECARGO AL 0,5%
+CI recargo facturas en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado al 0,5% de S1 con cuota repercutida mayor que cero+S3 (solo líneas con cuota repercutida mayor que cero).
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00019
+BI CON RECARGO AL 1,4 %
+Tipo de operación S1 con cuota repercutida mayor que cero + S3 (solo las líneas con cuota repercutida mayor que cero) en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado SUMAR las BI recargo facturas en el LRFE con línea de cuota repercutida mayor que cero al 1,4%.
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00020
+1,4%
+TIPO 1,4%
+
+00021
+CI RECARGO AL 1,4%
+CI recargo facturas en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado al 1,4% de S1 con cuota repercutida mayor que cero+S3 (solo líneas con cuota repercutida mayor que cero).
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00022
+BI CON RECARGO AL 5,2%
+Tipo de operación S1 con cuota repercutida mayor que cero + S3 (solo las líneas con cuota repercutida mayor que cero) en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado SUMAR las BI recargo facturas en el LRFE con línea de cuota repercutida mayor que cero al 5,2%.
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13   15
+
+00023
+5,2%
+TIPO 5,2%
+
+00024
+CI RECARGO AL 5,2%
+CI recargo facturas en el LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado al 5,2% de S1 con cuota repercutida mayor que cero+S3 (solo líneas con cuota repercutida mayor que cero).
+LRFE
+F1 F2 F4
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00025
+BI MODIFICACIONES BASES Y CUOTAS RECARGO EQUIVALENCIA
+Sumar BI de líneas con recargo S1 + S3 (solo las líneas con cuota) emitidas del LRFE con periodo de liquidación declarado igual al periodo autoliquidado, SUMAR las BI de recargo de facturas emitidas rectificativas (R1 R2 R3 R4 R5) neteadas con el signo que corresponda, sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero/NULO en S1 + S3 (solo las lineas con cuota) del LRFE con periodo de liquidación declarado igual al periodo autoliquidado, SUMAR las BI de líneas con recargo de facturas emitidas rectificativas (R1 R2 R3 R4 R5) menos base rectificada contenida en cada una de ellas.
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+En S1 + S3 (solo las líneas con cuota) emitidas del LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado sumar BI negativas de líneas con cuota recargo negativa o cero en el LRFE
+LRFE
+F1 F2 F4 < 0
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00026
+CI MODIFICACIONES BASES Y CUOTAS RECARGO EQUIVALENCIA
+CI recargo facturas emitidas del LRFE con periodo de liquidación declarado igual al periodo autoliquidado, SUMAR las CI de recargo de facturas emitidas rectificativas (R1 R2 R3 R4 R5) neteadas con el signo que corresponda sin tener en cuenta las facturas rectificativas por sustitución con base rectificada distinto de cero o nulo.
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+Facturas rectificativas por sustitución con base rectificada distinto de cero/nulo, en LRFE con periodo de liquidación declarado igual al periodo autoliquidado, SUMAR las CI de recargo de facturas emitidas rectificativas (R1 R2 R3 R4 R5) menos cuotas rectificadas correspondientes.
+LRFE
+R1 R2 R3 R4 R5
+S1 S3 (CON CUOTA)
+01 11 12 13   15
+
+En S1 + S3 (solo las líneas con cuota) emitidas del LRFE con fecha de operación y en su defecto fecha de expedición en el periodo autoliquidado SUMAR CI de líneas con cuota negativa de recargo en facturas.
+LRFE
+F1 F2 F4 < 0
+S1 S3 (CON CUOTA)
+01 11 12 13 15
+
+00027
+CUOTA TOTAL
+Sumatorio cuotas casillas anteriores
+
+Generar PDF
+Cerrar
+La generación del PDF puede tardar varios minutos dependiendo de la cantidad de información.
+Seleccione la información que desee incluir en el PDF:
+Sólo la página actual
+
+Todas las páginas del índice
+
+Puede cancelar la generación del PDF en cualquier momento.
+
+CancelarContinuar
+
+Generar PDF
+[SiguienteIVA deducible](/Sede/iva/pre-303/2026/iva-deducible.html)
+
+Página actualizada: 13/octubre/2026

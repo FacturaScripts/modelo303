@@ -1,0 +1,790 @@
+{
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_26/DR303e26v101.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_26/DR303e26v101.xlsx",
+  "ruta": "actual/DR303e26v101.xlsx",
+  "sha256": "0be8b156da2250c6b11f6253e0165221ed2e549ec4c65a562021bec6b9b8489b",
+  "tamano": 386926,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Wed, 28 Jan 2026 13:11:00 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_26/dr390e2026.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_26/dr390e2026.xlsx",
+  "ruta": "actual/dr390e2026.xlsx",
+  "sha256": "5ce047995347c2b5ad6e5d4e407f126eeb9bd214602ed7c99e9f85175176ec15",
+  "tamano": 556940,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Mon, 26 Oct 2026 09:05:48 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_25/DR303e25.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_25/DR303e25.xlsx",
+  "ruta": "actual/DR303e25.xlsx",
+  "sha256": "6c3d7eeb714e0deb52f91d7e8dbadeb83f16c1d32d25f9e871756f3ddf0117e6",
+  "tamano": 386694,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Thu, 04 Dec 2025 10:15:46 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_22/DR303e22.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_22/DR303e22.xlsx",
+  "ruta": "actual/DR303e22.xlsx",
+  "sha256": "6648f6b319579e49cd5bfdaae69e7451db75767e7f19da0b90383b25b79b3f60",
+  "tamano": 339445,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 28 Dec 2021 07:32:10 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_25/dr390e2025.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_25/dr390e2025.xlsx",
+  "ruta": "actual/dr390e2025.xlsx",
+  "sha256": "6d33d8a4245976e55dc31ff85065b420f76d1588110dc1eb541a8039c5e3f252",
+  "tamano": 556062,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Mon, 26 Oct 2026 09:06:32 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/dr390e2024.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/dr390e2024.xlsx",
+  "ruta": "actual/dr390e2024.xlsx",
+  "sha256": "8be79bacc86034c3c7951d2ea671c030800ed9a4cc3f52b9e5d407bc19bc03f0",
+  "tamano": 556712,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Fri, 28 Nov 2025 06:57:55 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_22/dr390e2022.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_22/dr390e2022.xlsx",
+  "ruta": "actual/dr390e2022.xlsx",
+  "sha256": "7c6554f3182df51daaec37284dd891eb925e1f92df7e69bc01b8ccfb8e4f26fe",
+  "tamano": 502078,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Wed, 04 Jan 2023 12:06:55 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/dr390e2021.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/dr390e2021.xlsx",
+  "ruta": "actual/dr390e2021.xlsx",
+  "sha256": "0164fbea6f500a63950b762f5b5e43c5d771f84ac8d260e70dc1497acaed4246",
+  "tamano": 497063,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Wed, 26 Oct 2022 08:19:29 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Procedimiento_ayuda/G414/Inst_mod_303_2025.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Procedimiento_ayuda/G414/Inst_mod_303_2025.pdf",
+  "ruta": "actual/Inst_mod_303_2025.pdf",
+  "sha256": "789ec19325a3737d5de7db3f3de55f73d74e3b348037772d9a05776595a8fa52",
+  "tamano": 986149,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Fri, 31 Jan 2025 23:20:54 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Procedimiento_ayuda/G412/Instrucciones_modelo_390-2025.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Procedimiento_ayuda/G412/Instrucciones_modelo_390-2025.pdf",
+  "ruta": "actual/Instrucciones_modelo_390-2025.pdf",
+  "sha256": "26028dcb993675bf91cdf9b9fb50742c473c5fe6680735e29acdc3c560d3301d",
+  "tamano": 355432,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 24 Feb 2026 11:37:38 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Procedimiento_ayuda/G412/instr390.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Procedimiento_ayuda/G412/instr390.pdf",
+  "ruta": "actual/instr390.pdf",
+  "sha256": "2af493936c21232f596df92f48768ebb92a928237103ef4dfefba1921816a0f3",
+  "tamano": 760685,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Mon, 16 Dec 2024 12:59:09 GMT"
+ },
+ "https://www.boe.es/buscar/act.php?id=BOE-A-2008-20953": {
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2008-20953",
+  "ruta": "actual/normativa/BOE-A-2008-20953_Orden-EHA-3786-2008_mod303.html",
+  "sha256": "5657b8091f0579b5b28355db86860def948d1ebd781ce5f83c823bfb7fd71a32",
+  "tamano": 180535,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": null
+ },
+ "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18472": {
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18472",
+  "ruta": "actual/normativa/BOE-A-2009-18472_Orden-EHA-3111-2009_mod390.html",
+  "sha256": "02c670006d1f5b441bb568b893c001346fab835858e60c31981534e140fa06aa",
+  "tamano": 164745,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": null
+ },
+ "https://www.boe.es/buscar/act.php?id=BOE-A-2013-12385": {
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2013-12385",
+  "ruta": "actual/normativa/BOE-A-2013-12385_Orden-HAP-2194-2013.html",
+  "sha256": "152557ff1caca16d0a7c6bacc13edc0e79d4003232219ecc8c1fee1ff3a0c995",
+  "tamano": 639323,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": null
+ },
+ "https://www.boe.es/buscar/act.php?id=BOE-A-2025-25272": {
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2025-25272",
+  "ruta": "actual/normativa/BOE-A-2025-25272_Orden-HAC-1425-2025_simplificado-2026.html",
+  "sha256": "ff791b7cb73f09491c530282cd31548f4c766ecdf23452870e1864cdbf368a70",
+  "tamano": 442064,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": null
+ },
+ "https://www.boe.es/buscar/act.php?id=BOE-A-2024-24949": {
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2024-24949",
+  "ruta": "actual/normativa/BOE-A-2024-24949_Orden-HAC-1347-2024_simplificado-2025.html",
+  "sha256": "f9c0253de90f04213f310f4f3771f88784ee6873c3701b9f91012e9103a0bdd1",
+  "tamano": 460517,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": null
+ },
+ "https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740": {
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-1992-28740",
+  "ruta": "actual/normativa/BOE-A-1992-28740_Ley-37-1992-IVA.html",
+  "sha256": "2c781e136f013d9b1ad72fede59e978794c9682b4d6d4e0c76a7d4b28578e72c",
+  "tamano": 1786584,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": null
+ },
+ "https://www.boe.es/buscar/act.php?id=BOE-A-1992-28925": {
+  "url": "https://www.boe.es/buscar/act.php?id=BOE-A-1992-28925",
+  "ruta": "actual/normativa/BOE-A-1992-28925_RD-1624-1992-Reglamento-IVA.html",
+  "sha256": "8624eea2aca5caa536d6149130485a71f30a5a2b1b9aaf51988d4e3a43102610",
+  "tamano": 1068512,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": null
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/AEAT/LSI.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/AEAT/LSI.xlsx",
+  "ruta": "actual/LSI.xlsx",
+  "sha256": "d35e92f2ebcdfba9d2d836da13f677758c27fd04f3903280accfd18ea6db497d",
+  "tamano": 58337,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 17 Feb 2026 12:16:25 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/AEAT/LSIJ.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/AEAT/LSIJ.xlsx",
+  "ruta": "actual/LSIJ.xlsx",
+  "sha256": "963e653c2f2ffca8d894886965bb528b853801b7afa58643155681e396c8d1eb",
+  "tamano": 58515,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 17 Feb 2026 12:16:25 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Biblioteca/Manual/Practicos/IVA/Manual_IVA_2026.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Biblioteca/Manual/Practicos/IVA/Manual_IVA_2026.pdf",
+  "ruta": "actual/Manual_IVA_2026.pdf",
+  "sha256": "fbd13b98ec92c33279412d07d5b8f5aeb25b711d49484b4437550d6a41059147",
+  "tamano": 2154195,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Wed, 30 Sep 2026 12:16:10 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/DR303e21v103.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/DR303e21v103.xlsx",
+  "ruta": "actual/DR303e21v103.xlsx",
+  "sha256": "cb0226f444e4412336b155655d5b2afda0b60e7e87d6dcda6eafd6497e5f4ee7",
+  "tamano": 343400,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 26 Sep 2023 09:32:44 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/DR303e21v200.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/DR303e21v200.xlsx",
+  "ruta": "actual/DR303e21v200.xlsx",
+  "sha256": "185b8612c9cf4a22b4ed919db0ba45d21b03b7168da957fca3b5758f567ce249",
+  "tamano": 341383,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 26 Sep 2023 09:32:44 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros/PLANTILLA_LIBROS_Pers_Juridicas.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros/PLANTILLA_LIBROS_Pers_Juridicas.xlsx",
+  "ruta": "actual/PLANTILLA_LIBROS_Pers_Juridicas.xlsx",
+  "sha256": "e5127ab6c471ab47b80232bf6dccaadd88791ef610de818311dc582da7e6e813",
+  "tamano": 286104,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Thu, 10 Sep 2026 05:27:53 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros/PLANTILLA_LIBROS_UNIFICADOS.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros/PLANTILLA_LIBROS_UNIFICADOS.xlsx",
+  "ruta": "actual/PLANTILLA_LIBROS_UNIFICADOS.xlsx",
+  "sha256": "1011b811d71e5074dea08b946d2be2189343e419bcb668441d6e74fd1f639008",
+  "tamano": 292511,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Thu, 10 Sep 2026 05:28:53 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros_registro/CALCULO_CASILLAS_IVA_PRE303-LSI.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros_registro/CALCULO_CASILLAS_IVA_PRE303-LSI.xlsx",
+  "ruta": "actual/CALCULO_CASILLAS_IVA_PRE303-LSI.xlsx",
+  "sha256": "700a42a33259eef838a4d78bee4228d987a2ecec8519bf0c1ab421a68b9ed4fb",
+  "tamano": 46524,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 17 Feb 2026 12:16:25 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros_registro/Formato_Electronico_Comun_Libros_Registro_IVA_IRPF.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros_registro/Formato_Electronico_Comun_Libros_Registro_IVA_IRPF.pdf",
+  "ruta": "actual/Formato_Electronico_Comun_Libros_Registro_IVA_IRPF.pdf",
+  "sha256": "071bdaabc3736e2e6def49be35c11fec744a74d5a9ab3f2ac50a2b1aa6fd7d22",
+  "tamano": 738001,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 17 Feb 2026 10:21:59 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2022/2022_Notas_aclaratorias.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2022/2022_Notas_aclaratorias.pdf",
+  "ruta": "actual/2022_Notas_aclaratorias.pdf",
+  "sha256": "cb2f322ab6b8bbe9a753d380bf79e207cfb97eff05b79e0cc9ebeee26b95cae0",
+  "tamano": 595718,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 15 Nov 2022 12:15:17 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2023/2023_Notas_aclaratorias.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2023/2023_Notas_aclaratorias.pdf",
+  "ruta": "actual/2023_Notas_aclaratorias.pdf",
+  "sha256": "17ee32f0c1e3067156235c8c2bf4eb9a6d1504c9ba78f422d0d7662df7846d1e",
+  "tamano": 502148,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Wed, 08 Feb 2023 15:05:36 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2024/2024_Notas_aclaratorias.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2024/2024_Notas_aclaratorias.pdf",
+  "ruta": "actual/2024_Notas_aclaratorias.pdf",
+  "sha256": "47684d911b3aa59a5af84e995e13068932df843f8115e8d0cff652e63439557e",
+  "tamano": 476776,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Wed, 25 Sep 2024 14:03:23 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2025/2025_Notas_aclaratorias.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2025/2025_Notas_aclaratorias.pdf",
+  "ruta": "actual/2025_Notas_aclaratorias.pdf",
+  "sha256": "ab1df0b14fc36d2a365e030ee7e9af2a09808e68331c427a200537a8673fc63e",
+  "tamano": 757193,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Thu, 06 Feb 2025 09:14:15 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/Especificos_SII/2021_notas_aclaratorias.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/Especificos_SII/2021_notas_aclaratorias.pdf",
+  "ruta": "actual/2021_notas_aclaratorias.pdf",
+  "sha256": "8fbfa43cdbea9b497e4f3021d825c364048d1d28e73168dfb51a0407843d7777",
+  "tamano": 887611,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 09 Aug 2022 07:47:39 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/Especificos_SII/2021notas_aclaratorias_OSS.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/Especificos_SII/2021notas_aclaratorias_OSS.pdf",
+  "ruta": "actual/2021notas_aclaratorias_OSS.pdf",
+  "sha256": "13b890c0cf45a1628276be82e99cacad4ff9f720def4d762fae6c4211c3404ce",
+  "tamano": 664687,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 09 Aug 2022 07:47:31 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/ServiciosDisponibles/Notas_aclaratorias.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/ServiciosDisponibles/Notas_aclaratorias.pdf",
+  "ruta": "actual/Notas_aclaratorias.pdf",
+  "sha256": "a663790702c55db93974dc1d0b6bc0b504ad8b34184297cd94b7feaf5d14cd71",
+  "tamano": 411919,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Mon, 30 Mar 2026 12:17:27 GMT"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/General/EspecificacionesServiciosDeclaracionesAEAT_ES.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/General/EspecificacionesServiciosDeclaracionesAEAT_ES.pdf",
+  "ruta": "actual/EspecificacionesServiciosDeclaracionesAEAT_ES.pdf",
+  "sha256": "cdbd1cad6d6db079d264490d5a0d6484818225db95a1d3ba563b253affce605e",
+  "tamano": 1093136,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/General/consultas.xsd": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/General/consultas.xsd",
+  "ruta": "actual/consultas.xsd",
+  "sha256": "54220f18daa13363cb98558d15441ae6752c6eb60799e812893a482a433f41d2",
+  "tamano": 2342,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_19/dr390e2019v101.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_19/dr390e2019v101.xlsx",
+  "ruta": "actual/dr390e2019v101.xlsx",
+  "sha256": "7d4caff7bbdd668fa2ddd03f8751632394ed4010a81301b5fc787272f2371bc1",
+  "tamano": 496560,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 12:48:09 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_23/DR303e23.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_23/DR303e23.xlsx",
+  "ruta": "actual/DR303e23.xlsx",
+  "sha256": "72e463cb29984f535c9f56917d788ff0641965f116aeab47da5f76a59eecfbe4",
+  "tamano": 385533,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Thu, 14 Dec 2023 09:36:19 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_23/dr390e2023v100.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_23/dr390e2023v100.xlsx",
+  "ruta": "actual/dr390e2023v100.xlsx",
+  "sha256": "179c02eddc8bab411c249fc3fda19c7015d668e1dd7930d4af79f38998b9c5a7",
+  "tamano": 501060,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Thu, 23 Nov 2023 12:27:04 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/DR303e24.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/DR303e24.xlsx",
+  "ruta": "actual/DR303e24.xlsx",
+  "sha256": "8b1f74b58b9293e60f9ea6fa3cc352a35ca3fe7d09a6705f122585e7f7da65b9",
+  "tamano": 385739,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 02 Apr 2024 05:22:17 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/DR303e24v200.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/DR303e24v200.xlsx",
+  "ruta": "actual/DR303e24v200.xlsx",
+  "sha256": "2095dd633413f4aed28053bc88402461d80865f454156c01ebc4a2ab68cb76a8",
+  "tamano": 389379,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Fri, 29 Nov 2024 12:21:03 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/390v01e2015_v1.00.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/390v01e2015_v1.00.pdf",
+  "ruta": "actual/390v01e2015_v1.00.pdf",
+  "sha256": "49aa7389ea31d2a166b7ecc050a8f5066fdf052e84dff72f45e71063f3e57a60",
+  "tamano": 106206,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:02:24 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/390v01e2016_v1.00.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/390v01e2016_v1.00.xlsx",
+  "ruta": "actual/390v01e2016_v1.00.xlsx",
+  "sha256": "28c2bda5aa2d891f2f91a3275b40a790d656748c0a9fb3e5329ef54aef23dd50",
+  "tamano": 517513,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:02:24 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e12v11.pdf": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e12v11.pdf",
+  "ruta": "actual/DR303e12v11.pdf",
+  "sha256": "6daceebcc868e5ef9ed1538374fc4159b29248a270663552f086f6a9bfd29699",
+  "tamano": 35087,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:01:37 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e14v22.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e14v22.xlsx",
+  "ruta": "actual/DR303e14v22.xlsx",
+  "sha256": "6ada04f1843318c987c53dbfab88ac19b760c49793bcc30e751c5485a36cdaec",
+  "tamano": 252607,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:02:24 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e15v34.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e15v34.xlsx",
+  "ruta": "actual/DR303e15v34.xlsx",
+  "sha256": "5bffa57f1630f4ade6a19b21010fd7e6aff0b440e632f17f1be53a61ecdaa15f",
+  "tamano": 252338,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:02:24 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e17v20_04.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e17v20_04.xlsx",
+  "ruta": "actual/DR303e17v20_04.xlsx",
+  "sha256": "85775f8df5f7ba17f60b565eae41e710ec423285164867b0de83799fc6f07795",
+  "tamano": 299463,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:02:24 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e18v10_10.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e18v10_10.xlsx",
+  "ruta": "actual/DR303e18v10_10.xlsx",
+  "sha256": "3fbad46fdad001a6faab1a68cd7e13958901e208cc7ab888786fc7ba44065098",
+  "tamano": 298775,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:01:37 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e18v10_40.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e18v10_40.xlsx",
+  "ruta": "actual/DR303e18v10_40.xlsx",
+  "sha256": "4683a167c73019f935e6e78a6c2ef1d76f71a1c78207fdf8bc0098703892db25",
+  "tamano": 298223,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:02:24 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e20v10_20.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e20v10_20.xlsx",
+  "ruta": "actual/DR303e20v10_20.xlsx",
+  "sha256": "bd570be2599aa7aba4740282fc06dd573e8d0d03dd0717ae3c1d26e0fae0446d",
+  "tamano": 297738,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:01:37 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/dr390e2017v3.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/dr390e2017v3.xlsx",
+  "ruta": "actual/dr390e2017v3.xlsx",
+  "sha256": "e94e3a5471cde24105197e13362a4e3d12284ba4aeb3585bfd812c85dc0bd4cd",
+  "tamano": 500274,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:02:24 GMT"
+ },
+ "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/dr390e2018v101.xlsx": {
+  "url": "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/dr390e2018v101.xlsx",
+  "ruta": "actual/dr390e2018v101.xlsx",
+  "sha256": "6ad240de8090017dca775ed4234a90a43b163e3bb44e042502b5c74a9a9e2d61",
+  "tamano": 496068,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "etag": null,
+  "last_modified": "Tue, 13 Jul 2021 13:01:37 GMT"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/Especificaciones_modelo_303-2026.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/Especificaciones_modelo_303-2026.pdf",
+  "ruta": "actual/Especificaciones_modelo_303-2026.pdf",
+  "sha256": "8212de130f7e9bae5916163df861eff96d2584d8d4095e4b73f0aa7bdefedb26",
+  "tamano": 1898091,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2026/Especif_m303_26.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2026/Especif_m303_26.pdf",
+  "ruta": "actual/Especif_m303_26.pdf",
+  "sha256": "8850323fa4a86136bd2dcf5d37b84085f8df7183071afc0273625cdcccdc1474",
+  "tamano": 1838604,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2025/Especif_303_2025.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2025/Especif_303_2025.pdf",
+  "ruta": "actual/Especif_303_2025.pdf",
+  "sha256": "93093f5be780149ef24a6d8d6f312dc65b820171bc79138b29396cc8500826b1",
+  "tamano": 1879791,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/Especif_m303_24.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/Especif_m303_24.pdf",
+  "ruta": "actual/Especif_m303_24.pdf",
+  "sha256": "bfbd457ea6bb5aeabb54826fafdea5b3eb9a70e0ace1b41d520f0b498258ecd7",
+  "tamano": 2040663,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2023/esp303_2023.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2023/esp303_2023.pdf",
+  "ruta": "actual/esp303_2023.pdf",
+  "sha256": "227e43a9c741dd97497c689bfe56b93eec99a1019d500554bedb6ea619969022",
+  "tamano": 580305,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2022/esp303_2022.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2022/esp303_2022.doc",
+  "ruta": "actual/esp303_2022.doc",
+  "sha256": "44f95a51a3e90e0a8b446e27c01be65553439893fc2ab266f794e0ad7517be2c",
+  "tamano": 2475520,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/303_NovedValidCuotasCompensPeriodosAnter.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/303_NovedValidCuotasCompensPeriodosAnter.pdf",
+  "ruta": "actual/303_NovedValidCuotasCompensPeriodosAnter.pdf",
+  "sha256": "ea96f405932ca859441083514dc09d9302a7990534a24118d462c456975928cb",
+  "tamano": 133798,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2021/IVA303-CoordColabora.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2021/IVA303-CoordColabora.pdf",
+  "ruta": "actual/IVA303-CoordColabora.pdf",
+  "sha256": "d9245832b6e331ba70c5cfbb21870b9b0a983979f4942b8d2c936927fce9c49e",
+  "tamano": 527220,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_7.02.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_7.02.pdf",
+  "ruta": "actual/IVA303-CoordColabora_7.02.pdf",
+  "sha256": "2dce35831ee47b34b2f35d2adaca1c135d429ea2e534d3861d177eaabb2e3813",
+  "tamano": 535261,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_2018-6.01.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_2018-6.01.pdf",
+  "ruta": "actual/IVA303-CoordColabora_2018-6.01.pdf",
+  "sha256": "b0d7d880eceb991546f8932b790c34ed834cf95c95b43a0de7a376a08c6de379",
+  "tamano": 539045,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_2017-5.00.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_2017-5.00.doc",
+  "ruta": "actual/IVA303-CoordColabora_2017-5.00.doc",
+  "sha256": "a0d4c26b41a2fe0632c71981bba47cba77467c12a16e501104ab7096b9407bc7",
+  "tamano": 2331136,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora-4.2.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora-4.2.doc",
+  "ruta": "actual/IVA303-CoordColabora-4.2.doc",
+  "sha256": "53e7c2cee18b151e0c427af70f2ed5114fbad688408cb9f4936600c45abb4707",
+  "tamano": 2368512,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2011/Ficheros/IVA303-CoordColabora-2.3.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2011/Ficheros/IVA303-CoordColabora-2.3.doc",
+  "ruta": "actual/IVA303-CoordColabora-2.3.doc",
+  "sha256": "cda8ea0de5ab52aa8a34e80e52630ac4fd296c86dcbe80cf8cca803f0aa974c4",
+  "tamano": 703488,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/303_2015_89890001K_1T.303": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/303_2015_89890001K_1T.303",
+  "ruta": "actual/303_2015_89890001K_1T.303",
+  "sha256": "5d591dfd1b73f580a515c11a869bb53c43949d39978e9dbb4e003621b03e5244",
+  "tamano": 4546,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2021/esp390_2021.docx": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2021/esp390_2021.docx",
+  "ruta": "actual/esp390_2021.docx",
+  "sha256": "a64e01502722502f1a0537d6e58593ec983d03b3e4db911277c44c2d1b314bee",
+  "tamano": 35838,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2019/esp390_2019.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2019/esp390_2019.doc",
+  "ruta": "actual/esp390_2019.doc",
+  "sha256": "9e24659377c8c000d3cee66b6716e0750fa992a6a7a074ca8c87be6940f5aa3e",
+  "tamano": 181248,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2018/esp390_2018.v1.2.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2018/esp390_2018.v1.2.pdf",
+  "ruta": "actual/esp390_2018.v1.2.pdf",
+  "sha256": "df0ee5a26ac6bca91ff27f1b89fa80d42a8cfa47443ce16fabeec39e943c7886",
+  "tamano": 97827,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2017.v1.0.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2017.v1.0.doc",
+  "ruta": "actual/esp390_2017.v1.0.doc",
+  "sha256": "612d08a98601b2c27fcd74540933df4ec807e077510a74c6d4595f65c3d06244",
+  "tamano": 194048,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2016.v1.0.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2016.v1.0.doc",
+  "ruta": "actual/esp390_2016.v1.0.doc",
+  "sha256": "9a4b44ab65dd97842100d062226699ae14006acadc8ffb4fcdb960eb05feb2bd",
+  "tamano": 160256,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/390v01e2015_v1.00.xlsx": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/390v01e2015_v1.00.xlsx",
+  "ruta": "actual/390v01e2015_v1.00.xlsx",
+  "sha256": "e6caddad441f11406dab2c3bafbb4c77828e33375a3d13330fe95bdbd552c7c0",
+  "tamano": 517345,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2015v1.2.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2015v1.2.doc",
+  "ruta": "actual/esp390_2015v1.2.doc",
+  "sha256": "be0cea140e607f57af6e9b7b075c86390307f92e5036f30997c3b0c64a399027",
+  "tamano": 158208,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2014/IVA2014.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2014/IVA2014.pdf",
+  "ruta": "actual/IVA2014.pdf",
+  "sha256": "da42a856f70fc9cf0aaf89a056a2fab079398985bed7bed95cfe84a38345ee20",
+  "tamano": 99432,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2014/ficheros/esp390_2014v1.1.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2014/ficheros/esp390_2014v1.1.doc",
+  "ruta": "actual/esp390_2014v1.1.doc",
+  "sha256": "c2d2529414c4580cd65460b755cc41ce71a458bba36da0351c1c085cfa108965",
+  "tamano": 153088,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2013/GraficoIVA2013.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2013/GraficoIVA2013.pdf",
+  "ruta": "actual/GraficoIVA2013.pdf",
+  "sha256": "d235ab2480447cd90947888f96c27525427010cb5e5f580c2a8a36e2d3f65d23",
+  "tamano": 130009,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2013/ficheros/esp390_2013v1.1.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2013/ficheros/esp390_2013v1.1.doc",
+  "ruta": "actual/esp390_2013v1.1.doc",
+  "sha256": "5834f556c0bcf31f21b6a5dd5416c536da1fad592cac17dad2c612ac3bfaa437",
+  "tamano": 158720,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2012/IVA2012.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2012/IVA2012.pdf",
+  "ruta": "actual/IVA2012.pdf",
+  "sha256": "440697d83f73951413eb94645b3cacbc9dff6f98c27067f96b99459cf718d791",
+  "tamano": 90125,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2012/Ficheros/esp390_2012v1.2.docx": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2012/Ficheros/esp390_2012v1.2.docx",
+  "ruta": "actual/esp390_2012v1.2.docx",
+  "sha256": "66d5f9dd5ef31f6eb0b26c2ecfef863ac441ec55fc78a48c64455d4e5184a80c",
+  "tamano": 59467,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA2011_ESQUEMA.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA2011_ESQUEMA.pdf",
+  "ruta": "actual/IVA2011_ESQUEMA.pdf",
+  "sha256": "a73d57960e936cbd04ebd80a055d9538354724d25f3e6c7bf0a60bd8ea22dc61",
+  "tamano": 88267,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2011/Ficheros/esp390_2011v1.2.doc": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2011/Ficheros/esp390_2011v1.2.doc",
+  "ruta": "actual/esp390_2011v1.2.doc",
+  "sha256": "97bd9018a69adca36f61462b4c60cf92b9e31dd8c49fef61a29dffa4552b6d86",
+  "tamano": 138240,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ },
+ "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/MIIVA2011.pdf": {
+  "url": "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/MIIVA2011.pdf",
+  "ruta": "actual/MIIVA2011.pdf",
+  "sha256": "f399e0b3746668d79e63cb4b1e538b66d427987ac42a275659339bc39e8b7fe0",
+  "tamano": 115160,
+  "descargado": "2026-11-26",
+  "comprobado": "2026-11-26",
+  "origen_descarga": "manual"
+ }
+}

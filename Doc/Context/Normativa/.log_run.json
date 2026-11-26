@@ -1,0 +1,350 @@
+{
+ "nuevos": [
+  "actual/dr390e2019v101.xlsx",
+  "actual/DR303e23.xlsx",
+  "actual/dr390e2023v100.xlsx",
+  "actual/DR303e24.xlsx",
+  "actual/DR303e24v200.xlsx",
+  "actual/390v01e2015_v1.00.pdf",
+  "actual/390v01e2016_v1.00.xlsx",
+  "actual/DR303e12v11.pdf",
+  "actual/DR303e14v22.xlsx",
+  "actual/DR303e15v34.xlsx",
+  "actual/DR303e17v20_04.xlsx",
+  "actual/DR303e18v10_10.xlsx",
+  "actual/DR303e18v10_40.xlsx",
+  "actual/DR303e20v10_20.xlsx",
+  "actual/dr390e2017v3.xlsx",
+  "actual/dr390e2018v101.xlsx"
+ ],
+ "modificados": [],
+ "iguales": 34,
+ "errores": [
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/Especificaciones_modelo_303-2026.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2026/Especif_m303_26.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2025/Especif_303_2025.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/Especif_m303_24.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2023/esp303_2023.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2022/esp303_2022.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/303_NovedValidCuotasCompensPeriodosAnter.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/2021/IVA303-CoordColabora.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_7.02.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_2018-6.01.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora_2017-5.00.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/IVA303-CoordColabora-4.2.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2011/Ficheros/IVA303-CoordColabora-2.3.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_303/303_2015_89890001K_1T.303",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2014/ficheros/completo89_1T.303",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2021/esp390_2021.docx",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2019/esp390_2019.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/2018/esp390_2018.v1.2.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2017.v1.0.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2016.v1.0.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/390v01e2015_v1.00.xlsx",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/Mod_390/esp390_2015v1.2.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2014/IVA2014.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2014/ficheros/esp390_2014v1.1.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2013/GraficoIVA2013.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2013/ficheros/esp390_2013v1.1.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/2012/IVA2012.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2012/Ficheros/esp390_2012v1.2.docx",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA2011_ESQUEMA.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/Especificaciones/2011/Ficheros/esp390_2011v1.2.doc",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/MIIVA2011.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/General/EspecificacionesServiciosDeclaracionesAEAT_ES.pdf",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ],
+  [
+   "https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/General/consultas.xsd",
+   "000",
+   "curl: (60) SSL certificate problem: self signed certificate in certificate chain\nMore details here: https://curl.se/docs/sslcerts.html\n\ncurl failed to verify the legitimacy of the server and therefore could not\nestablish a secure connection to it. To learn more about this situation and\nhow to fix it, please visit the web page mentioned above."
+  ]
+ ],
+ "paginas_cambiadas": [],
+ "paginas_nuevas": [
+  "ayuda_disenos-registro_ejercicios-anteriores-mod-e267a444.md"
+ ],
+ "paginas_desaparecidas": [],
+ "enlaces": {
+  "https://sede.agenciatributaria.gob.es/static_files/AEAT/LSI.xlsx": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/nuevo-servicio-pre303-importacion-libros-electronico/disenos-registro-normalizados-libros-registro.html",
+  "https://sede.agenciatributaria.gob.es/static_files/AEAT/LSIJ.xlsx": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/nuevo-servicio-pre303-importacion-libros-electronico/disenos-registro-normalizados-libros-registro.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Biblioteca/Manual/Practicos/IVA/Manual_IVA_2026.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/presentar-declaracion-iva-modelo-303.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_19/dr390e2019v101.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/DR303e21v103.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_21/DR303e21v200.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_23/DR303e23.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_23/dr390e2023v100.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/DR303e24.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/DR_300_399/archivos_24/DR303e24v200.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/390v01e2015_v1.00.pdf": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/390v01e2016_v1.00.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e12v11.pdf": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e14v22.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e15v34.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e17v20_04.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e18v10_10.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e18v10_40.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/DR303e20v10_20.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/dr390e2017v3.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Disenyo_registro/ant_300_399/archivos/dr390e2018v101.xlsx": "https://sede.agenciatributaria.gob.es/Sede/ayuda/disenos-registro/ejercicios-anteriores-modelos-300-399.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros/PLANTILLA_LIBROS_Pers_Juridicas.xlsx": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/nuevo-servicio-pre303-importacion-libros-electronico/plantilla-libros-soporte-electronico.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros/PLANTILLA_LIBROS_UNIFICADOS.xlsx": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/nuevo-servicio-pre303-importacion-libros-electronico/plantilla-libros-soporte-electronico.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros_registro/CALCULO_CASILLAS_IVA_PRE303-LSI.xlsx": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/nuevo-servicio-pre303-importacion-libros-electronico/especificaciones-calculo-casillas.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/Fact_registro/Libros_registro/Formato_Electronico_Comun_Libros_Registro_IVA_IRPF.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/nuevo-servicio-pre303-importacion-libros-electronico/formatos-electronicos-libros-registro.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2022/2022_Notas_aclaratorias.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/servicios-especificos-sii/2022.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2023/2023_Notas_aclaratorias.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/servicios-especificos-sii/2023.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2024/2024_Notas_aclaratorias.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/servicios-especificos-sii/2024.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/2025/2025_Notas_aclaratorias.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/servicios-especificos-sii/2025.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/Especificos_SII/2021_notas_aclaratorias.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/notas-aclaratorias/2021-hasta-1-julio.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/Especificos_SII/2021notas_aclaratorias_OSS.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/notas-aclaratorias/2021-1-julio.html",
+  "https://sede.agenciatributaria.gob.es/static_files/Sede/Tema/IVA/PRE_303/ServiciosDisponibles/Notas_aclaratorias.pdf": "https://sede.agenciatributaria.gob.es/Sede/iva/pre-303/notas-aclaratorias.html"
+ },
+ "actualizada": {
+  "procedimientoini_G414.md": "Página actualizada: 28/septiembre/2026",
+  "procedimientoini_G412.md": "Página actualizada: 13/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-5c097bad.md": "Página actualizada: 05/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-028b9416.md": "Página actualizada: 26/octubre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-4ff26285.md": "Página actualizada: 26/octubre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-2051a816.md": "Página actualizada: 09/junio/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-5ce1d184.md": "Página actualizada: 09/junio/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-bb532ab8.md": "Página actualizada: 09/junio/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-c5eeacd4.md": "Página actualizada: 29/septiembre/2026",
+  "iva_pre-303.md": "Página actualizada: 13/octubre/2026",
+  "iva_presentar-declaracion-iva-modelo-303.md": "Página actualizada: 03/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-220b315d.md": "Página actualizada: 19/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-390-i-0aec156c.md": "Página actualizada: 12/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-390-i-f7ab3a55.md": "Página actualizada: 09/junio/2026",
+  "ayuda_disenos-registro_modelos-300-399.md": "Página actualizada: 26/octubre/2026",
+  "ayuda_disenos-registro_ejercicios-anteriores-mod-e267a444.md": "Página actualizada: 26/octubre/2026",
+  "ayuda_consultas-informaticas_otros-servicios-ayu-48535111.md": "Página actualizada: 13/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-d437dede.md": "Página actualizada: 19/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-43ec2bc9.md": "Página actualizada: 19/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-cc4a8d1b.md": "Página actualizada: 19/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-d20ec344.md": "Página actualizada: 19/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-62e63efb.md": "Página actualizada: 19/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-a4d965c2.md": "Página actualizada: 07/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-231aedc2.md": "Página actualizada: 19/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-0cef742f.md": "Página actualizada: 07/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-14a6dcec.md": "Página actualizada: 07/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-af7d3397.md": "Página actualizada: 07/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-8f1b207d.md": "Página actualizada: 07/octubre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-bad67901.md": "Página actualizada: 26/octubre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-5f1ca8ca.md": "Página actualizada: 09/junio/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-b43ea7ff.md": "Página actualizada: 09/junio/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-cf555582.md": "Página actualizada: 09/junio/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-7a66e8cc.md": "Página actualizada: 29/septiembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-80e35772.md": "Página actualizada: 29/septiembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-addbdc57.md": "Página actualizada: 12/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-f0975574.md": "Página actualizada: 12/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-471df2a9.md": "Página actualizada: 12/noviembre/2026",
+  "iva_pre-303_gestiones.md": "Página actualizada: 24/septiembre/2026",
+  "iva_pre-303_servicio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_acceder-pre303.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_que-servicios-funcionalidades-tiene-7dfa2fa5.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-disponibles-contribuyentes.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_nuevo-servicio-pre303-importacion-li-a110cfd6.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-arrendadores.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-empresarios-re-f444fb78.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sujetos-pasivo-3a20373d.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_preguntas-frecuentes_cuestiones-gene-a2bc13d0.md": "Página actualizada: 03/noviembre/2026",
+  "iva_pre-303_preguntas-frecuentes_cuestiones-espe-c0b2e889.md": "Página actualizada: 13/octubre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-303-i-bc23ea37.md": "Página actualizada: 09/junio/2026",
+  "iva_presentar-declaracion-iva-modelo-303_gestiones.md": "Página actualizada: 24/septiembre/2026",
+  "iva_presentar-declaracion-iva-modelo-303_errores-86f27b96.md": "Página actualizada: 13/octubre/2026",
+  "iva_presentar-declaracion-iva-modelo-303_plazo-p-2a093238.md": "Página actualizada: 13/octubre/2026",
+  "iva_presentar-declaracion-iva-modelo-303_periodo-d4fa077b.md": "Página actualizada: 07/octubre/2026",
+  "iva_presentar-declaracion-iva-modelo-303_formas-afeab012.md": "Página actualizada: 13/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-c727a5a9.md": "Página actualizada: 19/noviembre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-28f0ca9f.md": "Página actualizada: 09/octubre/2026",
+  "ayuda_consultas-informaticas_presentacion-declar-f06781c3.md": "Página actualizada: 19/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-390-i-12574ea8.md": "Página actualizada: 12/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-390-i-abd0ee3a.md": "Página actualizada: 12/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-390-i-e36ad9c2.md": "Página actualizada: 12/noviembre/2026",
+  "todas-gestiones_impuestos-tasas_iva_modelo-390-i-77e8391c.md": "Página actualizada: 12/noviembre/2026",
+  "iva_pre-303_servicios-disponibles-contribuyentes-bf797035.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_nuevo-servicio-pre303-importacion-li-8d22dbcc.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_nuevo-servicio-pre303-importacion-li-acc8a3e2.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_nuevo-servicio-pre303-importacion-li-3e423fff.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_nuevo-servicio-pre303-importacion-li-b42f6231.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_nuevo-servicio-pre303-importacion-li-751b8da4.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_nuevo-servicio-pre303-importacion-li-d1069f8e.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_equivalencias.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_notas-acla-de2c9744.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_libros-agr-0a04673e.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_preguntas-frecuentes_.md": "Página actualizada: 25/noviembre/2026",
+  "iva_presentar-declaracion-iva-modelo-303_errores-28f6bb39.md": "Página actualizada: 13/octubre/2026",
+  "iva_presentar-declaracion-iva-modelo-303_errores-1b5d7795.md": "Página actualizada: 07/octubre/2026",
+  "iva_pre-303_2020.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2021.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2021-1-julio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2022.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2023.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2024.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2025.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2026.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2026-notas-e8526d74.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2026-notas-9e142556.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2026-notas-bce75114.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_notas-aclaratorias.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_notas-aclaratorias_2021-hasta-1-julio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_notas-aclaratorias_2021-1-julio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2022.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2023.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2024.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2025.md": "Página actualizada: 13/octubre/2026",
+  "iva_presentar-declaracion-iva-modelo-303_errores-a7b91c61.md": "Página actualizada: 24/septiembre/2026",
+  "iva_pre-303_2020_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2020_iva-devengado.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2020_operaciones-ejercicio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2021_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2021_informacion-adicional.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2021-1-julio_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2021-1-julio_iva-devengado.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2021-1-julio_operaciones-ejercicio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2022_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2022_informacion-adicional.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2022_operaciones-ejercicio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2023_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2023_informacion-adicional.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2023_operaciones-ejercicio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2024_iva-devengado.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2024_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2024_informacion-adicional.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2025_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2025_informacion-adicional.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2025_operaciones-ejercicio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2026_iva-deducible.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2026_informacion-adicional.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2026_operaciones-ejercicio.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_2026_iva-devengado.md": "Página actualizada: 13/octubre/2026",
+  "iva_pre-303_servicios-especificos-sii_2026-notas.md": "Página actualizada: 13/octubre/2026"
+ },
+ "nombres_largos": []
+}

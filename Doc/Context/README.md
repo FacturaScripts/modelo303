@@ -19,6 +19,16 @@ en el mismo trabajo que cambia el código.
 - [`08-puntos-delicados.md`](08-puntos-delicados.md): lo que se rompe con facilidad.
 - [`09-evolucion.md`](09-evolucion.md): etapas del código según el historial.
 
+## Normativa
+
+- [`Normativa/`](Normativa/): documentación **oficial** de los modelos 303 y 390 (AEAT y BOE), descargada con la skill
+  `download-modelo303` (`.agents/skills/`). Contiene `actual/` (diseños de registro del 303 de 2012 a 2026 y del 390 de
+  2015 a 2026, instrucciones, especificaciones del portal de desarrolladores, normativa del BOE en `actual/normativa/`),
+  `paginas/` (texto de la ayuda técnica, instrucciones, Pre303 y plazos de la Sede), `historico/` (versiones sustituidas),
+  `manifest.json` y [`CHANGELOG.md`](Normativa/CHANGELOG.md) (qué se bajó, versiones vigentes, alertas y lo que queda por
+  descargar a mano). Contrasta con ella cualquier decisión sobre casillas, diseños de registro o plazos; para
+  refrescarla, ejecuta la skill.
+
 ## Decisiones
 
 - [`0001-calcular-desde-la-contabilidad.md`](Decisiones/0001-calcular-desde-la-contabilidad.md): por qué los modelos leen asientos y no facturas.

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="servicioConsultasDirectas">
+		<xs:annotation>
+			<xs:documentation>Respuesta del servicio de consultas directas</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="respuestaCorrecta" type="RespuestaCorrecta" maxOccurs="100"/>
+				<xs:element name="error" type="Error"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="RespuestaCorrecta">
+		<xs:sequence>
+			<xs:element name="ejercicio" type="Ejercicio"/>
+			<xs:element name="modelo" type="Modelo"/>
+			<xs:element name="periodo" type="Periodo"/>
+			<xs:element name="nif" type="Nif"/>
+			<xs:element name="csv" type="Csv"/>
+			<xs:element name="expediente" type="Expediente"/>
+			<xs:element name="justificante" type="Justificante"/>
+			<xs:element name="just_anterior" type="Justificante" maxOccurs="1" minOccurs="0"/>
+			<xs:element name="fechaYHoraPresentacion" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Error">
+		<xs:sequence>
+			<xs:element name="descripcionError" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- definiciones de tipos -->
+	<xs:simpleType name="Ejercicio">
+		<xs:restriction base="xs:string">
+			<xs:length value="4"/>
+			<xs:pattern value="\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Modelo">
+		<xs:restriction base="xs:string">
+			<xs:length value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Periodo">
+		<xs:restriction base="xs:string">
+			<xs:length value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Nif">
+		<xs:restriction base="xs:string">
+				<xs:length value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Csv">
+		<xs:restriction base="xs:string">
+			<xs:length value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Expediente">
+		<xs:restriction base="xs:string">
+			<xs:length value="25"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="Justificante">
+		<xs:restriction base="xs:string">
+			<xs:length value="13"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+</xs:schema>
