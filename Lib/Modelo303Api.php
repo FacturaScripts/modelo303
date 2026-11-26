@@ -57,6 +57,9 @@ class Modelo303Api
     /** Casillas de cuota del recargo de equivalencia. */
     protected const CUOTA_RECARGO_SQUARES = ['158', '170', '18', '21', '24', '26'];
 
+    /** Modelo de la AEAT. */
+    public const MODEL = '303';
+
     /**
      * Casillas de porcentaje fijo y la casilla de base de la que dependen: solo se devuelven
      * si su base no es 0.
@@ -66,9 +69,6 @@ class Modelo303Api
         '151' => '150', '154' => '153', '157' => '156', '163' => '162', '166' => '165',
         '169' => '168', '65' => '64',
     ];
-
-    /** Modelo de la AEAT. */
-    public const MODEL = '303';
 
     /** Periodos admitidos, tal y como se devuelven en la respuesta. */
     public const PERIODS = [
@@ -155,7 +155,8 @@ class Modelo303Api
         }
 
         $data['tipodeclaracion'] = empty($reg->tipodeclaracion) ? null : (string)$reg->tipodeclaracion;
-        $data['iban'] = empty($reg->iban) ? null : (string)$reg->iban;
+        // la API no necesita el IBAN completo: se devuelve enmascarado
+        $data['iban'] = static::maskIban($reg->iban);
         $data['sinactividad'] = (bool)$reg->sinactividad;
         $data['rectificativa'] = (bool)$reg->rectificativa;
         $data['justificanteant'] = empty($reg->justificanteant) ? null : (string)$reg->justificanteant;

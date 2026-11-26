@@ -46,11 +46,25 @@ use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
  */
 class EditRegularizacionImpuesto extends EditController
 {
-    /** @var ?Modelo303 */
-    public ?Modelo303 $modelo303;
+    /**
+     * Modelo 303 de la regularización que alimenta la vista del resumen y la exportación. Se crea vacío
+     * en createViewsTaxSummary() y se recalcula en loadData() con Modelo303::fromRegularizacion().
+     *
+     * @var ?Modelo303
+     */
+    public ?Modelo303 $modelo303 = null;
 
     /** @var ?Modelo390 modelo 390 de la regularización anual (null en el resto de periodos) */
     public ?Modelo390 $modelo390 = null;
+
+    /**
+     * Indica si la regularización cargada es la anual (modelo 390), para que el título de la
+     * página, de la pestaña principal y de la exportación digan «Modelo 390» y no «Modelo 303».
+     * Se calcula al cargar la vista principal.
+     *
+     * @var bool
+     */
+    protected bool $annualTitle = false;
 
     /**
      * Returns the class name of the model to use in the editView.
@@ -61,7 +75,9 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Return the basic data for this page.
+     * Devuelve los datos básicos de la página. El título es «Modelo 303», salvo cuando ya se ha
+     * cargado una regularización anual, que se muestra como «Modelo 390». La página se registra
+     * en el menú siempre con el título del 303, porque al desplegar los plugins no hay registro cargado.
      *
      * @return array
      */
@@ -70,7 +86,7 @@ class EditRegularizacionImpuesto extends EditController
         $data = parent::getPageData();
         $data['menu'] = 'reports';
         $data['submenu'] = 'tax-models';
-        $data['title'] = 'model-303';
+        $data['title'] = $this->annualTitle ? 'model-390' : 'model-303';
         $data['icon'] = 'fa-solid fa-balance-scale-right';
         return $data;
     }
@@ -199,8 +215,10 @@ class EditRegularizacionImpuesto extends EditController
             return;
         }
 
-        // lock accounting and save
+        // bloqueamos la contabilidad y guardamos; el asiento lo ha creado el plugin, así que
+        // se elimina con la regularización
         $reg->bloquear = true;
+        $reg->asientomanual = false;
         if (false === $reg->save()) {
             Tools::log()->warning('record-save-error');
             return;
@@ -228,32 +246,6 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Añade la pestaña del modelo 390 (resumen anual), que solo se muestra en la regularización anual.
-     *
-     * @param string $viewName
-     * @return void
-     */
-    protected function createViewsModelo390(string $viewName = 'Modelo390'): void
-    {
-        $this->addHtmlView($viewName, $viewName, 'RegularizacionImpuesto', 'model-390', 'fa-solid fa-list-alt');
-        $this->disableButtons($viewName);
-    }
-
-    /**
-     * Añade la pestaña con los datos de presentación del modelo 390 (identificación y casillas
-     * manuales) y el botón de descarga del fichero DR390. Solo se muestra en la regularización anual.
-     *
-     * @param string $viewName
-     * @return void
-     */
-    protected function createViewsPresentacion390(string $viewName = 'EditPresentacion390'): void
-    {
-        $this->addEditView($viewName, 'RegularizacionImpuesto', 'aeat-file-390', 'fa-solid fa-file-arrow-down')
-            ->setSettings('btnNew', false)
-            ->setSettings('btnDelete', false);
-    }
-
-    /**
      * Add view for account entry detail.
      *
      * @param string $viewName
@@ -266,6 +258,18 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Añade la pestaña del modelo 390 (resumen anual), que solo se muestra en la regularización anual.
+     *
+     * @param string $viewName
+     * @return void
+     */
+    protected function createViewsModelo390(string $viewName = 'Modelo390'): void
+    {
+        $this->addHtmlView($viewName, $viewName, 'RegularizacionImpuesto', 'model-390', 'fa-solid fa-list-alt');
+        $this->disableButtons($viewName);
+    }
+
+    /**
      * Add view for the AEAT .303 file presentation data (manual boxes + download button).
      *
      * @param string $viewName
@@ -274,6 +278,20 @@ class EditRegularizacionImpuesto extends EditController
     protected function createViewsPresentacion(string $viewName = 'EditPresentacion303'): void
     {
         $this->addEditView($viewName, 'RegularizacionImpuesto', 'aeat-file-303', 'fa-solid fa-file-arrow-down')
+            ->setSettings('btnNew', false)
+            ->setSettings('btnDelete', false);
+    }
+
+    /**
+     * Añade la pestaña con los datos de presentación del modelo 390 (identificación y casillas
+     * manuales) y el botón de descarga del fichero DR390. Solo se muestra en la regularización anual.
+     *
+     * @param string $viewName
+     * @return void
+     */
+    protected function createViewsPresentacion390(string $viewName = 'EditPresentacion390'): void
+    {
+        $this->addEditView($viewName, 'RegularizacionImpuesto', 'aeat-file-390', 'fa-solid fa-file-arrow-down')
             ->setSettings('btnNew', false)
             ->setSettings('btnDelete', false);
     }
@@ -339,50 +357,6 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Generates and sends the AEAT .303 text file for download.
-     *
-     * @return bool
-     */
-    protected function downloadTxtAction(): bool
-    {
-        $reg = new RegularizacionImpuesto();
-        $code = $this->request->input('code');
-        if (false === $reg->load($code)) {
-            Tools::log()->warning('record-not-found');
-            return true;
-        }
-
-        // el resumen anual (modelo 390) no se presenta con el fichero del 303, que solo admite
-        // trimestres y meses: generarlo daría un .303 con un periodo que no corresponde
-        if ($reg->periodo === 'Y') {
-            Tools::log()->warning('file-303-not-for-model-390');
-            return true;
-        }
-
-        $empresa = new Empresa();
-        if (false === $empresa->load($reg->idempresa)) {
-            Tools::log()->warning('company-not-found');
-            return true;
-        }
-
-        $modelo = Modelo303::fromRegularizacion($reg);
-        $content = Modelo303File::generate($reg, $modelo->getSquares(), $empresa);
-
-        $fileName = $empresa->cifnif . '_' . date('Y', strtotime((string)$reg->fechainicio))
-            . '_' . $reg->periodo . '.303';
-
-        $this->setTemplate(false);
-        $this->response
-            ->header('Content-Type', 'text/plain; charset=ISO-8859-1')
-            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"')
-            ->header('Pragma', 'no-cache')
-            ->header('Expires', '0')
-            ->setContent($content);
-
-        return false;
-    }
-
-    /**
      * Genera y envía para descargar el fichero DR390 del modelo 390 de la regularización anual.
      *
      * @return bool
@@ -415,6 +389,50 @@ class EditRegularizacionImpuesto extends EditController
         $modelo = Modelo390::fromRegularizacion($reg);
         $content = Modelo390File::generate($reg, $modelo->getSquares(), $empresa);
         $fileName = $empresa->cifnif . '_' . $year . '_0A.390';
+
+        $this->setTemplate(false);
+        $this->response
+            ->header('Content-Type', 'text/plain; charset=ISO-8859-1')
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0')
+            ->setContent($content);
+
+        return false;
+    }
+
+    /**
+     * Generates and sends the AEAT .303 text file for download.
+     *
+     * @return bool
+     */
+    protected function downloadTxtAction(): bool
+    {
+        $reg = new RegularizacionImpuesto();
+        $code = $this->request->input('code');
+        if (false === $reg->load($code)) {
+            Tools::log()->warning('record-not-found');
+            return true;
+        }
+
+        // el resumen anual (modelo 390) no se presenta con el fichero del 303, que solo admite
+        // trimestres y meses: generarlo daría un .303 con un periodo que no corresponde
+        if ($reg->periodo === 'Y') {
+            Tools::log()->warning('file-303-not-for-model-390');
+            return true;
+        }
+
+        $empresa = new Empresa();
+        if (false === $empresa->load($reg->idempresa)) {
+            Tools::log()->warning('company-not-found');
+            return true;
+        }
+
+        $modelo = Modelo303::fromRegularizacion($reg);
+        $content = Modelo303File::generate($reg, $modelo->getSquares(), $empresa);
+
+        $fileName = $empresa->cifnif . '_' . date('Y', strtotime((string)$reg->fechainicio))
+            . '_' . $reg->periodo . '.303';
 
         $this->setTemplate(false);
         $this->response
@@ -510,18 +528,11 @@ class EditRegularizacionImpuesto extends EditController
             }
         }
 
-        // add tax settlement summary table
+        // la pestaña del modelo 390 y la del resumen del 303 son vistas html que no se exportan:
+        // añadimos sus casillas como tablas
         if (null !== $this->modelo390) {
-            $concept = Tools::trans('concept');
-            $amount = Tools::trans('amount');
-            $rows = [];
-            foreach (['47' => 'model390-total-accrued', '64' => 'model390-total-deductions',
-                         '65' => 'model390-general-regime-result', '86' => 'model390-box-86',
-                         '108' => 'model390-box-108'] as $box => $label) {
-                $rows[] = [$concept => $box . ' - ' . Tools::trans($label), $amount => Tools::money($this->modelo390->casilla($box))];
-            }
-            $this->exportManager->addTablePage([$concept, $amount], $rows);
-        } elseif (!empty($this->modelo303)) {
+            $this->exportModelo390();
+        } elseif (null !== $this->modelo303) {
             $concept = Tools::trans('concept');
             $amount = Tools::trans('amount');
             $rows = [
@@ -529,10 +540,78 @@ class EditRegularizacionImpuesto extends EditController
                 [$concept => Tools::trans('total-to-deduct'), $amount => Tools::money($this->modelo303->casilla('45'))],
                 [$concept => Tools::trans('total-result-of-the-general-regime'), $amount => Tools::money($this->modelo303->casilla('46'))],
             ];
-            $this->exportManager->addTablePage([$concept, $amount], $rows);
+            $this->exportManager->addTablePage([$concept, $amount], $rows, [], Tools::trans('summary'));
         }
 
         $this->exportManager->show($this->response);
+    }
+
+    /**
+     * Añade a la exportación las casillas del modelo 390, una tabla por cada apartado de la pestaña
+     * Modelo 390 (con las mismas filas visibles que la pantalla), y la lista de regularizaciones
+     * periódicas usadas en el resultado de las liquidaciones del año.
+     *
+     * @return void
+     */
+    protected function exportModelo390(): void
+    {
+        $concept = Tools::trans('concept');
+        $boxBase = Tools::trans('model390-box-base');
+        $base = Tools::trans('tax-base');
+        $boxQuota = Tools::trans('model390-box-quota');
+        $quota = Tools::trans('quota');
+        $box = Tools::trans('model390-box');
+        $amount = Tools::trans('amount');
+
+        foreach ($this->modelo390->getSections() as $title => $sectionRows) {
+            // los apartados de IVA devengado y deducible tienen base y cuota; el resto, un solo importe
+            $withBase = in_array($title, ['model390-section-accrued', 'model390-section-deductible'], true);
+
+            $rows = [];
+            foreach ($sectionRows as $row) {
+                $label = Tools::trans($row['label']);
+                if ($row['rate'] !== null) {
+                    $label .= ' ' . str_replace('.', ',', $row['rate']) . ' %';
+                }
+
+                if ($withBase) {
+                    $rows[] = [
+                        $concept => $label,
+                        $boxBase => (string)$row['base'],
+                        $base => $row['base'] === null ? '' : Tools::money($this->modelo390->casilla($row['base'])),
+                        $boxQuota => (string)$row['cuota'],
+                        $quota => $row['cuota'] === null ? '' : Tools::money($this->modelo390->casilla($row['cuota'])),
+                    ];
+                    continue;
+                }
+
+                $rows[] = [
+                    $concept => $label,
+                    $box => (string)$row['cuota'],
+                    $amount => $row['cuota'] === null ? '' : Tools::money($this->modelo390->casilla($row['cuota'])),
+                ];
+            }
+
+            // el prefijo «390 - » distingue estas hojas de las de las pestañas IVA devengado e IVA deducible
+            $headers = $withBase ? [$concept, $boxBase, $base, $boxQuota, $quota] : [$concept, $box, $amount];
+            $this->exportManager->addTablePage($headers, $rows, [], '390 - ' . Tools::trans($title));
+        }
+
+        // regularizaciones periódicas del año usadas en el resultado de las liquidaciones
+        $period = Tools::trans('period');
+        $type = Tools::trans('model390-declaration-type');
+        $result = Tools::trans('result') . ' (71)';
+        $pending = Tools::trans('model390-pending-compensation') . ' (87)';
+        $rows = [];
+        foreach ($this->modelo390->getPeriodos() as $periodo) {
+            $rows[] = [
+                $period => $periodo['periodo'],
+                $type => $periodo['tipo'],
+                $result => Tools::money($periodo['resultado']),
+                $pending => Tools::money($periodo['pendiente']),
+            ];
+        }
+        $this->exportManager->addTablePage([$period, $type, $result, $pending], $rows, [], '390 - ' . Tools::trans('model390-periodic-settlements'));
     }
 
     /**
@@ -611,6 +690,16 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
+     * Indica si la regularización que se está editando es la anual (modelo 390).
+     *
+     * @return bool
+     */
+    protected function isAnnual(): bool
+    {
+        return $this->getModel()->periodo === 'Y';
+    }
+
+    /**
      * Vincula un asiento contable ya existente (normalmente creado a mano, sin usar el
      * asistente) a una regularización, en lugar de generar uno nuevo. Así la lógica que
      * excluye los asientos de regularización al calcular los periodos siguientes (ver
@@ -670,6 +759,8 @@ class EditRegularizacionImpuesto extends EditController
         $reg->idasiento = $asiento->idasiento;
         $reg->fechaasiento = $asiento->fecha;
         $reg->bloquear = true;
+        // el asiento es del usuario: no se elimina al eliminar la regularización
+        $reg->asientomanual = true;
         return $reg->save();
     }
 
@@ -714,6 +805,17 @@ class EditRegularizacionImpuesto extends EditController
             case 'EditRegularizacionImpuesto':
                 parent::loadData($viewName, $view);
                 $this->settingsMainView();
+
+                // la regularización anual es el modelo 390: lo indicamos en el título de la página,
+                // de la pestaña principal y de los documentos exportados
+                if ($this->isAnnual()) {
+                    $this->annualTitle = true;
+                    $view->title = Tools::trans('model-390');
+                    $this->title = Tools::trans('model-390');
+                    if ($view->model->exists()) {
+                        $this->title .= ' ' . $view->model->primaryDescription();
+                    }
+                }
                 break;
 
             case 'ListPartidaImpuestoResumen':
@@ -870,16 +972,6 @@ class EditRegularizacionImpuesto extends EditController
     }
 
     /**
-     * Indica si la regularización que se está editando es la anual (modelo 390).
-     *
-     * @return bool
-     */
-    protected function isAnnual(): bool
-    {
-        return $this->getModel()->periodo === 'Y';
-    }
-
-    /**
      * Settings for main view.
      *
      * @return void
@@ -913,6 +1005,7 @@ class EditRegularizacionImpuesto extends EditController
         $reg->idasiento = null;
         $reg->fechaasiento = null;
         $reg->bloquear = false;
+        $reg->asientomanual = false;
         return $reg->save();
     }
 

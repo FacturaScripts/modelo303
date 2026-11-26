@@ -46,11 +46,25 @@ use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 class Modelo303
 {
     /**
+     * Nombres que recibe el periodo anual según quién lo pida: Y (periodo guardado en
+     * RegularizacionImpuesto), ANUAL (formato público de la API), ANNUAL (plugin Informes) y A y 0A
+     * (fichero de la AEAT). Modelo303ApiTrait::normalizePeriod() y treasury() los aceptan todos.
+     *
+     * @var string[]
+     */
+    public const ANNUAL_PERIODS = ['Y', 'ANUAL', 'ANNUAL', 'A', '0A'];
+
+    /**
      * Casillas de introducción manual, guardadas en la regularización como c65, c68, ...
      * (ver Extension/Table/regularizacionimpuestos.xml).
      */
     public const MANUAL_SQUARES = ['65', '68', '70', '76', '77', '78', '108', '109', '110', '111', '112'];
 
+    /**
+     * Número de casilla más alto que se inicializa en el modelo (de la 00 a la 200).
+     *
+     * @var int
+     */
     private const MAX_SQUARE = 200;
 
     /**
@@ -131,6 +145,8 @@ class Modelo303
      * Stores all model squares.
      * Each key is the AEAT square number.
      *   '01' => 0.00, '02' => 0.00, ...
+     *
+     * @var array<string, float>
      */
     private array $square;
 
@@ -175,6 +191,7 @@ class Modelo303
      * Get the value of a specific square formatted as a string.
      *
      * @param string $square
+     * @param bool $showEmpty si es true, devuelve también los importes a cero formateados.
      * @return string
      */
     public function casillaStr(string $square, bool $showEmpty = false): string
@@ -510,6 +527,16 @@ class Modelo303
         return $where;
     }
 
+    /**
+     * Devuelve los saldos de IVA repercutido (477), soportado (472) y a devolver (4700) del
+     * periodo de un ejercicio, para el plugin Informes (9421c52). Solo suma las partidas de los
+     * asientos de ese ejercicio, que es de una sola empresa.
+     *
+     * @param string $codejercicio código del ejercicio.
+     * @param string $period T1, T2, T3, T4 o el anual, que admite ANNUAL, ANUAL, Y, A y 0A
+     *                       (cualquier otro valor se trata como T1).
+     * @return array<string, float> claves iva-repercutido, iva-soportado e iva-devolver; vacío si el ejercicio no existe.
+     */
     public static function treasury(string $codejercicio, string $period): array
     {
         // comprobamos que el ejercicio existe
@@ -519,13 +546,12 @@ class Modelo303
         }
 
         $dataBase = new DataBase();
-        $period = strtoupper($period);
-        list($dateStart, $dateEnd) = static::treasuryDates($exercise, $period);
+        [$dateStart, $dateEnd] = static::treasuryDates($exercise, strtoupper(trim($period)));
 
         return [
-            'iva-repercutido' => static::treasurySaldoCuenta('477%', $dateStart, $dateEnd, $dataBase),
-            'iva-soportado' => static::treasurySaldoCuenta('472%', $dateStart, $dateEnd, $dataBase),
-            'iva-devolver' => static::treasurySaldoCuenta('4700%', $dateStart, $dateEnd, $dataBase),
+            'iva-repercutido' => static::treasurySaldoCuenta('477%', $exercise->codejercicio, $dateStart, $dateEnd, $dataBase),
+            'iva-soportado' => static::treasurySaldoCuenta('472%', $exercise->codejercicio, $dateStart, $dateEnd, $dataBase),
+            'iva-devolver' => static::treasurySaldoCuenta('4700%', $exercise->codejercicio, $dateStart, $dateEnd, $dataBase),
         ];
     }
 
@@ -773,45 +799,58 @@ class Modelo303
         ]);
     }
 
+    /**
+     * Calcula las fechas de inicio y fin del periodo, con el año del inicio del ejercicio.
+     *
+     * El periodo anual se acepta con todos los nombres que usan el plugin y sus llamadores:
+     * ANNUAL (plugin Informes), Y (periodo de RegularizacionImpuesto), ANUAL (la API), A y 0A
+     * (fichero de la AEAT).
+     *
+     * @param Ejercicio $exercise
+     * @param string $period T1, T2, T3, T4 o el anual, en mayúsculas.
+     * @return array{0: string, 1: string} fechas en formato Y-m-d, el que entienden MySQL y PostgreSQL.
+     */
     protected static function treasuryDates(Ejercicio $exercise, string $period): array
     {
-        // si el periodo no es T1, T2, T3, T4 o Annual, se asume que es el primer trimestre
-        if (!in_array($period, ['T1', 'T2', 'T3', 'T4', 'ANNUAL'])) {
+        if (in_array($period, self::ANNUAL_PERIODS, true)) {
+            $period = 'ANNUAL';
+        }
+
+        // si el periodo no es T1, T2, T3, T4 o el anual, se asume que es el primer trimestre
+        if (!in_array($period, ['T1', 'T2', 'T3', 'T4', 'ANNUAL'], true)) {
             $period = 'T1';
         }
 
+        $year = date('Y', strtotime($exercise->fechainicio));
         return match ($period) {
-            'T1' => [
-                date('01-01-Y', strtotime($exercise->fechainicio)),
-                date('31-03-Y', strtotime($exercise->fechainicio))
-            ],
-            'T2' => [
-                date('01-04-Y', strtotime($exercise->fechainicio)),
-                date('30-06-Y', strtotime($exercise->fechainicio))
-            ],
-            'T3' => [
-                date('01-07-Y', strtotime($exercise->fechainicio)),
-                date('30-09-Y', strtotime($exercise->fechainicio))
-            ],
-            'ANNUAL' => [
-                date('01-01-Y', strtotime($exercise->fechainicio)),
-                date('31-12-Y', strtotime($exercise->fechainicio))
-            ],
-            default => [
-                date('01-10-Y', strtotime($exercise->fechainicio)),
-                date('31-12-Y', strtotime($exercise->fechainicio))
-            ],
+            'T1' => [$year . '-01-01', $year . '-03-31'],
+            'T2' => [$year . '-04-01', $year . '-06-30'],
+            'T3' => [$year . '-07-01', $year . '-09-30'],
+            'ANNUAL' => [$year . '-01-01', $year . '-12-31'],
+            default => [$year . '-10-01', $year . '-12-31'],
         };
     }
 
-    protected static function treasurySaldoCuenta(string $cuenta, string $desde, string $hasta, DataBase $dataBase): float
+    /**
+     * Suma debe menos haber de las partidas de las subcuentas que empiezan por el patrón, en
+     * los asientos del ejercicio dentro del rango de fechas.
+     *
+     * @param string $cuenta patrón LIKE de la subcuenta (por ejemplo 477%).
+     * @param string $codejercicio ejercicio de los asientos; limita la suma a su empresa.
+     * @param string $desde fecha de inicio en formato Y-m-d.
+     * @param string $hasta fecha de fin en formato Y-m-d.
+     * @param DataBase $dataBase
+     * @return float
+     */
+    protected static function treasurySaldoCuenta(string $cuenta, string $codejercicio, string $desde, string $hasta, DataBase $dataBase): float
     {
         $saldo = 0.0;
 
         if ($dataBase->tableExists('partidas')) {
-            // calculamos el saldo de todos aquellos asientos que afecten a caja
+            // calculamos el saldo de los asientos del ejercicio en el periodo
             $sql = "select sum(debe-haber) as total from partidas where codsubcuenta LIKE " . $dataBase->var2str($cuenta)
-                . " and idasiento in (select idasiento from asientos where fecha >= " . $dataBase->var2str($desde)
+                . " and idasiento in (select idasiento from asientos where codejercicio = " . $dataBase->var2str($codejercicio)
+                . " and fecha >= " . $dataBase->var2str($desde)
                 . " and fecha <= " . $dataBase->var2str($hasta) . ");";
 
             $data = $dataBase->select($sql);

@@ -124,4 +124,11 @@
         <type>double precision</type>
         <default>0</default>
     </column>
+    <!-- El asiento de la regularización es uno ya existente que se vinculó a mano (no lo creó el
+         plugin): al eliminar la regularización no se elimina el asiento -->
+    <column>
+        <name>asientomanual</name>
+        <type>boolean</type>
+        <default>false</default>
+    </column>
 </table>

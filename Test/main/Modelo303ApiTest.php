@@ -199,6 +199,8 @@ final class Modelo303ApiTest extends Modelo303TestCase
         $this->assertSame('303', $body['modelo']);
         $this->assertArrayNotHasKey('modelo_anual', $body);
         $this->assertSame($exercise->codejercicio, $body['ejercicio']['codejercicio']);
+        // el aviso sale de las traducciones, no de un texto fijo
+        $this->assertContains(Tools::trans('api-model303-unsaved-calculation'), $body['avisos']);
         $this->assertContains(
             'Cálculo provisional: no hay regularización guardada, las casillas manuales valen 0.',
             $body['avisos']
@@ -250,6 +252,7 @@ final class Modelo303ApiTest extends Modelo303TestCase
         $reg->c70 = 25.5;
         $reg->c110 = 100.0;
         $reg->c78 = 40.0;
+        $reg->iban = 'ES91 2100 0418 4502 0005 1332';
         $this->assertTrue($reg->save());
         $this->addCleanup(static function () use ($reg) {
             if ($reg->exists()) {
@@ -268,6 +271,9 @@ final class Modelo303ApiTest extends Modelo303TestCase
             'Cálculo provisional: no hay regularización guardada, las casillas manuales valen 0.',
             $body['avisos']
         );
+
+        // el IBAN se devuelve enmascarado: país, control y los 4 últimos caracteres
+        $this->assertSame('ES91****************1332', $body['regularizacion']['iban']);
 
         // mismas cifras que la pantalla y el fichero .303
         $screen = Modelo303::fromRegularizacion($reg);

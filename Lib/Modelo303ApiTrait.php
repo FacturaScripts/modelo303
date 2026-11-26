@@ -42,7 +42,8 @@ trait Modelo303ApiTrait
 {
     /**
      * Normaliza el periodo recibido al formato público de los endpoints: T1–T4, 01–12 o ANUAL.
-     * Acepta también 1T–4T, 1–12 y ANNUAL, Y, A y 0A para el anual.
+     * Acepta también 1T–4T, 1–12 y, para el anual, todos los nombres de Modelo303::ANNUAL_PERIODS
+     * (ANNUAL, Y, A y 0A).
      *
      * @param string $period
      * @return string|null periodo normalizado o null si no es válido.
@@ -51,7 +52,7 @@ trait Modelo303ApiTrait
     {
         $period = strtoupper(preg_replace('/\s+/', '', $period));
 
-        if (in_array($period, ['ANUAL', 'ANNUAL', 'Y', 'A', '0A'], true)) {
+        if (in_array($period, Modelo303::ANNUAL_PERIODS, true)) {
             return 'ANUAL';
         }
 
@@ -205,6 +206,28 @@ trait Modelo303ApiTrait
         ], ['idregiva' => 'ASC']);
 
         return $exists ? [$reg, true] : [static::unsavedRegularization($exercise, $regPeriod), false];
+    }
+
+    /**
+     * Enmascara un IBAN para la respuesta de la API: deja el código de país, los dígitos de control
+     * y los 4 últimos caracteres, que bastan para reconocer la cuenta, y oculta el resto con
+     * asteriscos. El IBAN completo solo se usa en el fichero de la AEAT y en la pantalla.
+     *
+     * @param ?string $iban
+     * @return ?string IBAN enmascarado, o null si está vacío.
+     */
+    protected static function maskIban(?string $iban): ?string
+    {
+        $iban = strtoupper((string)preg_replace('/\s+/', '', (string)$iban));
+        if ($iban === '') {
+            return null;
+        }
+
+        if (strlen($iban) <= 8) {
+            return str_repeat('*', strlen($iban));
+        }
+
+        return substr($iban, 0, 4) . str_repeat('*', strlen($iban) - 8) . substr($iban, -4);
     }
 
     /**
@@ -395,7 +418,7 @@ trait Modelo303ApiTrait
     }
 
     /**
-     * Avisos en español para el usuario.
+     * Avisos para el usuario, en el idioma del servidor, como los del cálculo del modelo.
      *
      * @param string[] $avisos avisos del cálculo del modelo (ya traducidos por Modelo303 o Modelo390).
      * @param array $invoices resultado de Modelo303::invoicesWithoutAccounting().
@@ -406,7 +429,7 @@ trait Modelo303ApiTrait
     {
         $warnings = [];
         if (false === $exists) {
-            $warnings[] = 'Cálculo provisional: no hay regularización guardada, las casillas manuales valen 0.';
+            $warnings[] = Tools::trans('api-model303-unsaved-calculation');
         }
 
         // importes sin casilla, regularizaciones que faltan, descuadres... (ya traducidos)
@@ -414,14 +437,17 @@ trait Modelo303ApiTrait
             $warnings[] = $aviso;
         }
 
+        // una clave para una factura y otra para varias, para que la frase concuerde en número
         $sales = count($invoices['venta'] ?? []);
         if ($sales > 0) {
-            $warnings[] = 'Hay ' . $sales . ' facturas de cliente del periodo sin asiento contable: no se tienen en cuenta.';
+            $key = $sales === 1 ? 'api-model303-sale-invoice-without-entry' : 'api-model303-sale-invoices-without-entry';
+            $warnings[] = Tools::trans($key, ['%count%' => $sales]);
         }
 
         $purchases = count($invoices['compra'] ?? []);
         if ($purchases > 0) {
-            $warnings[] = 'Hay ' . $purchases . ' facturas de proveedor del periodo sin asiento contable: no se tienen en cuenta.';
+            $key = $purchases === 1 ? 'api-model303-supplier-invoice-without-entry' : 'api-model303-supplier-invoices-without-entry';
+            $warnings[] = Tools::trans($key, ['%count%' => $purchases]);
         }
 
         return $warnings;

@@ -25,7 +25,8 @@ use FacturaScripts\Core\Template\InitClass;
 
 /**
  * Inicialización del plugin Modelo303: registra los endpoints de la API de sus dos modelos,
- * GET /api/3/modelo303 y GET /api/3/modelo390.
+ * GET /api/3/modelo303 y GET /api/3/modelo390, y la extensión de RegularizacionImpuesto que no
+ * elimina los asientos vinculados a mano al eliminar su regularización.
  *
  * @author Daniel Fernández Giménez <contacto@danielfg.es>
  */
@@ -37,6 +38,9 @@ final class Init extends InitClass
      */
     public function init(): void
     {
+        // no eliminar el asiento vinculado a mano al eliminar la regularización
+        $this->loadExtension(new Extension\Model\RegularizacionImpuesto());
+
         Kernel::addRoute('/api/3/modelo303', 'ApiModelo303', -1);
         ApiRoot::addCustomResource('modelo303');
 

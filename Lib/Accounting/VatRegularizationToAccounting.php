@@ -19,13 +19,13 @@
 
 namespace FacturaScripts\Plugins\Modelo303\Lib\Accounting;
 
-use FacturaScripts\Core\Model\FacturaCliente;
-use FacturaScripts\Core\Model\FacturaProveedor;
-use FacturaScripts\Core\Model\RegularizacionImpuesto;
 use FacturaScripts\Core\Tools;
 use FacturaScripts\Core\Where;
 use FacturaScripts\Dinamic\Lib\SubAccountTools;
 use FacturaScripts\Dinamic\Model\Asiento;
+use FacturaScripts\Dinamic\Model\FacturaCliente;
+use FacturaScripts\Dinamic\Model\FacturaProveedor;
+use FacturaScripts\Dinamic\Model\RegularizacionImpuesto;
 use FacturaScripts\Dinamic\Model\Join\PartidaImpuestoResumen;
 use FacturaScripts\Dinamic\Model\Subcuenta;
 
@@ -37,12 +37,29 @@ use FacturaScripts\Dinamic\Model\Subcuenta;
  */
 class VatRegularizationToAccounting
 {
-    /** @var float */
+    /**
+     * Suma del haber de las líneas de IVA ya guardadas en el asiento.
+     *
+     * @var float
+     */
     private float $credit = 0.0;
 
-    /** @var float */
+    /**
+     * Suma del debe de las líneas de IVA ya guardadas en el asiento.
+     *
+     * @var float
+     */
     private float $debit = 0.0;
 
+    /**
+     * Genera el asiento de regularización de IVA: salda las subcuentas de IVA repercutido y
+     * soportado del periodo y lleva la diferencia a la subcuenta de acreedores o deudores. Si
+     * hay facturas sin asiento o el asiento no cuadra, no deja nada guardado y devuelve false.
+     * Si todo va bien, anota en la regularización el asiento y su fecha (sin guardarla).
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return bool
+     */
     public function generate(RegularizacionImpuesto &$reg): bool
     {
         if (false === $this->checkInvoicesWithoutAccEntry($reg)) {
@@ -78,6 +95,14 @@ class VatRegularizationToAccounting
         return false;
     }
 
+    /**
+     * Añade la línea de resultado: la diferencia entre el IVA devengado y el deducible, a la
+     * subcuenta de acreedores (a pagar) o de deudores (a devolver) de la regularización.
+     *
+     * @param Asiento $accEntry
+     * @param RegularizacionImpuesto $reg
+     * @return bool
+     */
     protected function addAccountingResultLine(Asiento $accEntry, RegularizacionImpuesto $reg): bool
     {
         $subaccount = new Subcuenta();
@@ -100,6 +125,14 @@ class VatRegularizationToAccounting
         return $newLine->save();
     }
 
+    /**
+     * Añade una línea por cada subcuenta de IVA con el total de sus cuotas (IVA más recargo),
+     * en el debe las de repercutido y en el haber las de soportado.
+     *
+     * @param Asiento $accEntry
+     * @param RegularizacionImpuesto $reg
+     * @return bool
+     */
     protected function addAccountingTaxLines(Asiento $accEntry, RegularizacionImpuesto $reg): bool
     {
         foreach ($this->getSubtotals($reg) as $idsubcuenta => $total) {
@@ -152,6 +185,13 @@ class VatRegularizationToAccounting
         return empty($facturasSinAsiento);
     }
 
+    /**
+     * Totales de cuota por subcuenta de IVA del periodo, con el mismo filtro de partidas que
+     * Modelo303::taxWhere() para que el asiento cuadre con el resumen.
+     *
+     * @param RegularizacionImpuesto $reg
+     * @return array<int, array{debe: float, haber: float}> indexado por idsubcuenta.
+     */
     protected function getSubtotals(RegularizacionImpuesto $reg): array
     {
         $accTools = new SubAccountTools();

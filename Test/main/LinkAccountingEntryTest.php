@@ -201,6 +201,39 @@ final class LinkAccountingEntryTest extends Modelo303TestCase
         $this->assertTrue($this->hasWarning('accounting-entry-already-created'));
     }
 
+    public function testDeleteKeepsManuallyLinkedEntry(): void
+    {
+        $exercise = $this->getRandomExercise();
+        $reg = $this->createRegularization($exercise, 'T1');
+        $manualEntry = $this->createAccEntry($exercise, $reg->fechafin);
+
+        $controller = $this->getController();
+        $this->assertTrue($controller->linkAccountingEntry($reg, $manualEntry->idasiento));
+        $this->assertTrue((bool)$reg->asientomanual);
+
+        // al eliminar la regularización, el asiento vinculado a mano sigue en la contabilidad
+        $this->assertTrue($reg->delete());
+        $reloadedEntry = new Asiento();
+        $this->assertTrue($reloadedEntry->load($manualEntry->idasiento));
+    }
+
+    public function testDeleteRemovesEntryNotLinkedManually(): void
+    {
+        $exercise = $this->getRandomExercise();
+        $reg = $this->createRegularization($exercise, 'T1');
+        $entry = $this->createAccEntry($exercise, $reg->fechafin);
+
+        // un asiento asignado como los que crea el plugin (sin marca de vinculado a mano)
+        $reg->idasiento = $entry->idasiento;
+        $reg->asientomanual = false;
+        $this->assertTrue($reg->save());
+
+        // el core lo elimina con la regularización, como hasta ahora
+        $this->assertTrue($reg->delete());
+        $reloadedEntry = new Asiento();
+        $this->assertFalse($reloadedEntry->load($entry->idasiento));
+    }
+
     public function testLinkDoesNotModifyEntry(): void
     {
         $exercise = $this->getRandomExercise();
@@ -258,6 +291,7 @@ final class LinkAccountingEntryTest extends Modelo303TestCase
         $this->assertEmpty($reg->idasiento);
         $this->assertEmpty($reg->fechaasiento);
         $this->assertFalse((bool)$reg->bloquear);
+        $this->assertFalse((bool)$reg->asientomanual);
 
         // y se ha guardado, no solo modificado en memoria
         $reloadedReg = new RegularizacionImpuesto();
