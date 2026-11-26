@@ -52,6 +52,12 @@ class PartidaImpuesto extends JoinModel
         $this->cuotarecargo = 0.00;
     }
 
+    /**
+     * Devuelve la factura de cliente o, si no hay, la de proveedor que generó el asiento de la
+     * partida (la de proveedor llega vacía si tampoco existe).
+     *
+     * @return BusinessDocument
+     */
     protected function getFactura(): BusinessDocument
     {
         $where = [Where::eq('idasiento', $this->idasiento ?? 0)];

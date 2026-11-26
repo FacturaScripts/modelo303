@@ -31,6 +31,11 @@ use FacturaScripts\Core\Where;
  */
 class ListRegularizacionImpuesto extends ListController
 {
+    /**
+     * Datos de la página: cuelga del menú Informes, en el submenú de modelos fiscales.
+     *
+     * @return array
+     */
     public function getPageData(): array
     {
         $data = parent::getPageData();

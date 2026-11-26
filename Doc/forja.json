@@ -1,0 +1,136 @@
+{
+    "User": {
+        "modelo-303-para-facturascripts.md": {
+            "title": "Modelo 303 para FacturaScripts",
+            "title_short": "Modelo 303",
+            "permalink": "plugin-modelo303-para-facturascripts-837",
+            "ordernum": 10,
+            "imageurl": "Doc/Assets/modelo-303-para-facturascripts/01-menu-modelos-303-y-390.png",
+            "icon": "fa-solid fa-scale-balanced",
+            "color": "primary",
+            "keywords": "modelo 303, modelo 390, iva, autoliquidación, regularización de iva, hacienda, aeat, declaración trimestral",
+            "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
+            "visibility": true,
+            "idpublication": 777
+        },
+        "autoliquidacion-trimestral-modelo-303.md": {
+            "title": "Autoliquidación trimestral - Modelo 303",
+            "title_short": "Autoliquidación 303",
+            "permalink": "crear-informe-de-autoliquidacion-trimestral",
+            "parent": "modelo-303-para-facturascripts.md",
+            "ordernum": 20,
+            "imageurl": "Doc/Assets/autoliquidacion-trimestral-modelo-303/03-resumen.png",
+            "icon": "fa-solid fa-calculator",
+            "color": "primary",
+            "keywords": "autoliquidación trimestral, modelo 303, iva, casillas, resultado de la autoliquidación, asiento de regularización, bloquear contabilidad, periodo mensual",
+            "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
+            "visibility": true,
+            "idpublication": 1341
+        },
+        "presentar-el-modelo-303-en-la-aeat.md": {
+            "title": "Presentar el modelo 303 en la AEAT",
+            "title_short": "Presentar el 303",
+            "permalink": "presentar-el-modelo-303-en-la-aeat",
+            "parent": "modelo-303-para-facturascripts.md",
+            "ordernum": 30,
+            "imageurl": "Doc/Assets/presentar-el-modelo-303-en-la-aeat/01-pestana-presentacion.png",
+            "icon": "fa-solid fa-file-arrow-down",
+            "color": "success",
+            "keywords": "fichero 303, presentar modelo 303, aeat, sede electrónica, tipo de declaración, iban, casilla 110, rellenar casilla 110, autoliquidación rectificativa",
+            "controllers": "EditRegularizacionImpuesto",
+            "visibility": true
+        },
+        "vincular-un-asiento-manual-a-la-regularizacion.md": {
+            "title": "Vincular un asiento manual a la regularización",
+            "title_short": "Vincular asiento",
+            "permalink": "vincular-un-asiento-manual-a-la-regularizacion",
+            "parent": "modelo-303-para-facturascripts.md",
+            "ordernum": 40,
+            "imageurl": "Doc/Assets/vincular-un-asiento-manual-a-la-regularizacion/03-asiento-vinculado.png",
+            "icon": "fa-solid fa-link",
+            "color": "info",
+            "keywords": "vincular asiento, desvincular asiento, asiento manual, regularización de iva, bloquear contabilidad, modelo 303",
+            "controllers": "EditRegularizacionImpuesto",
+            "visibility": true
+        },
+        "calculos-del-plugin-modelo-303.md": {
+            "title": "Cálculos del plugin Modelo 303",
+            "title_short": "Cálculos Modelo 303",
+            "permalink": "calculos-del-plugin-modelo-303",
+            "parent": "modelo-303-para-facturascripts.md",
+            "ordernum": 50,
+            "imageurl": "Doc/Assets/calculos-del-plugin-modelo-303/03-casillas-del-resumen.png",
+            "icon": "fa-solid fa-calculator",
+            "color": "info",
+            "keywords": "modelo 303, casillas, recargo de equivalencia, IVA devengado, IVA deducible, cuota total devengada, casilla 110",
+            "controllers": "EditRegularizacionImpuesto",
+            "visibility": true,
+            "idpublication": 3726
+        },
+        "autoliquidacion-anual-modelo-390.md": {
+            "title": "Autoliquidación anual - Modelo 390",
+            "title_short": "Modelo 390 anual",
+            "permalink": "crear-informe-de-autoliquidacion-anual",
+            "parent": "modelo-303-para-facturascripts.md",
+            "ordernum": 60,
+            "imageurl": "Doc/Assets/autoliquidacion-anual-modelo-390/04-pestana-modelo-390.png",
+            "icon": "fa-solid fa-calendar-check",
+            "color": "primary",
+            "keywords": "modelo 390, resumen anual iva, autoliquidación anual, declaración resumen anual, volumen de operaciones",
+            "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
+            "visibility": true,
+            "idpublication": 1342
+        },
+        "presentar-el-modelo-390-en-la-aeat.md": {
+            "title": "Presentar el modelo 390 en la AEAT",
+            "title_short": "Presentar modelo 390",
+            "permalink": "presentar-el-modelo-390-en-la-aeat",
+            "parent": "modelo-303-para-facturascripts.md",
+            "ordernum": 70,
+            "imageurl": "Doc/Assets/presentar-el-modelo-390-en-la-aeat/01-pestana-fichero-aeat-390.png",
+            "icon": "fa-solid fa-file-arrow-down",
+            "color": "success",
+            "keywords": "modelo 390, fichero 390, DR390, presentar AEAT, clave de actividad, epígrafe IAE, declaración sustitutiva",
+            "controllers": "EditRegularizacionImpuesto",
+            "visibility": true
+        },
+        "exportar-modelo-303-a-excel.md": {
+            "title": "Exportar Modelo 303 a Excel",
+            "title_short": "Exportar a Excel",
+            "permalink": "exportar-informe-a-excel",
+            "parent": "modelo-303-para-facturascripts.md",
+            "ordernum": 80,
+            "imageurl": "Doc/Assets/exportar-modelo-303-a-excel/01-menu-imprimir-y-archivo-excel.png",
+            "icon": "fa-solid fa-file-excel",
+            "color": "success",
+            "keywords": "exportar modelo 303, excel, pdf, csv, imprimir regularización, modelo 390",
+            "controllers": "EditRegularizacionImpuesto",
+            "visibility": true,
+            "idpublication": 1343
+        }
+    },
+    "Dev": {
+        "api-modelo-303-y-390.md": {
+            "title": "API REST de los modelos 303 y 390",
+            "title_short": "API modelos 303 y 390",
+            "permalink": "api-modelo-303-y-390",
+            "ordernum": 200,
+            "icon": "fa-solid fa-plug",
+            "color": "info",
+            "keywords": "api, rest, modelo 303, modelo 390, iva, casillas, endpoint, json, regularizacion, autoliquidacion",
+            "controllers": "ApiModelo303,ApiModelo390",
+            "visibility": true
+        },
+        "estructura-del-plugin-modelo-303.md": {
+            "title": "Estructura del plugin Modelo 303",
+            "title_short": "Estructura del plugin",
+            "permalink": "estructura-del-plugin-modelo-303",
+            "ordernum": 210,
+            "icon": "fa-solid fa-sitemap",
+            "color": "info",
+            "keywords": "modelo 303, modelo 390, clases, Lib, extension, regularizacionimpuestos, casillas, fichero aeat, programacion",
+            "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
+            "visibility": true
+        }
+    }
+}
