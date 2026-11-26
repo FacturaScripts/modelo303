@@ -11,7 +11,17 @@
             "keywords": "modelo 303, modelo 390, iva, autoliquidación, regularización de iva, hacienda, aeat, declaración trimestral",
             "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
             "visibility": true,
-            "idpublication": 777
+            "idpublication": 777,
+            "assets": {
+                "Assets/modelo-303-para-facturascripts/01-menu-modelos-303-y-390.png": {
+                    "url": "/MyFiles/2026/11/8507_forja_hwh8kg76tb_01_menu_modelos_303_y_390.png?myft=017fdb4a9b2bfbff86a3daea3a01394f242e9148e7cb6b7032c4bf6610c7c540",
+                    "sha256": "51d504240acc0e19f5217e3324b4dc3f6fca35cc05acf1bb92ec917042251a4c"
+                },
+                "Assets/modelo-303-para-facturascripts/02-listado-de-modelos.png": {
+                    "url": "/MyFiles/2026/11/8508_forja_on9fbs018o_02_listado_de_modelos.png?myft=455512eb7792944ee615119d30b2741983697569a050fad0960f2e3ba2f4a544",
+                    "sha256": "04dd95db8799887ec924080a46ff93b50cb3f8f706f9615e5c12c8740fa84c84"
+                }
+            }
         },
         "autoliquidacion-trimestral-modelo-303.md": {
             "title": "Autoliquidación trimestral - Modelo 303",
@@ -25,7 +35,37 @@
             "keywords": "autoliquidación trimestral, modelo 303, iva, casillas, resultado de la autoliquidación, asiento de regularización, bloquear contabilidad, periodo mensual",
             "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
             "visibility": true,
-            "idpublication": 1341
+            "idpublication": 1341,
+            "assets": {
+                "Assets/autoliquidacion-trimestral-modelo-303/01-menu-modelos-303-y-390.png": {
+                    "url": "/MyFiles/2026/11/8509_forja_lhx388aze5_01_menu_modelos_303_y_390.png?myft=7c72db04dc7c6e2ab51946d51c8c1d650d558a3c5d6783bf13ff5dbdfc35b828",
+                    "sha256": "51d504240acc0e19f5217e3324b4dc3f6fca35cc05acf1bb92ec917042251a4c"
+                },
+                "Assets/autoliquidacion-trimestral-modelo-303/02-nueva-regularizacion.png": {
+                    "url": "/MyFiles/2026/11/8510_forja_qkiflvtqsl_02_nueva_regularizacion.png?myft=e50f81dd19563ee6d401e84a5f9b067ca869f3aeaaabc37dcec2a2d1b5194613",
+                    "sha256": "f61b0d2050ad6c0b201fd870283c60b394b0b90eaf177724c88eed024231972e"
+                },
+                "Assets/autoliquidacion-trimestral-modelo-303/03-resumen.png": {
+                    "url": "/MyFiles/2026/11/8511_forja_zumflpyfcy_03_resumen.png?myft=c69eb2592a470185c97a5d62c04e93e034282cf8f0cb90ed341452cced4dd14f",
+                    "sha256": "e660b187ea7035e1d68198cd65e1252c38c7cc45ffb3222bad7a4969e53ac6e4"
+                },
+                "Assets/autoliquidacion-trimestral-modelo-303/04-resultado-de-la-autoliquidacion.png": {
+                    "url": "/MyFiles/2026/11/8512_forja_kiiit80tvq_04_resultado_de_la_autoliquidacion.png?myft=6d5376dc0e3374b1bda2f336a03f2bdaf78d9c1d9e8cbbc2e1354cdfefd1579f",
+                    "sha256": "05d5f6957b064b96bdd07fa54e43e7b2300b423ac51deb3bcb7a2a28aa4e35de"
+                },
+                "Assets/autoliquidacion-trimestral-modelo-303/05-aviso-facturas-sin-asiento.png": {
+                    "url": "/MyFiles/2026/11/8513_forja_km9wd9nzkp_05_aviso_facturas_sin_asiento.png?myft=84f48d7938c8c1aab650fc42ac951ebfb488afb91181c5afba78060e057161c8",
+                    "sha256": "df7130697e8880797d5c8f555e05905a65eecdaa44057c3482ccd49251264f4d"
+                },
+                "Assets/autoliquidacion-trimestral-modelo-303/06-pestanas-de-detalle.png": {
+                    "url": "/MyFiles/2026/11/8514_forja_qqcobmygky_06_pestanas_de_detalle.png?myft=9a6b9fc779b99133aea82808701296016ac3b7cfc25f9120c8ef3c2ee5cd43ed",
+                    "sha256": "960883c589b3c2d3d72ca97a672487722389b4cc519d5a50d520a577e4dfb74b"
+                },
+                "Assets/autoliquidacion-trimestral-modelo-303/07-pestana-asiento.png": {
+                    "url": "/MyFiles/2026/11/8515_forja_q8xhr0figa_07_pestana_asiento.png?myft=ec97d7e30f99769c8e6d5d496ef3549e6260c06a01bf73091e4ac959df3e6665",
+                    "sha256": "a87ceeedf49b2bbf174b7e8d627f6a2cfb98fb74099e32a5f558d3c527e2cdc7"
+                }
+            }
         },
         "presentar-el-modelo-303-en-la-aeat.md": {
             "title": "Presentar el modelo 303 en la AEAT",
@@ -38,7 +78,18 @@
             "color": "success",
             "keywords": "fichero 303, presentar modelo 303, aeat, sede electrónica, tipo de declaración, iban, casilla 110, rellenar casilla 110, autoliquidación rectificativa",
             "controllers": "EditRegularizacionImpuesto",
-            "visibility": true
+            "visibility": true,
+            "idpublication": 5109,
+            "assets": {
+                "Assets/presentar-el-modelo-303-en-la-aeat/01-pestana-presentacion.png": {
+                    "url": "/MyFiles/2026/11/8516_forja_pzitxx29ns_01_pestana_presentacion.png?myft=50480163e5abf998f32a19fb3939fcac3f5083286f73e520becc3a9e09e1fa9d",
+                    "sha256": "05f169d57148b147bae64280b09abfeb38a208646514651536594b0132891808"
+                },
+                "Assets/presentar-el-modelo-303-en-la-aeat/02-casillas-manuales.png": {
+                    "url": "/MyFiles/2026/11/8517_forja_ughvqqwxvn_02_casillas_manuales.png?myft=086d7b843f1ccd61fc4988c2c8d2576ba9119161ae23b666427d8e6a60cc3615",
+                    "sha256": "862d4ac4a6973d406aae713571dd20c67fe2664223ef51c5b2ff677244eaabed"
+                }
+            }
         },
         "vincular-un-asiento-manual-a-la-regularizacion.md": {
             "title": "Vincular un asiento manual a la regularización",
@@ -51,7 +102,22 @@
             "color": "info",
             "keywords": "vincular asiento, desvincular asiento, asiento manual, regularización de iva, bloquear contabilidad, modelo 303",
             "controllers": "EditRegularizacionImpuesto",
-            "visibility": true
+            "visibility": true,
+            "idpublication": 5110,
+            "assets": {
+                "Assets/vincular-un-asiento-manual-a-la-regularizacion/01-pestana-asiento-sin-asiento.png": {
+                    "url": "/MyFiles/2026/11/8518_forja_mxltppjckl_01_pestana_asiento_sin_asiento.png?myft=5c7c9092ac2b2d027630608c7c8c4b49f8e36b470da7c1eaf2f4b5b9760ef2a6",
+                    "sha256": "2fef3877ae97449592a7043d1452ea9f5a755504bb0dbfd09627fdfd9c163cb3"
+                },
+                "Assets/vincular-un-asiento-manual-a-la-regularizacion/02-modal-vincular-asiento.png": {
+                    "url": "/MyFiles/2026/11/8519_forja_mcyozjfvzy_02_modal_vincular_asiento.png?myft=c8431cc6892a08cb7cc322ba90f25db7519a2f86f43f86be4e68fb3fe709a20b",
+                    "sha256": "f82d0495dd9632886f91de1be9b413491389bd2c892b2d17993b2741519fadfe"
+                },
+                "Assets/vincular-un-asiento-manual-a-la-regularizacion/03-asiento-vinculado.png": {
+                    "url": "/MyFiles/2026/11/8520_forja_m7fruk1yhg_03_asiento_vinculado.png?myft=924d84d5e17fdc83bce4fe9217be623e9689390857af677f4cc3f1b8412853a8",
+                    "sha256": "8823d5002b88ac9c903cb53942d6954694aee3c865f244d53eae5720bce1d597"
+                }
+            }
         },
         "calculos-del-plugin-modelo-303.md": {
             "title": "Cálculos del plugin Modelo 303",
@@ -65,7 +131,21 @@
             "keywords": "modelo 303, casillas, recargo de equivalencia, IVA devengado, IVA deducible, cuota total devengada, casilla 110",
             "controllers": "EditRegularizacionImpuesto",
             "visibility": true,
-            "idpublication": 3726
+            "idpublication": 3726,
+            "assets": {
+                "Assets/calculos-del-plugin-modelo-303/01-lineas-del-asiento.png": {
+                    "url": "/MyFiles/2026/11/8521_forja_ve8wx7ojsd_01_lineas_del_asiento.png?myft=ea477ad93039afa2adbbc696c60970192e025e65b43f44931cfb7fd4966e6d66",
+                    "sha256": "252cb04eae18e19f47dd724a96623b614e16192c854174b1d40d9ae267592439"
+                },
+                "Assets/calculos-del-plugin-modelo-303/02-datos-fiscales-de-la-linea.png": {
+                    "url": "/MyFiles/2026/11/8522_forja_lme7g8ybhn_02_datos_fiscales_de_la_linea.png?myft=f5fc4e55238a1c584884fc761dfcb71c98b71ccf0227f05bd46dde1b36d94ffb",
+                    "sha256": "8d0b74467e73eacdc092fb4dc410b56e73ad7837e340e4fc744d6747336a6fa7"
+                },
+                "Assets/calculos-del-plugin-modelo-303/03-casillas-del-resumen.png": {
+                    "url": "/MyFiles/2026/11/8523_forja_nxzc8kiwyn_03_casillas_del_resumen.png?myft=b43070f3daa67dcca09b47ae92ce0c1f128c6f193a94111ff3a927b57b076b41",
+                    "sha256": "fb3f1703f666f7e3df98286abcc13661cb2436d43cfbd1d441d327bab255facd"
+                }
+            }
         },
         "autoliquidacion-anual-modelo-390.md": {
             "title": "Autoliquidación anual - Modelo 390",
@@ -79,7 +159,29 @@
             "keywords": "modelo 390, resumen anual iva, autoliquidación anual, declaración resumen anual, volumen de operaciones",
             "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
             "visibility": true,
-            "idpublication": 1342
+            "idpublication": 1342,
+            "assets": {
+                "Assets/autoliquidacion-anual-modelo-390/01-menu-modelos-303-y-390.png": {
+                    "url": "/MyFiles/2026/11/8524_forja_qchmka1mtz_01_menu_modelos_303_y_390.png?myft=66e0c67ff52111d779092f21a4e362ee6fb6471d923636acaf8f6fe83ee4a89b",
+                    "sha256": "51d504240acc0e19f5217e3324b4dc3f6fca35cc05acf1bb92ec917042251a4c"
+                },
+                "Assets/autoliquidacion-anual-modelo-390/02-lista-modelo-390.png": {
+                    "url": "/MyFiles/2026/11/8525_forja_c0kfpuujkq_02_lista_modelo_390.png?myft=65f064812bc2ed5f9eefa9d601296a53ddd7c22cae0fdf048b2af4b277e406ac",
+                    "sha256": "b8c875a568585e134dd23bcbf722d3c528ae56fa79e2327e4f0e20adb39640c7"
+                },
+                "Assets/autoliquidacion-anual-modelo-390/03-nuevo-modelo-390.png": {
+                    "url": "/MyFiles/2026/11/8526_forja_utc1atiwh9_03_nuevo_modelo_390.png?myft=82f8f97e1b98e3e8c5e315170e42c47e2c331bb792376146017a5f21a119d2b8",
+                    "sha256": "913f621ef3cdd4550a56c1e5a693f7ade5c7bb7c6ae22bcb8cd69067b07a72f2"
+                },
+                "Assets/autoliquidacion-anual-modelo-390/04-pestana-modelo-390.png": {
+                    "url": "/MyFiles/2026/11/8527_forja_8hpc6a3tit_04_pestana_modelo_390.png?myft=e939cac12ffa1d46bf50d6dbdded3294e31ead428958caa6b757b46bbb8df0e3",
+                    "sha256": "7207f019954ee729a1d85955ac9e2f405ab27e0b1bef0a4c49472db7ae4d44b0"
+                },
+                "Assets/autoliquidacion-anual-modelo-390/05-avisos-del-modelo-390.png": {
+                    "url": "/MyFiles/2026/11/8528_forja_vxtajqxpet_05_avisos_del_modelo_390.png?myft=627e627af92abf81bd6a58d15d6cfee93aca93461170c94c2e3073b6d1dd06e0",
+                    "sha256": "a95653597e84656162fd0cf1a5459f01e0f8bfe8c70b9e1c005348ea21eb86a6"
+                }
+            }
         },
         "presentar-el-modelo-390-en-la-aeat.md": {
             "title": "Presentar el modelo 390 en la AEAT",
@@ -92,7 +194,18 @@
             "color": "success",
             "keywords": "modelo 390, fichero 390, DR390, presentar AEAT, clave de actividad, epígrafe IAE, declaración sustitutiva",
             "controllers": "EditRegularizacionImpuesto",
-            "visibility": true
+            "visibility": true,
+            "idpublication": 5111,
+            "assets": {
+                "Assets/presentar-el-modelo-390-en-la-aeat/01-pestana-fichero-aeat-390.png": {
+                    "url": "/MyFiles/2026/11/8529_forja_zn9errgebu_01_pestana_fichero_aeat_390.png?myft=b2c546fa9aca5b8434eb02ebe3dcb7da721ace2bb89c02bee59913c7af7eb3c2",
+                    "sha256": "f8c47f2bcabdd5745984f8a5dd9d1d52b007276a2d5d57c56bfd5fb31caefbe2"
+                },
+                "Assets/presentar-el-modelo-390-en-la-aeat/02-casillas-manuales-y-descarga.png": {
+                    "url": "/MyFiles/2026/11/8530_forja_cc81yjfrqj_02_casillas_manuales_y_descarga.png?myft=ccf5c4baada98c8869292997c868e246a88bed1421e1974812d283ed6226ae7a",
+                    "sha256": "8004281dc246fac322b44ee274264684978fa829b7014bd6259ccad9708f12a0"
+                }
+            }
         },
         "exportar-modelo-303-a-excel.md": {
             "title": "Exportar Modelo 303 a Excel",
@@ -106,7 +219,13 @@
             "keywords": "exportar modelo 303, excel, pdf, csv, imprimir regularización, modelo 390",
             "controllers": "EditRegularizacionImpuesto",
             "visibility": true,
-            "idpublication": 1343
+            "idpublication": 1343,
+            "assets": {
+                "Assets/exportar-modelo-303-a-excel/01-menu-imprimir-y-archivo-excel.png": {
+                    "url": "/MyFiles/2026/11/8531_forja_6xdkbkahwl_01_menu_imprimir_y_archivo_excel.png?myft=3df16fb65f73d8eb40018700d355c37c53e6e11057f665e57fcfadbaf68b6ffa",
+                    "sha256": "463ee4d732f0dad378bf85beeb4e6f46ee0fd0e5cb898a7f70958c36d90828aa"
+                }
+            }
         }
     },
     "Dev": {
@@ -119,7 +238,8 @@
             "color": "info",
             "keywords": "api, rest, modelo 303, modelo 390, iva, casillas, endpoint, json, regularizacion, autoliquidacion",
             "controllers": "ApiModelo303,ApiModelo390",
-            "visibility": true
+            "visibility": true,
+            "idpublication": 5112
         },
         "estructura-del-plugin-modelo-303.md": {
             "title": "Estructura del plugin Modelo 303",
@@ -130,7 +250,8 @@
             "color": "info",
             "keywords": "modelo 303, modelo 390, clases, Lib, extension, regularizacionimpuestos, casillas, fichero aeat, programacion",
             "controllers": "EditRegularizacionImpuesto,ListRegularizacionImpuesto",
-            "visibility": true
+            "visibility": true,
+            "idpublication": 5113
         }
     }
 }
